@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>proofstep</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+  <header class="top">
+    <div class="brand">
+      <span class="mark" aria-hidden="true"></span>
+      <div>
+        <h1>proofstep</h1>
+        <p>Was each step really done? Two models check, and it says when it can't tell.</p>
+      </div>
+    </div>
+    <div class="controls">
+      <label class="field">
+        <span>Video</span>
+        <select id="run"></select>
+      </label>
+      <label class="toggle">
+        <input type="checkbox" id="labels">
+        <span>Compare with human labels</span>
+      </label>
+    </div>
+  </header>
+
+  <main class="layout">
+    <section class="watch" aria-label="Video and timeline">
+      <div class="stage" id="stage">
+        <video id="video" controls playsinline preload="metadata"></video>
+        <canvas id="overlay" aria-hidden="true"></canvas>
+      </div>
+      <div class="summary" id="summary"></div>
+      <div class="timeline" id="timeline" aria-label="Step timeline"></div>
+      <p class="legend">
+        <span><i class="sw verified"></i>Verified</span>
+        <span><i class="sw missing"></i>Missing</span>
+        <span><i class="sw cant_verify"></i>Can't verify</span>
+        <span><i class="sw evidence"></i>Object in hand (SAM)</span>
+        <span class="truth-only"><i class="sw truth"></i>Human label</span>
+      </p>
+    </section>
+
+    <section class="steps" aria-label="Steps">
+      <ol id="steps"></ol>
+      <div id="extras"></div>
+    </section>
+  </main>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

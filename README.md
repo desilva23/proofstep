@@ -79,6 +79,14 @@ python -m proofstep cc4d 8_50 8_3                       # check them and compare
 python -m proofstep check procedures/spicedhotchocolate.json my_video.mp4
 ```
 
+To look through the results:
+
+```bash
+python -m proofstep serve         # then open http://localhost:8765
+```
+
+The viewer shows the video with SAM's box around the evidence object, a timeline of every step (green verified, red missing, amber can't verify, blue where the object was in hand), and each step's reasoning. Clicking a step jumps to the moment that matters. For CaptainCook4D videos, "Compare with human labels" overlays the dataset's labels and marks each answer right or wrong. It reads saved results only and never calls the API. A link like `http://localhost:8765/#run=8_3_360p&step=S5` opens a specific step.
+
 Every API answer is cached under `data/cache/`, so re-running costs nothing. Each paid call is logged to `data/costs.jsonl`. SAM is billed per frame ($0.20 per 1,000), which makes it the main cost: about $0.10 per object for a 4-minute video at 2 frames per second. `--max-sam-usd` (default $3) stops a run that would cost more per video.
 
 `muse-spark-1.3-contributor` is the default because it is about 12× cheaper, but Meta may train on what it receives. That is fine for the public dataset below and wrong for private footage: set `PROOFSTEP_SPARK_MODEL=muse-spark-1.3` for that.

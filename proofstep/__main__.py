@@ -65,10 +65,15 @@ def main() -> None:
         p.add_argument("--effort", default="medium", choices=["minimal", "low", "medium", "high", "xhigh"])
         p.add_argument("--no-second-look", dest="look_again", action="store_false",
                        help="stop after the first pass (to compare with the full pipeline)")
+    srv = sub.add_parser("serve", help="open the saved reports in a local web viewer (no API calls)")
+    srv.add_argument("--port", type=int, default=8765)
     args = ap.parse_args()
 
     try:
-        if args.cmd == "models":
+        if args.cmd == "serve":
+            from .serve import serve
+            serve(args.port)
+        elif args.cmd == "models":
             for m in sorted(m["id"] for m in api.get_json("/models").get("data", [])):
                 print(m)
         elif args.cmd == "check":
