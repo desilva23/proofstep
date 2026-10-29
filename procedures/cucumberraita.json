@@ -1,0 +1,111 @@
+{
+  "name": "cucumberraita",
+  "steps": [
+    {
+      "id": "S1",
+      "text": "In a mixing bowl, whisk 1 cup of chilled curd until smooth. Use fresh homemade or packaged curd"
+    },
+    {
+      "id": "S2",
+      "text": "1/4 teaspoon of red chilli powder to the bowl"
+    },
+    {
+      "id": "S3",
+      "text": "1/4 teaspoon salt to the bowl"
+    },
+    {
+      "id": "S4",
+      "text": "add 1 tablespoon of chopped cilantro leaves to the bowl"
+    },
+    {
+      "id": "S5",
+      "text": "Add 1 teaspoon of cumin powder to the bowl"
+    },
+    {
+      "id": "S6",
+      "text": "Rinse 1 medium sized cucumber"
+    },
+    {
+      "id": "S7",
+      "text": "peel the cucumber"
+    },
+    {
+      "id": "S8",
+      "text": "chop or grate the cucumber"
+    },
+    {
+      "id": "S9",
+      "text": "Add the chopped or grated cucumber to the whisked curd"
+    },
+    {
+      "id": "S10",
+      "text": "1/2 teaspoon of chaat masala powder to the bowl"
+    },
+    {
+      "id": "S11",
+      "text": "Combine all the ingredients in the bowl"
+    }
+  ],
+  "rules": [
+    [
+      "S1",
+      "S2"
+    ],
+    [
+      "S1",
+      "S3"
+    ],
+    [
+      "S1",
+      "S4"
+    ],
+    [
+      "S1",
+      "S5"
+    ],
+    [
+      "S1",
+      "S9"
+    ],
+    [
+      "S1",
+      "S10"
+    ],
+    [
+      "S2",
+      "S11"
+    ],
+    [
+      "S3",
+      "S11"
+    ],
+    [
+      "S4",
+      "S11"
+    ],
+    [
+      "S5",
+      "S11"
+    ],
+    [
+      "S6",
+      "S7"
+    ],
+    [
+      "S7",
+      "S8"
+    ],
+    [
+      "S8",
+      "S9"
+    ],
+    [
+      "S9",
+      "S11"
+    ],
+    [
+      "S10",
+      "S11"
+    ]
+  ]
+}

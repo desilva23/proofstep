@@ -1,0 +1,159 @@
+{
+  "name": "panfriedtofu",
+  "steps": [
+    {
+      "id": "S1",
+      "text": "Cut 1/4 block or 3 ounces of fresh tofu into large cubes (about 1 in x 1 in)"
+    },
+    {
+      "id": "S2",
+      "text": "add 1/4 tsp salt to the pan"
+    },
+    {
+      "id": "S3",
+      "text": "Add 1 tablespoon of olive oil to a non-stick pan"
+    },
+    {
+      "id": "S4",
+      "text": "pat tofu dry with a towel"
+    },
+    {
+      "id": "S5",
+      "text": "add the tofu cubes to the pan"
+    },
+    {
+      "id": "S6",
+      "text": "Turn on the heat to medium"
+    },
+    {
+      "id": "S7",
+      "text": "Cook 5 to 6 minutes until tofu cubes are lightly browned on the bottom"
+    },
+    {
+      "id": "S8",
+      "text": "Briefly remove the pan from the heat to reduce spitting"
+    },
+    {
+      "id": "S9",
+      "text": "Flip the tofu with tongs"
+    },
+    {
+      "id": "S10",
+      "text": "Return the heat to medium"
+    },
+    {
+      "id": "S11",
+      "text": "cook until tofu turns brown"
+    },
+    {
+      "id": "S12",
+      "text": "Briefly remove from the heat again"
+    },
+    {
+      "id": "S13",
+      "text": "drizzle 1 tablespoon soy sauce (watch for spitting) on the pan"
+    },
+    {
+      "id": "S14",
+      "text": "drizzle with the 1 tablespoons sesame oil on the pan"
+    },
+    {
+      "id": "S15",
+      "text": "Return to low heat"
+    },
+    {
+      "id": "S16",
+      "text": "cook pan for 2 minutes"
+    },
+    {
+      "id": "S17",
+      "text": "flip tofu on the pan"
+    },
+    {
+      "id": "S18",
+      "text": "cook pan for 2 minutes until the colour is darkened"
+    },
+    {
+      "id": "S19",
+      "text": "Transfer to a serving dish"
+    }
+  ],
+  "rules": [
+    [
+      "S1",
+      "S4"
+    ],
+    [
+      "S2",
+      "S6"
+    ],
+    [
+      "S3",
+      "S6"
+    ],
+    [
+      "S4",
+      "S5"
+    ],
+    [
+      "S5",
+      "S6"
+    ],
+    [
+      "S6",
+      "S7"
+    ],
+    [
+      "S7",
+      "S8"
+    ],
+    [
+      "S8",
+      "S9"
+    ],
+    [
+      "S9",
+      "S10"
+    ],
+    [
+      "S10",
+      "S11"
+    ],
+    [
+      "S11",
+      "S12"
+    ],
+    [
+      "S12",
+      "S13"
+    ],
+    [
+      "S12",
+      "S14"
+    ],
+    [
+      "S13",
+      "S15"
+    ],
+    [
+      "S14",
+      "S15"
+    ],
+    [
+      "S15",
+      "S16"
+    ],
+    [
+      "S16",
+      "S17"
+    ],
+    [
+      "S17",
+      "S18"
+    ],
+    [
+      "S18",
+      "S19"
+    ]
+  ]
+}

@@ -1,0 +1,171 @@
+{
+  "name": "mugcake",
+  "steps": [
+    {
+      "id": "S1",
+      "text": "1.5 tbsp sugar to the mixing bowl"
+    },
+    {
+      "id": "S2",
+      "text": "Measure and add 2 tbsp flour to the mixing bowl"
+    },
+    {
+      "id": "S3",
+      "text": "Place the paper cupcake liner inside the mug"
+    },
+    {
+      "id": "S4",
+      "text": "Set aside the lined mug"
+    },
+    {
+      "id": "S5",
+      "text": "1/4 tsp baking powder to the bowl"
+    },
+    {
+      "id": "S6",
+      "text": "a pinch of salt to the mixing bowl"
+    },
+    {
+      "id": "S7",
+      "text": "Whisk to combine mixture of flour, sugar and baking powder in the bowl"
+    },
+    {
+      "id": "S8",
+      "text": "2 tbsp water to the bowl"
+    },
+    {
+      "id": "S9",
+      "text": "Measure and add 2 tsp vegetable oil to the bowl"
+    },
+    {
+      "id": "S10",
+      "text": "1/4 tsp vanilla extract to the bowl"
+    },
+    {
+      "id": "S11",
+      "text": "Whisk batter until no lumps remain"
+    },
+    {
+      "id": "S12",
+      "text": "Pour batter into prepared mug"
+    },
+    {
+      "id": "S13",
+      "text": "Microwave the mug and batter on high power for 60 seconds. Check if the cake is done by inserting and toothpick into the center of the cake and then removing it. If wet batter clings to the toothpick, microwave for an additional 5 seconds. If the toothpick comes out clean, continue"
+    },
+    {
+      "id": "S14",
+      "text": "Invert the mug to release the cake onto a plate"
+    },
+    {
+      "id": "S15",
+      "text": "Allow to cool until it is no longer hot to the touch"
+    },
+    {
+      "id": "S16",
+      "text": "then carefully remove the paper liner"
+    },
+    {
+      "id": "S17",
+      "text": "While the cake is cooling, prepare to pipe the frosting. Scoop 4 spoonfuls of chocolate frosting into a zip-top bag"
+    },
+    {
+      "id": "S18",
+      "text": "seal zip top bag, removing as much air as possible"
+    },
+    {
+      "id": "S19",
+      "text": "Use scissors to cut one corner from the bag to create a small opening 1/4 inch in diameter"
+    },
+    {
+      "id": "S20",
+      "text": "Squeeze the frosting through the opening to apply small dollops of frosting to the plate in a circle around the base of the cake"
+    }
+  ],
+  "rules": [
+    [
+      "S1",
+      "S7"
+    ],
+    [
+      "S2",
+      "S7"
+    ],
+    [
+      "S3",
+      "S4"
+    ],
+    [
+      "S4",
+      "S12"
+    ],
+    [
+      "S5",
+      "S7"
+    ],
+    [
+      "S6",
+      "S7"
+    ],
+    [
+      "S7",
+      "S8"
+    ],
+    [
+      "S7",
+      "S9"
+    ],
+    [
+      "S7",
+      "S10"
+    ],
+    [
+      "S8",
+      "S11"
+    ],
+    [
+      "S9",
+      "S11"
+    ],
+    [
+      "S10",
+      "S11"
+    ],
+    [
+      "S11",
+      "S12"
+    ],
+    [
+      "S12",
+      "S13"
+    ],
+    [
+      "S13",
+      "S14"
+    ],
+    [
+      "S14",
+      "S15"
+    ],
+    [
+      "S15",
+      "S16"
+    ],
+    [
+      "S16",
+      "S17"
+    ],
+    [
+      "S17",
+      "S18"
+    ],
+    [
+      "S18",
+      "S19"
+    ],
+    [
+      "S19",
+      "S20"
+    ]
+  ]
+}

@@ -1,0 +1,143 @@
+{
+  "name": "spicytunaavocadowraps",
+  "steps": [
+    {
+      "id": "S1",
+      "text": "1/4 cup mayonnaise to the bowl"
+    },
+    {
+      "id": "S2",
+      "text": "Lay out 2 large lettuce leaves"
+    },
+    {
+      "id": "S3",
+      "text": "Take 1 ripe avocado"
+    },
+    {
+      "id": "S4",
+      "text": "Open a can of tuna"
+    },
+    {
+      "id": "S5",
+      "text": "drain excess water from can"
+    },
+    {
+      "id": "S6",
+      "text": "Add 1 can drained tuna to the bowl"
+    },
+    {
+      "id": "S7",
+      "text": "1 tsp Sriracha sauce to the bowl"
+    },
+    {
+      "id": "S8",
+      "text": "Chop 1 scallion"
+    },
+    {
+      "id": "S9",
+      "text": "add chopped scallion to the bowl"
+    },
+    {
+      "id": "S10",
+      "text": "Mix the contents of the bowl"
+    },
+    {
+      "id": "S11",
+      "text": "season 1/4 tsp pepper on the bowl"
+    },
+    {
+      "id": "S12",
+      "text": "Season bowl with 1/4 tsp salt"
+    },
+    {
+      "id": "S13",
+      "text": "cut avocado into thin slices"
+    },
+    {
+      "id": "S14",
+      "text": "place avocado slices on each leaf"
+    },
+    {
+      "id": "S15",
+      "text": "top lettuce leaves with the tuna mixture"
+    },
+    {
+      "id": "S16",
+      "text": "Roll up the lettuce wraps"
+    },
+    {
+      "id": "S17",
+      "text": "secure the wrap with a toothpick"
+    }
+  ],
+  "rules": [
+    [
+      "S1",
+      "S10"
+    ],
+    [
+      "S2",
+      "S14"
+    ],
+    [
+      "S3",
+      "S13"
+    ],
+    [
+      "S4",
+      "S5"
+    ],
+    [
+      "S5",
+      "S6"
+    ],
+    [
+      "S6",
+      "S10"
+    ],
+    [
+      "S7",
+      "S10"
+    ],
+    [
+      "S8",
+      "S9"
+    ],
+    [
+      "S9",
+      "S10"
+    ],
+    [
+      "S10",
+      "S11"
+    ],
+    [
+      "S10",
+      "S12"
+    ],
+    [
+      "S11",
+      "S15"
+    ],
+    [
+      "S12",
+      "S15"
+    ],
+    [
+      "S13",
+      "S14"
+    ],
+    [
+      "S14",
+      "S15"
+    ],
+    [
+      "S15",
+      "S16"
+    ],
+    [
+      "S16",
+      "S17"
+    ]
+  ]
+}

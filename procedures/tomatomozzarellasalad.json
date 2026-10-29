@@ -1,0 +1,87 @@
+{
+  "name": "tomatomozzarellasalad",
+  "steps": [
+    {
+      "id": "S1",
+      "text": "Rinse a tomato"
+    },
+    {
+      "id": "S2",
+      "text": "gently dry it with a paper/tea towel"
+    },
+    {
+      "id": "S3",
+      "text": "Slice one tomato into about 1/2 inch thick slices"
+    },
+    {
+      "id": "S4",
+      "text": "Place the thick slices of tomatoes on a platter, ensuring they only make a single layer"
+    },
+    {
+      "id": "S5",
+      "text": "Season the tomato slices with salt"
+    },
+    {
+      "id": "S6",
+      "text": "Sprinkle mozzarella cheese on top of the tomato throughout the platter"
+    },
+    {
+      "id": "S7",
+      "text": "Season platter with 1/4 teaspoon black pepper"
+    },
+    {
+      "id": "S8",
+      "text": "Garnish platter with italian seasoning"
+    },
+    {
+      "id": "S9",
+      "text": "Add a drizzle of extra-virgin olive oil, about 1 tablespoon, over the entire platter"
+    }
+  ],
+  "rules": [
+    [
+      "S1",
+      "S2"
+    ],
+    [
+      "S2",
+      "S3"
+    ],
+    [
+      "S3",
+      "S4"
+    ],
+    [
+      "S4",
+      "S5"
+    ],
+    [
+      "S4",
+      "S6"
+    ],
+    [
+      "S4",
+      "S7"
+    ],
+    [
+      "S4",
+      "S8"
+    ],
+    [
+      "S5",
+      "S9"
+    ],
+    [
+      "S6",
+      "S9"
+    ],
+    [
+      "S7",
+      "S9"
+    ],
+    [
+      "S8",
+      "S9"
+    ]
+  ]
+}

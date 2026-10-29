@@ -1,0 +1,163 @@
+{
+  "name": "tomatochutney",
+  "steps": [
+    {
+      "id": "S1",
+      "text": "Peel 4 large garlic cloves"
+    },
+    {
+      "id": "S2",
+      "text": "mince the garlic"
+    },
+    {
+      "id": "S3",
+      "text": "Take 1 tomato"
+    },
+    {
+      "id": "S4",
+      "text": "Chop tomato roughly (anysize chunks are fine)"
+    },
+    {
+      "id": "S5",
+      "text": "puree tomatoes without any water in a blender/mixer"
+    },
+    {
+      "id": "S6",
+      "text": "Heat 3 tbsp oil in a pan over medium heat"
+    },
+    {
+      "id": "S7",
+      "text": "Add 1/4 tsp mustard to the pan"
+    },
+    {
+      "id": "S8",
+      "text": "1/2 tsp cumin seeds to the pan"
+    },
+    {
+      "id": "S9",
+      "text": "When mustard and cumin seeds begin to sizzle, add minced garlic"
+    },
+    {
+      "id": "S10",
+      "text": "Lower the heat"
+    },
+    {
+      "id": "S11",
+      "text": "Saute the garlic for 2-3 minutes"
+    },
+    {
+      "id": "S12",
+      "text": "Add 2 tbsp red chili powder to the pan"
+    },
+    {
+      "id": "S13",
+      "text": "mix well contents of the pan"
+    },
+    {
+      "id": "S14",
+      "text": "Add tomato puree to the pan"
+    },
+    {
+      "id": "S15",
+      "text": "1/2 tsp salt to the pan"
+    },
+    {
+      "id": "S16",
+      "text": "Mix well tomato puree with contents in the pan"
+    },
+    {
+      "id": "S17",
+      "text": "Allow the mixture to simmer over low heat for 5 minutes or until the mixture becomes thick"
+    },
+    {
+      "id": "S18",
+      "text": "Take the pan off the heat"
+    },
+    {
+      "id": "S19",
+      "text": "Transfer it to a serving bowl"
+    }
+  ],
+  "rules": [
+    [
+      "S1",
+      "S2"
+    ],
+    [
+      "S2",
+      "S6"
+    ],
+    [
+      "S3",
+      "S4"
+    ],
+    [
+      "S4",
+      "S5"
+    ],
+    [
+      "S5",
+      "S6"
+    ],
+    [
+      "S6",
+      "S7"
+    ],
+    [
+      "S6",
+      "S8"
+    ],
+    [
+      "S7",
+      "S9"
+    ],
+    [
+      "S8",
+      "S9"
+    ],
+    [
+      "S9",
+      "S10"
+    ],
+    [
+      "S10",
+      "S11"
+    ],
+    [
+      "S11",
+      "S12"
+    ],
+    [
+      "S12",
+      "S13"
+    ],
+    [
+      "S13",
+      "S14"
+    ],
+    [
+      "S13",
+      "S15"
+    ],
+    [
+      "S14",
+      "S16"
+    ],
+    [
+      "S15",
+      "S16"
+    ],
+    [
+      "S16",
+      "S17"
+    ],
+    [
+      "S17",
+      "S18"
+    ],
+    [
+      "S18",
+      "S19"
+    ]
+  ]
+}

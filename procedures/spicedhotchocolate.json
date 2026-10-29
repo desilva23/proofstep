@@ -1,0 +1,67 @@
+{
+  "name": "spicedhotchocolate",
+  "steps": [
+    {
+      "id": "S1",
+      "text": "Fill a microwave-safe mug with skimmed milk"
+    },
+    {
+      "id": "S2",
+      "text": "Microwave the contents of the mug for 1 minute"
+    },
+    {
+      "id": "S3",
+      "text": "Add 1/5 teaspoon cinnamon to the mug"
+    },
+    {
+      "id": "S4",
+      "text": "Add 1 teaspoon of white sugar to the mug"
+    },
+    {
+      "id": "S5",
+      "text": "Add 2 pieces of chocolate to the mug"
+    },
+    {
+      "id": "S6",
+      "text": "Mix the contents of the mug"
+    },
+    {
+      "id": "S7",
+      "text": "Heat the contents of the mug for 1 minute and serve"
+    }
+  ],
+  "rules": [
+    [
+      "S1",
+      "S2"
+    ],
+    [
+      "S2",
+      "S3"
+    ],
+    [
+      "S2",
+      "S4"
+    ],
+    [
+      "S2",
+      "S5"
+    ],
+    [
+      "S3",
+      "S6"
+    ],
+    [
+      "S4",
+      "S6"
+    ],
+    [
+      "S5",
+      "S6"
+    ],
+    [
+      "S6",
+      "S7"
+    ]
+  ]
+}

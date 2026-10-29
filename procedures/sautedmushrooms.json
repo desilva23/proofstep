@@ -1,0 +1,155 @@
+{
+  "name": "sautedmushrooms",
+  "steps": [
+    {
+      "id": "S1",
+      "text": "Rinse 3 mushrooms under cold water"
+    },
+    {
+      "id": "S2",
+      "text": "pat rinsed mushrooms dry with a paper towel"
+    },
+    {
+      "id": "S3",
+      "text": "Chop 1 shallot"
+    },
+    {
+      "id": "S4",
+      "text": "Pull out mushroom stems"
+    },
+    {
+      "id": "S5",
+      "text": "Slice the mushrooms"
+    },
+    {
+      "id": "S6",
+      "text": "Peel 2 garlic cloves"
+    },
+    {
+      "id": "S7",
+      "text": "mince garlic cloves"
+    },
+    {
+      "id": "S8",
+      "text": "Heat 1 tbsp olive oil in a large skillet over medium-high heat"
+    },
+    {
+      "id": "S9",
+      "text": "Once the pan is hot, add the mushrooms"
+    },
+    {
+      "id": "S10",
+      "text": "cook for 3-5 minutes, stirring often, until mushrooms start to soften and brown"
+    },
+    {
+      "id": "S11",
+      "text": "Add chopped shallot to the pan"
+    },
+    {
+      "id": "S12",
+      "text": "cook the pan, often stirring, for 1 minute"
+    },
+    {
+      "id": "S13",
+      "text": "1/4 tbsp balsamic vinegar to the pan"
+    },
+    {
+      "id": "S14",
+      "text": "Add 2 cloves of minced garlic to the pan"
+    },
+    {
+      "id": "S15",
+      "text": "cook the pan, often stirring, for 1 minute"
+    },
+    {
+      "id": "S16",
+      "text": "pepper on pan to taste"
+    },
+    {
+      "id": "S17",
+      "text": "Season pan with salt"
+    },
+    {
+      "id": "S18",
+      "text": "Transfer the contents of the pan to a serving dish"
+    }
+  ],
+  "rules": [
+    [
+      "S1",
+      "S2"
+    ],
+    [
+      "S2",
+      "S4"
+    ],
+    [
+      "S3",
+      "S8"
+    ],
+    [
+      "S4",
+      "S5"
+    ],
+    [
+      "S5",
+      "S8"
+    ],
+    [
+      "S6",
+      "S7"
+    ],
+    [
+      "S7",
+      "S8"
+    ],
+    [
+      "S8",
+      "S9"
+    ],
+    [
+      "S9",
+      "S10"
+    ],
+    [
+      "S10",
+      "S11"
+    ],
+    [
+      "S11",
+      "S12"
+    ],
+    [
+      "S12",
+      "S13"
+    ],
+    [
+      "S12",
+      "S14"
+    ],
+    [
+      "S13",
+      "S15"
+    ],
+    [
+      "S14",
+      "S15"
+    ],
+    [
+      "S15",
+      "S16"
+    ],
+    [
+      "S15",
+      "S17"
+    ],
+    [
+      "S16",
+      "S18"
+    ],
+    [
+      "S17",
+      "S18"
+    ]
+  ]
+}

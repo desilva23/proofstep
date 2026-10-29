@@ -1,0 +1,95 @@
+{
+  "name": "microwavefrenchtoast",
+  "steps": [
+    {
+      "id": "S1",
+      "text": "In a large mug, melt 1 tablespoon of softened butter in the microwave for about 30 seconds"
+    },
+    {
+      "id": "S2",
+      "text": "Roll the butter around in the mug to coat it"
+    },
+    {
+      "id": "S3",
+      "text": "Cut or tear 1 slices of bread into bite-size pieces"
+    },
+    {
+      "id": "S4",
+      "text": "In the mug, whisk one egg with a fork until well blended"
+    },
+    {
+      "id": "S5",
+      "text": "Sprinkle 1/4 teaspoon cinnamon over the egg"
+    },
+    {
+      "id": "S6",
+      "text": "Add 1/4 teaspoon vanilla extract to the mug"
+    },
+    {
+      "id": "S7",
+      "text": "stir the mug"
+    },
+    {
+      "id": "S8",
+      "text": "add bread pieces to the egg mixture in the mug, pressing the bread down into the egg"
+    },
+    {
+      "id": "S9",
+      "text": "Microwave on high for 90 seconds until the egg is cooked through"
+    },
+    {
+      "id": "S10",
+      "text": "Put the mug's contents on a plate"
+    },
+    {
+      "id": "S11",
+      "text": "cut the contents on plate, and serve"
+    }
+  ],
+  "rules": [
+    [
+      "S1",
+      "S2"
+    ],
+    [
+      "S2",
+      "S4"
+    ],
+    [
+      "S3",
+      "S8"
+    ],
+    [
+      "S4",
+      "S5"
+    ],
+    [
+      "S4",
+      "S6"
+    ],
+    [
+      "S5",
+      "S7"
+    ],
+    [
+      "S6",
+      "S7"
+    ],
+    [
+      "S7",
+      "S8"
+    ],
+    [
+      "S8",
+      "S9"
+    ],
+    [
+      "S9",
+      "S10"
+    ],
+    [
+      "S10",
+      "S11"
+    ]
+  ]
+}

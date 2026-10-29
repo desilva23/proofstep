@@ -1,0 +1,99 @@
+{
+  "name": "cheesepimiento",
+  "steps": [
+    {
+      "id": "S1",
+      "text": "Add 1/3 cup cheddar cheese to a microwave-safe cup"
+    },
+    {
+      "id": "S2",
+      "text": "Add 1 tablespoons of water to the bowl"
+    },
+    {
+      "id": "S3",
+      "text": "Chop 1/4 red bell pepper into tiny bits"
+    },
+    {
+      "id": "S4",
+      "text": "Place the chopped pepper in the microwave-safe bowl"
+    },
+    {
+      "id": "S5",
+      "text": "Microwave the bowl, covered, for 2 minutes"
+    },
+    {
+      "id": "S6",
+      "text": "Melt the cheese by microwaving cup for 30 sec. (Check after 30 seconds and microwave for 10 seconds more if needed)"
+    },
+    {
+      "id": "S7",
+      "text": "Mix the cheese and red bell pepper in the bowl"
+    },
+    {
+      "id": "S8",
+      "text": "add 1/2 tbsp softened butter to the bowl"
+    },
+    {
+      "id": "S9",
+      "text": "Add 1/4 teaspoon salt to the bowl"
+    },
+    {
+      "id": "S10",
+      "text": "Add 1/4 teaspoon pepper to the bowl"
+    },
+    {
+      "id": "S11",
+      "text": "Mix all the ingredients of the bowl well"
+    }
+  ],
+  "rules": [
+    [
+      "S1",
+      "S6"
+    ],
+    [
+      "S2",
+      "S5"
+    ],
+    [
+      "S3",
+      "S4"
+    ],
+    [
+      "S4",
+      "S5"
+    ],
+    [
+      "S5",
+      "S7"
+    ],
+    [
+      "S6",
+      "S7"
+    ],
+    [
+      "S7",
+      "S8"
+    ],
+    [
+      "S7",
+      "S9"
+    ],
+    [
+      "S7",
+      "S10"
+    ],
+    [
+      "S8",
+      "S11"
+    ],
+    [
+      "S9",
+      "S11"
+    ],
+    [
+      "S10",
+      "S11"
+    ]
+  ]
+}

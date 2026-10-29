@@ -1,0 +1,131 @@
+{
+  "name": "microwavemugpizza",
+  "steps": [
+    {
+      "id": "S1",
+      "text": "Take a microwavable mug"
+    },
+    {
+      "id": "S2",
+      "text": "Measure 1/8 teaspoon of salt and add it to the mug"
+    },
+    {
+      "id": "S3",
+      "text": "Measure 4 tablespoons of flour and add it to the mug"
+    },
+    {
+      "id": "S4",
+      "text": "Measure 1/16 teaspoon of baking soda and add it to the mug"
+    },
+    {
+      "id": "S5",
+      "text": "Measure 1/8 teaspoon of baking powder and add it to the mug"
+    },
+    {
+      "id": "S6",
+      "text": "Stir the contents in the mug well"
+    },
+    {
+      "id": "S7",
+      "text": "1 tablespoon of olive oil to the mug"
+    },
+    {
+      "id": "S8",
+      "text": "Add in 3 tablespoons of milk to the mug"
+    },
+    {
+      "id": "S9",
+      "text": "Mix the contents of the mug thoroughly. (There might be some lumps, but that is ok.)"
+    },
+    {
+      "id": "S10",
+      "text": "Take 1 tablespoon of marinara sauce"
+    },
+    {
+      "id": "S11",
+      "text": "spread marinara sauce around the surface of the batter"
+    },
+    {
+      "id": "S12",
+      "text": "Sprinkle 1 generous tablespoon of mozzarella cheese on top of the sauce"
+    },
+    {
+      "id": "S13",
+      "text": "Sprinkle dried Italian herbs inside the mug"
+    },
+    {
+      "id": "S14",
+      "text": "Microwave for 1 minute 20 seconds, or until it rises and the toppings are bubbling"
+    }
+  ],
+  "rules": [
+    [
+      "S1",
+      "S2"
+    ],
+    [
+      "S1",
+      "S3"
+    ],
+    [
+      "S1",
+      "S4"
+    ],
+    [
+      "S1",
+      "S5"
+    ],
+    [
+      "S2",
+      "S6"
+    ],
+    [
+      "S3",
+      "S6"
+    ],
+    [
+      "S4",
+      "S6"
+    ],
+    [
+      "S5",
+      "S6"
+    ],
+    [
+      "S6",
+      "S7"
+    ],
+    [
+      "S6",
+      "S8"
+    ],
+    [
+      "S7",
+      "S9"
+    ],
+    [
+      "S8",
+      "S9"
+    ],
+    [
+      "S9",
+      "S10"
+    ],
+    [
+      "S10",
+      "S11"
+    ],
+    [
+      "S11",
+      "S12"
+    ],
+    [
+      "S12",
+      "S13"
+    ],
+    [
+      "S13",
+      "S14"
+    ]
+  ]
+}

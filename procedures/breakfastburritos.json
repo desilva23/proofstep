@@ -1,0 +1,99 @@
+{
+  "name": "breakfastburritos",
+  "steps": [
+    {
+      "id": "S1",
+      "text": "Extract and add contents of an egg to a microwave-safe bowl"
+    },
+    {
+      "id": "S2",
+      "text": "Whisk the egg"
+    },
+    {
+      "id": "S3",
+      "text": "Microwave for 3 minutes, stirring in between"
+    },
+    {
+      "id": "S4",
+      "text": "Add 1/2 tbsp sweet and sour sauce to the bowl"
+    },
+    {
+      "id": "S5",
+      "text": "Add 1 tbsp salsa to the bowl"
+    },
+    {
+      "id": "S6",
+      "text": "Place 8 inch tortilla on a cutting board"
+    },
+    {
+      "id": "S7",
+      "text": "Sprinkle oregano in the bowl"
+    },
+    {
+      "id": "S8",
+      "text": "Mix the contents of the bowl well"
+    },
+    {
+      "id": "S9",
+      "text": "Pour egg mixture on top of the tortilla"
+    },
+    {
+      "id": "S10",
+      "text": "Sprinkle 1 tbsp shredded cheddar cheese on top of the egg"
+    },
+    {
+      "id": "S11",
+      "text": "Roll the tortilla from one end to another into a log shape, about 1.5 inches thick. Roll it tight enough to prevent gaps but not so tight that the filling leaks"
+    }
+  ],
+  "rules": [
+    [
+      "S1",
+      "S2"
+    ],
+    [
+      "S2",
+      "S3"
+    ],
+    [
+      "S3",
+      "S4"
+    ],
+    [
+      "S3",
+      "S5"
+    ],
+    [
+      "S3",
+      "S7"
+    ],
+    [
+      "S4",
+      "S8"
+    ],
+    [
+      "S5",
+      "S8"
+    ],
+    [
+      "S6",
+      "S9"
+    ],
+    [
+      "S7",
+      "S8"
+    ],
+    [
+      "S8",
+      "S9"
+    ],
+    [
+      "S9",
+      "S10"
+    ],
+    [
+      "S10",
+      "S11"
+    ]
+  ]
+}

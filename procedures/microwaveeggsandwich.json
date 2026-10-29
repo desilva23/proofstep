@@ -1,0 +1,99 @@
+{
+  "name": "microwaveeggsandwich",
+  "steps": [
+    {
+      "id": "S1",
+      "text": "Coat a 6-oz. ramekin cup with cooking spray"
+    },
+    {
+      "id": "S2",
+      "text": "Pour 1 egg into the ramekin cup"
+    },
+    {
+      "id": "S3",
+      "text": "Microwave the ramekin cup uncovered on high for 30 seconds"
+    },
+    {
+      "id": "S4",
+      "text": "stir the ramekin cup"
+    },
+    {
+      "id": "S5",
+      "text": "Continue to Microwave for 15-30 more seconds or until the egg is almost set"
+    },
+    {
+      "id": "S6",
+      "text": "Top cup with 1 tablespoon of salsa"
+    },
+    {
+      "id": "S7",
+      "text": "sprinkle 1 tablespoon of cheese on cup"
+    },
+    {
+      "id": "S8",
+      "text": "Microwave just until cheese melts, about 10 seconds"
+    },
+    {
+      "id": "S9",
+      "text": "Cut the English muffin into two pieces with a knife"
+    },
+    {
+      "id": "S10",
+      "text": "Line the bottom piece of the English muffin with lettuce"
+    },
+    {
+      "id": "S11",
+      "text": "Place the egg from the cup over the lettuce"
+    },
+    {
+      "id": "S12",
+      "text": "replace the top of the English muffin"
+    }
+  ],
+  "rules": [
+    [
+      "S1",
+      "S2"
+    ],
+    [
+      "S2",
+      "S3"
+    ],
+    [
+      "S3",
+      "S4"
+    ],
+    [
+      "S4",
+      "S5"
+    ],
+    [
+      "S5",
+      "S6"
+    ],
+    [
+      "S6",
+      "S7"
+    ],
+    [
+      "S7",
+      "S8"
+    ],
+    [
+      "S8",
+      "S11"
+    ],
+    [
+      "S9",
+      "S10"
+    ],
+    [
+      "S10",
+      "S11"
+    ],
+    [
+      "S11",
+      "S12"
+    ]
+  ]
+}

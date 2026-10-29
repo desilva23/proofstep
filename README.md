@@ -1,0 +1,57 @@
+# proofstep
+
+Checks from a video whether each step of a physical procedure was actually done. When the evidence doesn't settle it, proofstep says **"can't verify, look at 2:42"** instead of guessing.
+
+Built for the Meta Global AI Developer Hackathon (Oct 27 – Nov 4, 2026) on the Meta Model API: **Muse Spark** watches the video, and **SAM 3.1** checks the physical evidence.
+
+## Why two models
+
+A video model asked "was this step done?" answers confidently, including when it's wrong. Asking it again doesn't help: in our tests its answers never changed between runs, and the wrong ones were wrong every time.
+
+So proofstep asks a second, different kind of witness. Spark claims what happened and when. SAM 3.1 then looks for the objects that step needs and checks whether they were actually in someone's hand. When the two agree, the step is verified or missing. When they disagree, proofstep says so and points to the moment to look at.
+
+## How it works
+
+1. **Spark watches** (`proofstep/watch.py`). One call per video. For each step: done / not done / can't tell, start and end times, and the **objects a camera would see handled**, named as they look ("spice jar", not "cinnamon": SAM finds nothing for the ingredient name, but finds the jar).
+2. **SAM finds the evidence** (`proofstep/evidence.py`). SAM 3.1 segments each named object and every hand across a 2-frames-per-second copy of the video. A frame counts as "in hand" when a confident object box overlaps a confident hand box. SAM matches plain nouns more reliably than compound ones ("measuring spoon" and "milk bottle" found nothing; "spoon" and "bottle" did), so a name it never finds is retried as its last word.
+3. **Rules decide** (`proofstep/decide.py`). Plain code, no model:
+
+   | Spark says | SAM sees | Result |
+   |---|---|---|
+   | done at t | object in hand within 45 s of t | **Verified** |
+   | skipped | object never in hand, except during other steps that use it | **Missing** |
+   | anything else | | **Can't verify**, with the moment to look at |
+
+   - The evidence shown is the in-hand stretch closest to Spark's time. Moments inside another step that uses the same object belong to that step.
+   - An object named for three or more steps (the mug a drink is made in) is treated as background, not evidence.
+   - Order rules are checked only between verified steps.
+
+## Run it
+
+Needs Python 3.11+ and ffmpeg. No packages to install.
+
+```bash
+cp .env.example .env              # then put your Meta Model API key in it
+python -m proofstep models        # free: checks the key and lists your models
+python -m proofstep.datasets.captaincook4d 8_50 8_3     # labels, recipe procedures, two videos
+python -m proofstep cc4d 8_50 8_3                       # check them and compare with the human labels
+python -m proofstep check procedures/spicedhotchocolate.json my_video.mp4
+```
+
+Every API answer is cached under `data/cache/`, so re-running costs nothing. Each paid call is logged to `data/costs.jsonl`. SAM is billed per frame ($0.20 per 1,000), which makes it the main cost: about $0.10 per object for a 4-minute video at 2 frames per second. `--max-sam-usd` (default $3) stops a run that would cost more per video.
+
+`muse-spark-1.3-contributor` is the default because it is about 12× cheaper, but Meta may train on what it receives. That is fine for the public dataset below and wrong for private footage: set `PROOFSTEP_SPARK_MODEL=muse-spark-1.3` for that.
+
+## Procedures
+
+A procedure is a JSON file with numbered steps and "this before that" rules. See `procedures/` for the 24 CaptainCook4D recipes, generated from the dataset's task graphs.
+
+## Data
+
+[CaptainCook4D](https://github.com/CaptainCook4D) (Peddi et al., NeurIPS 2024): egocentric cooking videos with step timings and labelled mistakes, including skipped steps and wrong order. Videos are Apache 2.0, annotations MIT, and everyone filmed gave written consent.
+
+One label fix is applied: in recording `8_3` the cinnamon and chocolate step labels are swapped, which we confirmed frame by frame (`LABEL_SWAPS` in `proofstep/datasets/captaincook4d.py`).
+
+## License
+
+MIT

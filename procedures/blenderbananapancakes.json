@@ -1,0 +1,115 @@
+{
+  "name": "blenderbananapancakes",
+  "steps": [
+    {
+      "id": "S1",
+      "text": "1/2 tsp baking powder to a blender"
+    },
+    {
+      "id": "S2",
+      "text": "Add 1 banana to a blender"
+    },
+    {
+      "id": "S3",
+      "text": "1 egg to a blender"
+    },
+    {
+      "id": "S4",
+      "text": "1 heaped tbsp flour to a blender"
+    },
+    {
+      "id": "S5",
+      "text": "blitz the blender for 20 seconds"
+    },
+    {
+      "id": "S6",
+      "text": "Melt a small knob of butter in a non-stick frying pan over low-medium heat"
+    },
+    {
+      "id": "S7",
+      "text": "Pour three little puddles straight from the blender into the frying pan"
+    },
+    {
+      "id": "S8",
+      "text": "Cook for 1 min or until the tops start to bubble"
+    },
+    {
+      "id": "S9",
+      "text": "Flip the pancakes with a fork or a fish slice spatula"
+    },
+    {
+      "id": "S10",
+      "text": "cook for 20-30 seconds more"
+    },
+    {
+      "id": "S11",
+      "text": "Chop 1 strawberry"
+    },
+    {
+      "id": "S12",
+      "text": "Transfer to a plate"
+    },
+    {
+      "id": "S13",
+      "text": "Serve the pancakes with chopped strawberries"
+    },
+    {
+      "id": "S14",
+      "text": "splash maple syrup on plate"
+    }
+  ],
+  "rules": [
+    [
+      "S1",
+      "S5"
+    ],
+    [
+      "S2",
+      "S5"
+    ],
+    [
+      "S3",
+      "S5"
+    ],
+    [
+      "S4",
+      "S5"
+    ],
+    [
+      "S5",
+      "S6"
+    ],
+    [
+      "S6",
+      "S7"
+    ],
+    [
+      "S7",
+      "S8"
+    ],
+    [
+      "S8",
+      "S9"
+    ],
+    [
+      "S9",
+      "S10"
+    ],
+    [
+      "S10",
+      "S12"
+    ],
+    [
+      "S11",
+      "S13"
+    ],
+    [
+      "S12",
+      "S13"
+    ],
+    [
+      "S13",
+      "S14"
+    ]
+  ]
+}

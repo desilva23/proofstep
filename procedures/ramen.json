@@ -1,0 +1,131 @@
+{
+  "name": "ramen",
+  "steps": [
+    {
+      "id": "S1",
+      "text": "Remove the noodles from the package(Break Noodles / Keep them as a block)"
+    },
+    {
+      "id": "S2",
+      "text": "Peel 1 medium onion"
+    },
+    {
+      "id": "S3",
+      "text": "slice 1/4 medium onion into pieces"
+    },
+    {
+      "id": "S4",
+      "text": "Peel 1 garlic clove"
+    },
+    {
+      "id": "S5",
+      "text": "Chop 1 garlic clove on a cutting board"
+    },
+    {
+      "id": "S6",
+      "text": "Put all the Vegetables in a microwave-safe bowl"
+    },
+    {
+      "id": "S7",
+      "text": "Add the noodles to the bowl"
+    },
+    {
+      "id": "S8",
+      "text": "cover the noodles with water"
+    },
+    {
+      "id": "S9",
+      "text": "Cover with a lid (or paper towel) to prevent splattering"
+    },
+    {
+      "id": "S10",
+      "text": "Microwave the ramen for 4 minutes"
+    },
+    {
+      "id": "S11",
+      "text": "Let the noodles sit for about 1 minute after the microwave stops"
+    },
+    {
+      "id": "S12",
+      "text": "Add basil to the bowl"
+    },
+    {
+      "id": "S13",
+      "text": "Add chopped cilantro to the bowl"
+    },
+    {
+      "id": "S14",
+      "text": "Mix in the flavour packet to the bowl"
+    },
+    {
+      "id": "S15",
+      "text": "Stir noodles with a spoon or fork until the flavouring dissolves"
+    }
+  ],
+  "rules": [
+    [
+      "S1",
+      "S7"
+    ],
+    [
+      "S2",
+      "S3"
+    ],
+    [
+      "S3",
+      "S6"
+    ],
+    [
+      "S4",
+      "S5"
+    ],
+    [
+      "S5",
+      "S6"
+    ],
+    [
+      "S6",
+      "S7"
+    ],
+    [
+      "S7",
+      "S8"
+    ],
+    [
+      "S8",
+      "S9"
+    ],
+    [
+      "S9",
+      "S10"
+    ],
+    [
+      "S10",
+      "S11"
+    ],
+    [
+      "S10",
+      "S12"
+    ],
+    [
+      "S10",
+      "S13"
+    ],
+    [
+      "S11",
+      "S14"
+    ],
+    [
+      "S12",
+      "S14"
+    ],
+    [
+      "S13",
+      "S14"
+    ],
+    [
+      "S14",
+      "S15"
+    ]
+  ]
+}

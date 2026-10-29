@@ -1,0 +1,119 @@
+{
+  "name": "zoodles",
+  "steps": [
+    {
+      "id": "S1",
+      "text": "Peel 1 garlic cloves"
+    },
+    {
+      "id": "S2",
+      "text": "Spiralize 1 medium zucchini into thin noodles using a spiralizer"
+    },
+    {
+      "id": "S3",
+      "text": "Heat a large pan on medium heat"
+    },
+    {
+      "id": "S4",
+      "text": "Melt 1 tablespoons of softened butter"
+    },
+    {
+      "id": "S5",
+      "text": "Add 1 large minced garlic cloves to the pan"
+    },
+    {
+      "id": "S6",
+      "text": "Cook garlic until fragrant (about 1 minutes). Be careful not to burn garlic"
+    },
+    {
+      "id": "S7",
+      "text": "1/6 cup grated parmesan cheese"
+    },
+    {
+      "id": "S8",
+      "text": "pepper to taste"
+    },
+    {
+      "id": "S9",
+      "text": "season with salt"
+    },
+    {
+      "id": "S10",
+      "text": "Add the zucchini noodles"
+    },
+    {
+      "id": "S11",
+      "text": "Cook for 2 minutes or until the zoodles are done"
+    },
+    {
+      "id": "S12",
+      "text": "Remove from heat"
+    },
+    {
+      "id": "S13",
+      "text": "Top with more parmesan if desired"
+    }
+  ],
+  "rules": [
+    [
+      "S1",
+      "S3"
+    ],
+    [
+      "S2",
+      "S3"
+    ],
+    [
+      "S3",
+      "S4"
+    ],
+    [
+      "S4",
+      "S5"
+    ],
+    [
+      "S5",
+      "S6"
+    ],
+    [
+      "S6",
+      "S7"
+    ],
+    [
+      "S6",
+      "S8"
+    ],
+    [
+      "S6",
+      "S9"
+    ],
+    [
+      "S6",
+      "S10"
+    ],
+    [
+      "S7",
+      "S11"
+    ],
+    [
+      "S8",
+      "S11"
+    ],
+    [
+      "S9",
+      "S11"
+    ],
+    [
+      "S10",
+      "S11"
+    ],
+    [
+      "S11",
+      "S12"
+    ],
+    [
+      "S12",
+      "S13"
+    ]
+  ]
+}

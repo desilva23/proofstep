@@ -1,0 +1,131 @@
+{
+  "name": "dressedupmeatballs",
+  "steps": [
+    {
+      "id": "S1",
+      "text": "Peel 1 garlic clove"
+    },
+    {
+      "id": "S2",
+      "text": "Cut 1/8 garlic clove"
+    },
+    {
+      "id": "S3",
+      "text": "Peel one medium onion"
+    },
+    {
+      "id": "S4",
+      "text": "Place 5 meatballs in a Microwave-safe plate"
+    },
+    {
+      "id": "S5",
+      "text": "Cut 1/4 medium carrot into short, thin strips"
+    },
+    {
+      "id": "S6",
+      "text": "Mix 1/4 cup sweet-and-sour sauce and 1/2 teaspoon soy sauce in a small bowl"
+    },
+    {
+      "id": "S7",
+      "text": "Mince 1/8 garlic clove"
+    },
+    {
+      "id": "S8",
+      "text": "Cut onion into two pieces"
+    },
+    {
+      "id": "S9",
+      "text": "Slice 1/8 medium onion"
+    },
+    {
+      "id": "S10",
+      "text": "Top the plate with the carrots, onion, garlic and 1/4 tsp pepper powder"
+    },
+    {
+      "id": "S11",
+      "text": "Pour the sauces over the meatballs"
+    },
+    {
+      "id": "S12",
+      "text": "Microwave the plate, covered, on high for 1.5 minutes"
+    },
+    {
+      "id": "S13",
+      "text": "Stir the contents in the microwave with a spoon"
+    },
+    {
+      "id": "S14",
+      "text": "Microwave the plate, covered, on high for 1.5 minutes"
+    },
+    {
+      "id": "S15",
+      "text": "Stir the contents in the microwave with a spoon"
+    },
+    {
+      "id": "S16",
+      "text": "Microwave for 1 more minute"
+    }
+  ],
+  "rules": [
+    [
+      "S1",
+      "S2"
+    ],
+    [
+      "S2",
+      "S7"
+    ],
+    [
+      "S3",
+      "S8"
+    ],
+    [
+      "S4",
+      "S10"
+    ],
+    [
+      "S5",
+      "S10"
+    ],
+    [
+      "S6",
+      "S11"
+    ],
+    [
+      "S7",
+      "S10"
+    ],
+    [
+      "S8",
+      "S9"
+    ],
+    [
+      "S9",
+      "S10"
+    ],
+    [
+      "S10",
+      "S11"
+    ],
+    [
+      "S11",
+      "S12"
+    ],
+    [
+      "S12",
+      "S13"
+    ],
+    [
+      "S13",
+      "S14"
+    ],
+    [
+      "S14",
+      "S15"
+    ],
+    [
+      "S15",
+      "S16"
+    ]
+  ]
+}

@@ -1,0 +1,155 @@
+{
+  "name": "pinwheels",
+  "steps": [
+    {
+      "id": "S1",
+      "text": "Place 8-inch flour tortilla on cutting board"
+    },
+    {
+      "id": "S2",
+      "text": "Use a butter knife to scoop nut butter from the jar"
+    },
+    {
+      "id": "S3",
+      "text": "Spread nut butter onto the tortilla, leaving 1/2-inch uncovered at the edges"
+    },
+    {
+      "id": "S4",
+      "text": "Clean the knife by wiping it with a paper towel"
+    },
+    {
+      "id": "S5",
+      "text": "Use the knife to scoop jelly from the jar"
+    },
+    {
+      "id": "S6",
+      "text": "Spread jelly over the nut butter"
+    },
+    {
+      "id": "S7",
+      "text": "Clean the knife by wiping with a paper towel"
+    },
+    {
+      "id": "S8",
+      "text": "Roll the tortilla from one end to the other into a log shape, about 1.5 inches thick. Roll it tight enough to prevent gaps, but not so tight that the filling leaks"
+    },
+    {
+      "id": "S9",
+      "text": "Secure the rolled tortilla by inserting 5 toothpicks about 1 inch apart"
+    },
+    {
+      "id": "S10",
+      "text": "Trim the ends of the tortilla roll with the butter knife, leaving 1/2 inch margin between the last toothpick and the end of the roll"
+    },
+    {
+      "id": "S11",
+      "text": "Discard ends of the tortilla"
+    },
+    {
+      "id": "S12",
+      "text": "Slide floss under the tortilla, perpendicular to the length of the roll"
+    },
+    {
+      "id": "S13",
+      "text": "Place the floss halfway between toothpicks"
+    },
+    {
+      "id": "S14",
+      "text": "Cross the floss's two ends over the tortilla roll's top"
+    },
+    {
+      "id": "S15",
+      "text": "pull the floss ends in opposite directions to slice"
+    },
+    {
+      "id": "S16",
+      "text": "Continue slicing with floss to create 1 more pinwheel"
+    },
+    {
+      "id": "S17",
+      "text": "Continue slicing with floss to create 1 more pinwheel"
+    },
+    {
+      "id": "S18",
+      "text": "Continue slicing with floss to create 1 more pinwheel"
+    },
+    {
+      "id": "S19",
+      "text": "Place the pinwheels on a plate"
+    }
+  ],
+  "rules": [
+    [
+      "S1",
+      "S2"
+    ],
+    [
+      "S2",
+      "S3"
+    ],
+    [
+      "S3",
+      "S4"
+    ],
+    [
+      "S4",
+      "S5"
+    ],
+    [
+      "S5",
+      "S6"
+    ],
+    [
+      "S6",
+      "S7"
+    ],
+    [
+      "S7",
+      "S8"
+    ],
+    [
+      "S8",
+      "S9"
+    ],
+    [
+      "S9",
+      "S10"
+    ],
+    [
+      "S10",
+      "S11"
+    ],
+    [
+      "S10",
+      "S12"
+    ],
+    [
+      "S12",
+      "S13"
+    ],
+    [
+      "S13",
+      "S14"
+    ],
+    [
+      "S14",
+      "S15"
+    ],
+    [
+      "S15",
+      "S16"
+    ],
+    [
+      "S16",
+      "S17"
+    ],
+    [
+      "S17",
+      "S18"
+    ],
+    [
+      "S18",
+      "S19"
+    ]
+  ]
+}

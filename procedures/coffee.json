@@ -1,0 +1,131 @@
+{
+  "name": "coffee",
+  "steps": [
+    {
+      "id": "S1",
+      "text": "Prepare the filter insert by folding the paper filter in half to create a semi-circle, and in half again to create a quarter-circle"
+    },
+    {
+      "id": "S2",
+      "text": "Weigh the coffee beans (0.8oz-0.12 oz)"
+    },
+    {
+      "id": "S3",
+      "text": "Grind the coffee beans until the coffee grounds are the consistency of coarse sand, about 20 seconds"
+    },
+    {
+      "id": "S4",
+      "text": "Measure 12 ounces of cold water"
+    },
+    {
+      "id": "S5",
+      "text": "Place the dripper on top of a coffee mug"
+    },
+    {
+      "id": "S6",
+      "text": "Place the paper filter in the dripper"
+    },
+    {
+      "id": "S7",
+      "text": "spread open filter in dripper to create a cone"
+    },
+    {
+      "id": "S8",
+      "text": "Transfer the grounds to the filter cone"
+    },
+    {
+      "id": "S9",
+      "text": "transfer water to a kettle"
+    },
+    {
+      "id": "S10",
+      "text": "Boil the water. (While the water is boiling, assemble the filter cone)"
+    },
+    {
+      "id": "S11",
+      "text": "Once the water has boiled, check the temperature of the water. (The water should be between 195-205 degrees Fahrenheit or between 91-96 degrees Celsius. If the water is too hot, let it cool briefly.)"
+    },
+    {
+      "id": "S12",
+      "text": "Pour a small amount of water into the filter to wet the grounds"
+    },
+    {
+      "id": "S13",
+      "text": "Wait about 30 seconds for the coffee to bloom. (You will see small bubbles or foam on the coffee grounds during this step.)"
+    },
+    {
+      "id": "S14",
+      "text": "Slowly pour the rest of the water over the grounds in a circular motion. Do not overfill beyond the top of the paper filter"
+    },
+    {
+      "id": "S15",
+      "text": "Let the coffee drain completely into the mug before removing the dripper"
+    },
+    {
+      "id": "S16",
+      "text": "Discard the paper filter and coffee grounds"
+    }
+  ],
+  "rules": [
+    [
+      "S1",
+      "S6"
+    ],
+    [
+      "S2",
+      "S3"
+    ],
+    [
+      "S3",
+      "S8"
+    ],
+    [
+      "S4",
+      "S9"
+    ],
+    [
+      "S5",
+      "S6"
+    ],
+    [
+      "S6",
+      "S7"
+    ],
+    [
+      "S7",
+      "S8"
+    ],
+    [
+      "S8",
+      "S12"
+    ],
+    [
+      "S9",
+      "S10"
+    ],
+    [
+      "S10",
+      "S11"
+    ],
+    [
+      "S11",
+      "S12"
+    ],
+    [
+      "S12",
+      "S13"
+    ],
+    [
+      "S13",
+      "S14"
+    ],
+    [
+      "S14",
+      "S15"
+    ],
+    [
+      "S15",
+      "S16"
+    ]
+  ]
+}
