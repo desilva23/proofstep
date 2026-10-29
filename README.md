@@ -93,7 +93,15 @@ Every API answer is cached under `data/cache/`, so re-running costs nothing. Eac
 
 ## Procedures
 
-A procedure is a JSON file with numbered steps and "this before that" rules. See `procedures/` for the 24 CaptainCook4D recipes, generated from the dataset's task graphs.
+A procedure is a JSON file with numbered steps and "this before that" rules. `procedures/` has the 24 CaptainCook4D recipes, generated from the dataset's task graphs.
+
+**Your own procedure:** write the instructions in plain words, and Spark turns them into a checklist. It splits combined sentences into separate actions, drops tips and warnings, and adds an order rule only where a step depends on an earlier one. This reads the text only and costs a fraction of a cent.
+
+```bash
+python -m proofstep write my_instructions.txt     # saves procedures/<name>.json
+```
+
+In the viewer, **New check** does the whole thing: type the instructions (or pick a saved procedure), upload a video, see the estimated cost, confirm, and watch the result appear. Uploads are shrunk to 360p without audio before anything is sent. The viewer asks you to confirm that everyone in the video agreed to it being analysed, because the default Contributor models let Meta use what is sent.
 
 ## Data
 

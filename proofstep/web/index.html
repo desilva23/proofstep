@@ -24,8 +24,53 @@
         <input type="checkbox" id="labels">
         <span>Compare with human labels</span>
       </label>
+      <button type="button" class="primary" id="new-check">New check</button>
     </div>
   </header>
+
+  <dialog id="wizard" aria-labelledby="wizard-title">
+    <form method="dialog" class="wizard" id="wizard-form">
+      <header class="wizard-head">
+        <h2 id="wizard-title">Check a video against your own procedure</h2>
+        <button type="submit" class="close" aria-label="Close">×</button>
+      </header>
+
+      <section class="stage-block">
+        <h3><span class="num">1</span>Procedure</h3>
+        <label class="field col">
+          <span>Use a saved one</span>
+          <select id="proc-pick"></select>
+        </label>
+        <p class="or">or type the instructions in plain words</p>
+        <textarea id="proc-text" rows="5" placeholder="Put on gloves. Check the fridge thermometer reads 5°C or below and write it in the log. Wipe the door seals with sanitiser…"></textarea>
+        <div class="row-actions">
+          <button type="button" id="proc-make">Turn into a checklist</button>
+          <span class="hint" id="proc-status"></span>
+        </div>
+        <div id="proc-view" class="proc-view"></div>
+      </section>
+
+      <section class="stage-block">
+        <h3><span class="num">2</span>Video</h3>
+        <input type="file" id="video-file" accept="video/mp4,video/quicktime,video/webm,.mp4,.mov,.m4v,.webm">
+        <div class="progress" hidden><div id="upload-bar"></div></div>
+        <span class="hint" id="video-status">MP4, MOV or WebM, up to 20 minutes. It's shrunk to 360p before anything is sent.</span>
+      </section>
+
+      <section class="stage-block">
+        <h3><span class="num">3</span>Run</h3>
+        <p class="cost" id="cost">Pick a procedure and a video to see the cost.</p>
+        <label class="toggle consent">
+          <input type="checkbox" id="consent">
+          <span>Everyone in this video has agreed to it being analysed. I understand proofstep uses Meta's Contributor models by default, and Meta may use what is sent to improve them.</span>
+        </label>
+        <div class="row-actions">
+          <button type="button" class="primary" id="run-check" disabled>Run check</button>
+          <span class="hint" id="job-status"></span>
+        </div>
+      </section>
+    </form>
+  </dialog>
 
   <main class="layout">
     <section class="watch" aria-label="Video and timeline">

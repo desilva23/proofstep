@@ -65,12 +65,23 @@ def main() -> None:
         p.add_argument("--effort", default="medium", choices=["minimal", "low", "medium", "high", "xhigh"])
         p.add_argument("--no-second-look", dest="look_again", action="store_false",
                        help="stop after the first pass (to compare with the full pipeline)")
-    srv = sub.add_parser("serve", help="open the saved reports in a local web viewer (no API calls)")
+    srv = sub.add_parser("serve", help="open the local web viewer")
     srv.add_argument("--port", type=int, default=8765)
+    wr = sub.add_parser("write", help="turn plain-text instructions (a file, or stdin) into a procedure file")
+    wr.add_argument("instructions", nargs="?", type=Path, help="text file; reads stdin if left out")
+    wr.add_argument("-o", "--out", type=Path, help="where to save it (default procedures/<name>.json)")
     args = ap.parse_args()
 
     try:
-        if args.cmd == "serve":
+        if args.cmd == "write":
+            from . import author
+            text = args.instructions.read_text() if args.instructions else sys.stdin.read()
+            procedure = author.write(text)
+            out = args.out or config.ROOT / "procedures" / f"{author.slug(procedure.name)}.json"
+            procedure.save(out)
+            print(procedure.describe())
+            print(f"\nSaved to {out}")
+        elif args.cmd == "serve":
             from .serve import serve
             serve(args.port)
         elif args.cmd == "models":
@@ -87,7 +98,7 @@ def main() -> None:
                 report = run(procedure, cc4d.fetch_video(rid), max_sam_usd=args.max_sam_usd, effort=args.effort,
                              look_again=args.look_again)
                 show(report, truth)
-    except (api.ApiError, evidence.TooExpensive) as e:
+    except (api.ApiError, evidence.TooExpensive, ValueError) as e:
         sys.exit(f"\n{e}")
 
 

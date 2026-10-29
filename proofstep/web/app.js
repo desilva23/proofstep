@@ -245,18 +245,22 @@ async function load(name, stepId) {
   else setHash();
 }
 
-async function init() {
+async function fillRuns() {
   const runs = await (await fetch("/api/runs")).json();
-  if (!runs.length) {
-    $("steps").replaceChildren(el("li", { class: "empty" }, "No reports yet. Run python -m proofstep check or cc4d first."));
-    return;
-  }
   const groups = {};
   for (const r of runs) (groups[r.procedure] ||= []).push(r);
   $("run").replaceChildren(...Object.entries(groups).map(([proc, list]) =>
     el("optgroup", { label: proc }, list.map((r) => el("option", { value: r.name },
       `${r.recording || r.name} · ${r.counts.verified}✓ ${r.counts.missing}✗ ${r.counts.cant_verify}?`)))));
+  return runs;
+}
 
+async function init() {
+  const runs = await fillRuns();
+  if (!runs.length) {
+    $("steps").replaceChildren(el("li", { class: "empty" }, "No reports yet. Use New check, or run python -m proofstep check."));
+    return;
+  }
   const hash = readHash();
   const first = runs.find((r) => r.name === hash.run) || runs.find((r) => r.name === "8_3_360p") || runs[0];
   await load(first.name, hash.step);
@@ -287,3 +291,142 @@ window.addEventListener("resize", () => { sizeCanvas(); placePlayhead(); draw();
 new ResizeObserver(() => { sizeCanvas(); draw(); }).observe($("stage"));
 
 init();
+
+// New check: procedure, then video, then cost and consent, then a background job.
+
+const wiz = { procedure: null, video: null, seconds: 0, job: null };
+
+function wizStatus(id, text, error = false) {
+  $(id).textContent = text;
+  $(id).classList.toggle("error", error);
+}
+
+async function post(url, body) {
+  const res = await fetch(url, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
+  return data;
+}
+
+function showProcedure(proc) {
+  $("proc-view").replaceChildren(
+    el("ol", {}, proc.steps.map((s) => el("li", {}, s.text))),
+    proc.rules.length ? el("p", { class: "rules" }, `Must happen in order: ${proc.rules.map(([a, b]) => `${a} before ${b}`).join(", ")}`) : null);
+}
+
+async function fillProcedures(selected) {
+  const list = await (await fetch("/api/procedures")).json();
+  $("proc-pick").replaceChildren(el("option", { value: "" }, "Choose…"),
+    ...list.map((p) => el("option", { value: p.file }, `${p.name} (${p.steps} steps)`)));
+  if (selected) $("proc-pick").value = selected;
+}
+
+async function pickProcedure(file) {
+  wiz.procedure = file || null;
+  if (file) showProcedure(await (await fetch(`/api/procedure/${encodeURIComponent(file)}`)).json());
+  else $("proc-view").replaceChildren();
+  updateCost();
+}
+
+async function updateCost() {
+  $("run-check").disabled = true;
+  if (!wiz.procedure || !wiz.video) {
+    $("cost").textContent = "Pick a procedure and a video to see the cost.";
+    return;
+  }
+  try {
+    const est = await post("/api/estimate", { procedure: wiz.procedure, video: wiz.video });
+    $("cost").textContent = `About $${est.likely_usd.toFixed(2)} for a ${clock(wiz.seconds)} video, almost all of it SAM. A safety cap stops SAM's search if it would cost more than $${est.cap_usd.toFixed(2)}.`;
+    $("run-check").disabled = !$("consent").checked;
+  } catch (e) {
+    $("cost").textContent = e.message;
+  }
+}
+
+function upload(file) {
+  return new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    xhr.open("POST", `/api/upload?name=${encodeURIComponent(file.name)}`);
+    xhr.upload.onprogress = (e) => { if (e.lengthComputable) $("upload-bar").style.width = `${(100 * e.loaded) / e.total}%`; };
+    xhr.upload.onload = () => wizStatus("video-status", "Uploaded. Shrinking it to 360p…");
+    xhr.onload = () => {
+      const data = JSON.parse(xhr.responseText || "{}");
+      xhr.status === 200 ? resolve(data) : reject(new Error(data.error || `HTTP ${xhr.status}`));
+    };
+    xhr.onerror = () => reject(new Error("upload failed"));
+    xhr.send(file);
+  });
+}
+
+async function pollJob() {
+  if (!wiz.job) return;
+  const info = await (await fetch(`/api/job/${wiz.job}`)).json();
+  if (info.status === "running") {
+    wizStatus("job-status", `${info.progress} (${clock(info.elapsed)})`);
+    setTimeout(pollJob, 2000);
+    return;
+  }
+  wiz.job = null;
+  if (info.status === "failed") {
+    wizStatus("job-status", `Failed: ${info.error || "see the log in runs/logs"}`, true);
+    $("run-check").disabled = false;
+    return;
+  }
+  wizStatus("job-status", "Done.");
+  await fillRuns();
+  $("wizard").close();
+  await load(info.run);
+}
+
+$("new-check").addEventListener("click", async () => {
+  await fillProcedures(wiz.procedure);
+  $("wizard").showModal();
+});
+$("proc-pick").addEventListener("change", (e) => pickProcedure(e.target.value));
+$("proc-make").addEventListener("click", async () => {
+  const text = $("proc-text").value.trim();
+  if (!text) return wizStatus("proc-status", "Type the instructions first.", true);
+  $("proc-make").disabled = true;
+  wizStatus("proc-status", "Spark is reading the instructions…");
+  try {
+    const out = await post("/api/procedure", { text });
+    await fillProcedures(out.file);
+    await pickProcedure(out.file);
+    wizStatus("proc-status", `Saved as "${out.procedure.name}". Check the steps below.`);
+  } catch (e) {
+    wizStatus("proc-status", e.message, true);
+  } finally {
+    $("proc-make").disabled = false;
+  }
+});
+$("video-file").addEventListener("change", async (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  wiz.video = null;
+  document.querySelector(".progress").hidden = false;
+  $("upload-bar").style.width = "0";
+  wizStatus("video-status", `Uploading ${file.name}…`);
+  try {
+    const out = await upload(file);
+    wiz.video = out.video;
+    wiz.seconds = out.seconds;
+    wizStatus("video-status", `Ready: ${clock(out.seconds)} long.`);
+  } catch (err) {
+    wizStatus("video-status", err.message, true);
+  }
+  updateCost();
+});
+$("consent").addEventListener("change", updateCost);
+$("run-check").addEventListener("click", async () => {
+  $("run-check").disabled = true;
+  try {
+    const out = await post("/api/check", { procedure: wiz.procedure, video: wiz.video });
+    wiz.job = out.job;
+    wizStatus("job-status", "Started. Spark watches first, then SAM; this takes a few minutes.");
+    setTimeout(pollJob, 1500);
+  } catch (e) {
+    wizStatus("job-status", e.message, true);
+    $("run-check").disabled = false;
+  }
+});
+
