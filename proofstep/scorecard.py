@@ -2,6 +2,8 @@
 
     python -m proofstep.scorecard run --workers 5     # every test recording; cached answers are reused
     python -m proofstep.scorecard report              # scores whatever has been run; writes eval/scorecard.md
+
+--set heldout uses the held-out set instead, chosen and label-checked after the rules were frozen.
 """
 
 import argparse
@@ -15,23 +17,28 @@ from . import api, config
 from .datasets import captaincook4d as cc4d
 from .decide import CANT_VERIFY, MISSING, VERIFIED
 
-TESTSET = config.ROOT / "eval" / "captaincook4d.json"
-OUT = config.ROOT / "eval" / "scorecard.md"
+EVAL = config.ROOT / "eval"
+# name: (test set file, results file, how the report describes the set)
+SETS = {
+    "dev": ("captaincook4d.json", "scorecard.md", "the development set, which the rules were developed on"),
+    "heldout": ("captaincook4d_heldout.json", "scorecard_heldout.md",
+                "the held-out set, chosen and label-checked after the rules were frozen"),
+}
 LOGS = config.RUNS / "logs"
 
 SYSTEMS = {"spark": "Spark alone", "first": "proofstep, first pass", "full": "proofstep with second look"}
 SPARK_TO_STATUS = {"done": VERIFIED, "not_done": MISSING, "cannot_tell": CANT_VERIFY}
 
 
-def _test_ids() -> list[str]:
-    return [r["id"] for r in json.loads(TESTSET.read_text())["recordings"]]
+def _test_ids(test_set: str = "dev") -> list[str]:
+    return [r["id"] for r in json.loads((EVAL / SETS[test_set][0]).read_text())["recordings"]]
 
 
 def _costs() -> list[dict]:
     return [json.loads(line) for line in api.COSTS.read_text().splitlines() if line.strip()] if api.COSTS.exists() else []
 
 
-def run(workers: int, max_sam_usd: float, max_total_usd: float) -> None:
+def run(test_set: str, workers: int, max_sam_usd: float, max_total_usd: float) -> None:
     start = sum(c["usd"] for c in _costs())
     LOGS.mkdir(parents=True, exist_ok=True)
 
@@ -49,7 +56,7 @@ def run(workers: int, max_sam_usd: float, max_total_usd: float) -> None:
                     return f"failed, see {log}"
         return "done"
 
-    ids = _test_ids()
+    ids = _test_ids(test_set)
     with ThreadPoolExecutor(workers) as pool:
         futures = {pool.submit(one, rid): rid for rid in ids}
         for n, future in enumerate(as_completed(futures), 1):
@@ -80,8 +87,9 @@ def _spark_order_flag(report: dict) -> bool:
     return any(a in start and b in start and start[b] < start[a] for a, b in procedure.rules)
 
 
-def report() -> str:
-    ids = _test_ids()
+def report(test_set: str = "dev") -> str:
+    ids = _test_ids(test_set)
+    set_file, out_file, described = SETS[test_set]
     totals = {k: {"right": 0, "false_pass": 0, "false_alarm": 0, "abstain": 0, "skipped_caught": 0,
                   "order_caught": 0, "order_false": 0} for k in SYSTEMS}
     rows, missing_runs = [], []
@@ -133,7 +141,7 @@ def report() -> str:
     lines = [
         "# Scorecard",
         "",
-        f"{len(rows)} CaptainCook4D recordings from the hand-checked test set (`eval/captaincook4d.json`): "
+        f"{len(rows)} CaptainCook4D recordings from {described} (`eval/{set_file}`), every label checked by eye: "
         f"{n_steps} steps, {n_skipped} of them skipped; {n_order} of the videos have steps out of order. "
         "Each system's answer for each step is compared with the human label.",
         "",
@@ -174,7 +182,7 @@ def report() -> str:
     if missing_runs:
         lines += ["", f"Not run yet: {', '.join(missing_runs)}"]
     text = "\n".join(lines) + "\n"
-    OUT.write_text(text)
+    (EVAL / out_file).write_text(text)
     return text
 
 
@@ -185,11 +193,13 @@ def main() -> None:
     r.add_argument("--workers", type=int, default=5)
     r.add_argument("--max-sam-usd", type=float, default=6.0, help="per video")
     r.add_argument("--max-total-usd", type=float, default=50.0, help="stop starting new videos past this")
-    sub.add_parser("report")
+    rep = sub.add_parser("report")
+    for p in (r, rep):
+        p.add_argument("--set", dest="test_set", choices=list(SETS), default="dev")
     args = ap.parse_args()
     if args.cmd == "run":
-        run(args.workers, args.max_sam_usd, args.max_total_usd)
-    print(report())
+        run(args.test_set, args.workers, args.max_sam_usd, args.max_total_usd)
+    print(report(args.test_set))
 
 
 if __name__ == "__main__":

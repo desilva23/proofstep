@@ -1,6 +1,6 @@
 # Scorecard
 
-20 CaptainCook4D recordings from the hand-checked test set (`eval/captaincook4d.json`): 178 steps, 17 of them skipped; 5 of the videos have steps out of order. Each system's answer for each step is compared with the human label.
+20 CaptainCook4D recordings from the development set, which the rules were developed on (`eval/captaincook4d.json`), every label checked by eye: 178 steps, 17 of them skipped; 5 of the videos have steps out of order. Each system's answer for each step is compared with the human label.
 
 | | Spark alone | proofstep, first pass | proofstep with second look |
 |---|---|---|---|

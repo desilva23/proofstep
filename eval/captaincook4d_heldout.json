@@ -1,0 +1,115 @@
+{
+  "about": "Held-out set: 10 CaptainCook4D recordings from two recipes the development set does not use. Chosen and label-checked after the decision rules were frozen at commit 9c1269e, and committed before being run. Labels were checked by eye the same way as the development set (proofstep.datasets.label_sheets). Recordings were the shortest of each recipe, mixing ones with skipped steps, steps out of order, and none.",
+  "frozen_at": "9c1269e",
+  "totals": {
+    "recordings": 10,
+    "steps": 115,
+    "skipped_steps": 7,
+    "with_order_mistakes": 3,
+    "minutes": 81.1
+  },
+  "recordings": [
+    {
+      "id": "1_32",
+      "recipe": "microwaveeggsandwich",
+      "minutes": 6.0,
+      "skipped": [
+        "S1"
+      ],
+      "order_mistake": true,
+      "notes": "Eggs go into a bowl rather than a ramekin. No cooking spray appears anywhere."
+    },
+    {
+      "id": "1_42",
+      "recipe": "microwaveeggsandwich",
+      "minutes": 6.4,
+      "skipped": [],
+      "order_mistake": true,
+      "notes": "Starts with the egg, microwaves and stirs it, then pours oil on afterwards (its order mistakes)."
+    },
+    {
+      "id": "1_28",
+      "recipe": "microwaveeggsandwich",
+      "minutes": 7.5,
+      "skipped": [
+        "S3"
+      ],
+      "order_mistake": false,
+      "notes": "Only one microwave run (2:35-3:45), after whisking. The labels call it S5 and S3 skipped; calling it S3 with S5 skipped would be just as defensible."
+    },
+    {
+      "id": "1_7",
+      "recipe": "microwaveeggsandwich",
+      "minutes": 10.1,
+      "skipped": [],
+      "order_mistake": false,
+      "notes": ""
+    },
+    {
+      "id": "1_43",
+      "recipe": "microwaveeggsandwich",
+      "minutes": 7.4,
+      "skipped": [
+        "S1"
+      ],
+      "order_mistake": true,
+      "notes": "Replaces 1_34. No cooking spray appears anywhere."
+    },
+    {
+      "id": "9_36",
+      "recipe": "microwavefrenchtoast",
+      "minutes": 6.6,
+      "skipped": [
+        "S3",
+        "S8"
+      ],
+      "order_mistake": false,
+      "notes": "No bread appears anywhere: the result is an egg custard."
+    },
+    {
+      "id": "9_47",
+      "recipe": "microwavefrenchtoast",
+      "minutes": 8.4,
+      "skipped": [
+        "S7",
+        "S8"
+      ],
+      "order_mistake": false,
+      "notes": "The bread is cut but stays on the board; only the egg goes on the plate."
+    },
+    {
+      "id": "9_8",
+      "recipe": "microwavefrenchtoast",
+      "minutes": 9.3,
+      "skipped": [],
+      "order_mistake": false,
+      "notes": ""
+    },
+    {
+      "id": "9_13",
+      "recipe": "microwavefrenchtoast",
+      "minutes": 9.4,
+      "skipped": [],
+      "order_mistake": false,
+      "notes": ""
+    },
+    {
+      "id": "9_108",
+      "recipe": "microwavefrenchtoast",
+      "minutes": 10.0,
+      "skipped": [],
+      "order_mistake": false,
+      "notes": "Replaces 9_45, the only French toast recording with an order mistake."
+    }
+  ],
+  "excluded": [
+    {
+      "id": "1_34",
+      "reason": "Camera points at the microwave and cabinets; the counter is barely in frame (same person and kitchen as 7_30)."
+    },
+    {
+      "id": "9_45",
+      "reason": "Same camera problem as 1_34 and 7_30 (person 6, kitchen 10)."
+    }
+  ]
+}
