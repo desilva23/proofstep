@@ -1,0 +1,208 @@
+{
+  "about": "Test set for the scorecard: 20 CaptainCook4D recordings from three recipes. Every labelled step was checked by eye (four frames across its labelled window) and, for recordings with skipped steps, one frame every 10 seconds across the whole video, using proofstep.datasets.label_sheets. Checked 2026-10-29.",
+  "totals": {
+    "recordings": 20,
+    "steps": 178,
+    "skipped_steps": 17,
+    "with_order_mistakes": 5,
+    "minutes": 125.6
+  },
+  "recordings": [
+    {
+      "id": "8_3",
+      "recipe": "spicedhotchocolate",
+      "minutes": 7.0,
+      "skipped": [],
+      "order_mistake": false,
+      "notes": "The dataset swaps the cinnamon and chocolate labels; fixed in LABEL_SWAPS. The chocolate is two chips dropped into the mug at 2:42."
+    },
+    {
+      "id": "8_50",
+      "recipe": "spicedhotchocolate",
+      "minutes": 4.4,
+      "skipped": [
+        "S3",
+        "S6"
+      ],
+      "order_mistake": true,
+      "notes": "Sugar is powdered sugar from a bag. The chocolate goes into the mug from a zip bag at about 3:03."
+    },
+    {
+      "id": "8_31",
+      "recipe": "spicedhotchocolate",
+      "minutes": 4.5,
+      "skipped": [
+        "S4",
+        "S5"
+      ],
+      "order_mistake": false,
+      "notes": "No sugar or chocolate container is handled anywhere in the video."
+    },
+    {
+      "id": "8_44",
+      "recipe": "spicedhotchocolate",
+      "minutes": 5.8,
+      "skipped": [
+        "S2",
+        "S4"
+      ],
+      "order_mistake": false,
+      "notes": "A single microwave run at the end, so the first microwave step really is skipped. No sugar."
+    },
+    {
+      "id": "8_40",
+      "recipe": "spicedhotchocolate",
+      "minutes": 6.6,
+      "skipped": [],
+      "order_mistake": true,
+      "notes": "Uses a plate instead of a mug (labelled preparation error). Starts with cinnamon and chocolate before the milk."
+    },
+    {
+      "id": "8_25",
+      "recipe": "spicedhotchocolate",
+      "minutes": 7.4,
+      "skipped": [],
+      "order_mistake": false,
+      "notes": "The cinnamon window overlaps the microwave: spoons are fetched while it runs."
+    },
+    {
+      "id": "8_16",
+      "recipe": "spicedhotchocolate",
+      "minutes": 7.7,
+      "skipped": [],
+      "order_mistake": false,
+      "notes": ""
+    },
+    {
+      "id": "12_43",
+      "recipe": "tomatomozzarellasalad",
+      "minutes": 3.3,
+      "skipped": [
+        "S5",
+        "S6",
+        "S8",
+        "S9"
+      ],
+      "order_mistake": false,
+      "notes": "The tomato is diced. After plating only the pepper grinder is used."
+    },
+    {
+      "id": "12_17",
+      "recipe": "tomatomozzarellasalad",
+      "minutes": 4.1,
+      "skipped": [],
+      "order_mistake": false,
+      "notes": ""
+    },
+    {
+      "id": "12_26",
+      "recipe": "tomatomozzarellasalad",
+      "minutes": 5.5,
+      "skipped": [
+        "S9"
+      ],
+      "order_mistake": false,
+      "notes": "No olive oil bottle is used."
+    },
+    {
+      "id": "12_51",
+      "recipe": "tomatomozzarellasalad",
+      "minutes": 4.0,
+      "skipped": [],
+      "order_mistake": false,
+      "notes": ""
+    },
+    {
+      "id": "12_41",
+      "recipe": "tomatomozzarellasalad",
+      "minutes": 7.8,
+      "skipped": [],
+      "order_mistake": true,
+      "notes": "Seasons the tomatoes on the cutting board before plating. Mozzarella is not clearly visible in its labelled window."
+    },
+    {
+      "id": "12_10",
+      "recipe": "tomatomozzarellasalad",
+      "minutes": 6.6,
+      "skipped": [],
+      "order_mistake": false,
+      "notes": "Replaces 12_6, which has no 360p video; same person and kitchen."
+    },
+    {
+      "id": "12_38",
+      "recipe": "tomatomozzarellasalad",
+      "minutes": 6.0,
+      "skipped": [
+        "S1"
+      ],
+      "order_mistake": false,
+      "notes": "The rinse step has times but is tagged Missing Step; the frames show no rinsing, so it counts as skipped."
+    },
+    {
+      "id": "7_32",
+      "recipe": "breakfastburritos",
+      "minutes": 5.9,
+      "skipped": [
+        "S5",
+        "S10"
+      ],
+      "order_mistake": false,
+      "notes": "One sauce jar is used, at the sweet-and-sour step. No salsa or cheese."
+    },
+    {
+      "id": "7_35",
+      "recipe": "breakfastburritos",
+      "minutes": 6.1,
+      "skipped": [
+        "S8"
+      ],
+      "order_mistake": true,
+      "notes": "Sauces go in before microwaving. No stirring after the oregano."
+    },
+    {
+      "id": "7_38",
+      "recipe": "breakfastburritos",
+      "minutes": 7.7,
+      "skipped": [],
+      "order_mistake": true,
+      "notes": "Many steps out of order. The oregano frames are ambiguous."
+    },
+    {
+      "id": "7_1",
+      "recipe": "breakfastburritos",
+      "minutes": 9.0,
+      "skipped": [],
+      "order_mistake": false,
+      "notes": ""
+    },
+    {
+      "id": "7_5",
+      "recipe": "breakfastburritos",
+      "minutes": 9.9,
+      "skipped": [],
+      "order_mistake": false,
+      "notes": ""
+    },
+    {
+      "id": "7_26",
+      "recipe": "breakfastburritos",
+      "minutes": 6.3,
+      "skipped": [
+        "S2",
+        "S8"
+      ],
+      "order_mistake": false,
+      "notes": "Replaces 7_30. A spoon is used while adding the sauces, which makes the skipped mix step easy to mistake."
+    }
+  ],
+  "excluded": [
+    {
+      "id": "12_6",
+      "reason": "No 360p video in the dataset."
+    },
+    {
+      "id": "7_30",
+      "reason": "The camera points at the microwave and cabinets for most of the video; the counter where the cooking happens is barely in frame, so most steps can't be checked from this view."
+    }
+  ]
+}

@@ -105,7 +105,9 @@ def truth(recording_id: str) -> dict:
             unmatched.append(description)
             continue
         errors = ann.get("errors") or []
-        happened = ann["start_time"] >= 0
+        # Skipped steps usually have no times; 4 in the dataset (one in 12_38) keep their times but are
+        # tagged "Missing Step", and the 12_38 frames confirm the step isn't done.
+        happened = ann["start_time"] >= 0 and not any(e["tag"] == "Missing Step" for e in errors)
         steps[sid_of[description]] = {
             "happened": happened,
             "start": ann["start_time"] if happened else None,
@@ -144,9 +146,11 @@ def fetch_annotations() -> None:
 def fetch_video(recording_id: str) -> Path:
     dest = video_path(recording_id)
     if not dest.exists():
-        links = json.loads(LINKS.read_text())
+        url = json.loads(LINKS.read_text()).get(recording_id, {}).get("gopro_360p")
+        if not url:  # 12_6 is the only recording without one
+            raise SystemExit(f"CaptainCook4D has no 360p video for {recording_id}")
         print(f"  downloading {recording_id} (360p)")
-        _download(links[recording_id]["gopro_360p"], dest, timeout=300)
+        _download(url, dest, timeout=300)
     return dest
 
 
