@@ -2,6 +2,8 @@
 
 Checks from a video whether each step of a physical procedure was actually done. When the evidence doesn't settle it, proofstep says **"can't verify, look at 2:42"** instead of guessing.
 
+**Live demo (no install): https://desilva23.github.io/proofstep/**. Open the first video and click step S5.
+
 Built for the Meta Global AI Developer Hackathon (Oct 27 – Nov 4, 2026) on the Meta Model API: **Muse Spark** watches the video, and **SAM 3.1** checks the physical evidence.
 
 ## Why two models
@@ -93,7 +95,9 @@ To look through the results:
 python -m proofstep serve         # then open http://localhost:8765
 ```
 
-The viewer shows the video with SAM's box around the evidence object, a timeline of every step (green verified, red missing, amber can't verify, blue where the object was in hand), and each step's reasoning. Clicking a step jumps to the moment that matters. For CaptainCook4D videos, "Compare with human labels" overlays the dataset's labels and marks each answer right or wrong. It reads saved results only and never calls the API. A link like `http://localhost:8765/#run=8_3_360p&step=S5` opens a specific step.
+The viewer shows the video with SAM's box around the evidence object, a timeline of every step (green verified, red missing, amber can't verify, blue where the object was in hand), and each step's reasoning. Clicking a step jumps to the moment that matters. For CaptainCook4D videos, "Compare with human labels" overlays the dataset's labels and marks each answer right or wrong. Browsing reads saved results only. A link like `http://localhost:8765/#run=8_3_360p&step=S5` opens a specific step.
+
+`python -m proofstep export <run>...` writes chosen reports as a static copy of the viewer into `docs/`, which is what the live demo serves.
 
 Every API answer is cached under `data/cache/`, so re-running costs nothing. Each paid call is logged to `data/costs.jsonl`. SAM is billed per frame ($0.20 per 1,000), which makes it the main cost: about $0.10 per object for a 4-minute video at 2 frames per second. `--max-sam-usd` (default $3) stops a run that would cost more per video.
 

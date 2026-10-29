@@ -67,13 +67,19 @@ def main() -> None:
                        help="stop after the first pass (to compare with the full pipeline)")
     srv = sub.add_parser("serve", help="open the local web viewer")
     srv.add_argument("--port", type=int, default=8765)
+    ex = sub.add_parser("export", help="write chosen reports as a static site (no server needed)")
+    ex.add_argument("runs", nargs="+", help="run names, optionally name=public:title")
+    ex.add_argument("--out", type=Path, default=config.ROOT / "docs")
     wr = sub.add_parser("write", help="turn plain-text instructions (a file, or stdin) into a procedure file")
     wr.add_argument("instructions", nargs="?", type=Path, help="text file; reads stdin if left out")
     wr.add_argument("-o", "--out", type=Path, help="where to save it (default procedures/<name>.json)")
     args = ap.parse_args()
 
     try:
-        if args.cmd == "write":
+        if args.cmd == "export":
+            from .export import export
+            export(args.runs, args.out)
+        elif args.cmd == "write":
             from . import author
             text = args.instructions.read_text() if args.instructions else sys.stdin.read()
             procedure = author.write(text)

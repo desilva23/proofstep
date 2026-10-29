@@ -9,6 +9,14 @@ const ctx = canvas.getContext("2d");
 
 const state = { detail: null, selected: null, duration: 0 };
 
+// A published copy (python -m proofstep export) is plain files: same data, no server, no New check.
+const STATIC = Boolean(window.PROOFSTEP_STATIC);
+const urls = {
+  runs: () => (STATIC ? "api/runs.json" : "api/runs"),
+  run: (name) => `api/run/${encodeURIComponent(name)}${STATIC ? ".json" : ""}`,
+  video: (name) => `video/${encodeURIComponent(name)}${STATIC ? ".mp4" : ""}`,
+};
+
 function clock(t) {
   const s = Math.max(0, Math.floor(t));
   return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
@@ -225,7 +233,7 @@ function frame() {
 }
 
 async function load(name, stepId) {
-  const res = await fetch(`/api/run/${encodeURIComponent(name)}`);
+  const res = await fetch(urls.run(name));
   if (!res.ok) {
     $("steps").replaceChildren(el("li", { class: "empty" }, "Couldn't load this report."));
     return;
@@ -237,7 +245,7 @@ async function load(name, stepId) {
   $("run").value = name;
   $("labels").disabled = !detail.truth;
   document.body.classList.toggle("show-truth", $("labels").checked && !!detail.truth);
-  video.src = `/video/${encodeURIComponent(name)}`;
+  video.src = urls.video(name);
   renderSummary(detail.report, detail.truth);
   renderTimeline(detail.report, detail.truth, detail.boxes);
   renderSteps(detail.report, detail.truth);
@@ -246,12 +254,12 @@ async function load(name, stepId) {
 }
 
 async function fillRuns() {
-  const runs = await (await fetch("/api/runs")).json();
+  const runs = await (await fetch(urls.runs())).json();
   const groups = {};
   for (const r of runs) (groups[r.procedure] ||= []).push(r);
   $("run").replaceChildren(...Object.entries(groups).map(([proc, list]) =>
     el("optgroup", { label: proc }, list.map((r) => el("option", { value: r.name },
-      `${r.recording || r.name} · ${r.counts.verified}✓ ${r.counts.missing}✗ ${r.counts.cant_verify}?`)))));
+      `${r.title || r.recording || r.name} · ${r.counts.verified}✓ ${r.counts.missing}✗ ${r.counts.cant_verify}?`)))));
   return runs;
 }
 
@@ -315,7 +323,7 @@ function showProcedure(proc) {
 }
 
 async function fillProcedures(selected) {
-  const list = await (await fetch("/api/procedures")).json();
+  const list = await (await fetch("api/procedures")).json();
   $("proc-pick").replaceChildren(el("option", { value: "" }, "Choose…"),
     ...list.map((p) => el("option", { value: p.file }, `${p.name} (${p.steps} steps)`)));
   if (selected) $("proc-pick").value = selected;
@@ -323,7 +331,7 @@ async function fillProcedures(selected) {
 
 async function pickProcedure(file) {
   wiz.procedure = file || null;
-  if (file) showProcedure(await (await fetch(`/api/procedure/${encodeURIComponent(file)}`)).json());
+  if (file) showProcedure(await (await fetch(`api/procedure/${encodeURIComponent(file)}`)).json());
   else $("proc-view").replaceChildren();
   updateCost();
 }
@@ -335,7 +343,7 @@ async function updateCost() {
     return;
   }
   try {
-    const est = await post("/api/estimate", { procedure: wiz.procedure, video: wiz.video });
+    const est = await post("api/estimate", { procedure: wiz.procedure, video: wiz.video });
     $("cost").textContent = `About $${est.likely_usd.toFixed(2)} for a ${clock(wiz.seconds)} video, almost all of it SAM. A safety cap stops SAM's search if it would cost more than $${est.cap_usd.toFixed(2)}.`;
     $("run-check").disabled = !$("consent").checked;
   } catch (e) {
@@ -346,7 +354,7 @@ async function updateCost() {
 function upload(file) {
   return new Promise((resolve, reject) => {
     const xhr = new XMLHttpRequest();
-    xhr.open("POST", `/api/upload?name=${encodeURIComponent(file.name)}`);
+    xhr.open("POST", `api/upload?name=${encodeURIComponent(file.name)}`);
     xhr.upload.onprogress = (e) => { if (e.lengthComputable) $("upload-bar").style.width = `${(100 * e.loaded) / e.total}%`; };
     xhr.upload.onload = () => wizStatus("video-status", "Uploaded. Shrinking it to 360p…");
     xhr.onload = () => {
@@ -360,7 +368,7 @@ function upload(file) {
 
 async function pollJob() {
   if (!wiz.job) return;
-  const info = await (await fetch(`/api/job/${wiz.job}`)).json();
+  const info = await (await fetch(`api/job/${wiz.job}`)).json();
   if (info.status === "running") {
     wizStatus("job-status", `${info.progress} (${clock(info.elapsed)})`);
     setTimeout(pollJob, 2000);
@@ -378,6 +386,7 @@ async function pollJob() {
   await load(info.run);
 }
 
+if (STATIC) $("new-check").hidden = true;
 $("new-check").addEventListener("click", async () => {
   await fillProcedures(wiz.procedure);
   $("wizard").showModal();
@@ -389,7 +398,7 @@ $("proc-make").addEventListener("click", async () => {
   $("proc-make").disabled = true;
   wizStatus("proc-status", "Spark is reading the instructions…");
   try {
-    const out = await post("/api/procedure", { text });
+    const out = await post("api/procedure", { text });
     await fillProcedures(out.file);
     await pickProcedure(out.file);
     wizStatus("proc-status", `Saved as "${out.procedure.name}". Check the steps below.`);
@@ -420,7 +429,7 @@ $("consent").addEventListener("change", updateCost);
 $("run-check").addEventListener("click", async () => {
   $("run-check").disabled = true;
   try {
-    const out = await post("/api/check", { procedure: wiz.procedure, video: wiz.video });
+    const out = await post("api/check", { procedure: wiz.procedure, video: wiz.video });
     wiz.job = out.job;
     wizStatus("job-status", "Started. Spark watches first, then SAM; this takes a few minutes.");
     setTimeout(pollJob, 1500);
