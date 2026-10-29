@@ -35,10 +35,12 @@ def _parse(spec: str) -> tuple[str, str, str | None]:
 
 
 def export(specs: list[str], out: Path) -> None:
-    if out.exists():
-        shutil.rmtree(out)
+    # Videos are kept between exports: re-encoding gives different bytes, and git would store every copy.
+    for sub in ("api", "static"):
+        if (out / sub).exists():
+            shutil.rmtree(out / sub)
     (out / "api" / "run").mkdir(parents=True)
-    (out / "video").mkdir()
+    (out / "video").mkdir(parents=True, exist_ok=True)
     (out / "static").mkdir()
 
     runs = []
@@ -53,14 +55,18 @@ def export(specs: list[str], out: Path) -> None:
         detail["name"] = public
         (out / "api" / "run" / f"{public}.json").write_text(json.dumps(detail))
         # Smaller than the working copy, and with the index first so playback starts before the download ends.
-        subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", str(src), "-an", "-vf", "scale=-2:360",
-                        "-c:v", "libx264", "-preset", "slow", "-crf", "30", "-pix_fmt", "yuv420p",
-                        "-movflags", "+faststart", str(out / "video" / f"{public}.mp4")], check=True)
+        target = out / "video" / f"{public}.mp4"
+        if not target.exists():
+            subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", str(src), "-an", "-vf", "scale=-2:360",
+                            "-c:v", "libx264", "-preset", "slow", "-crf", "30", "-pix_fmt", "yuv420p",
+                            "-movflags", "+faststart", str(target)], check=True)
         runs.append({"name": public, "title": title, "procedure": report["procedure"], "counts": report["counts"],
                      "recording": serve._recording_id(name)})
         size = (out / "video" / f"{public}.mp4").stat().st_size / 1e6
         print(f"  {public}: report and {size:.1f} MB video")
     (out / "api" / "runs.json").write_text(json.dumps(runs))
+    for stale in set((out / "video").glob("*.mp4")) - {out / "video" / f"{r['name']}.mp4" for r in runs}:
+        stale.unlink()
 
     for f in ("app.js", "style.css"):
         shutil.copy(serve.WEB / f, out / "static" / f)

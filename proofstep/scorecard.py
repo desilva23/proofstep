@@ -175,8 +175,8 @@ def report(test_set: str = "dev") -> str:
     for rid, *_ in rows:
         truth = cc4d.truth(rid)
         for s in json.loads((config.RUNS / f"{rid}_360p.json").read_text())["steps"]:
-            if s["status"] != CANT_VERIFY:
-                continue
+            if s["status"] != CANT_VERIFY or s["id"] not in truth["steps"]:
+                continue  # only labelled steps, like the table
             at = (s.get("search") or {}).get("pointer")
             if at is None:
                 unpointed += 1
