@@ -35,24 +35,28 @@ So proofstep asks a second, different kind of witness. Spark claims what happene
 
    `--no-second-look` stops after stage 3, for comparison.
 
-## Results so far
+## Results
 
-On 20 hand-checked CaptainCook4D videos (178 steps, 17 skipped), full table in [`eval/scorecard.md`](eval/scorecard.md):
+Two test sets, every label checked by eye:
 
-| | Spark alone | proofstep |
-|---|---|---|
-| **Skipped steps passed as done** | 1 | **0** |
-| Done steps called missing | 12 | **2** |
-| Right when it answers | 93% | **99%** |
-| Can't verify | 2 | 16 (9%) |
-| Skipped steps flagged as missing | 16 of 17 | 13 of 17 (the other 4: can't verify) |
-| Order mistakes caught | 2 of 5 | **4 of 5** |
+- **Held-out set** ([`eval/scorecard_heldout.md`](eval/scorecard_heldout.md)): 10 videos from two recipes the rules never saw (115 steps, 7 skipped). They were picked, label-checked and committed after the rules were frozen at `9c1269e`, then run once.
+- **Development set** ([`eval/scorecard.md`](eval/scorecard.md)): 20 videos from three recipes (178 steps, 17 skipped). The rules were developed while looking at these, so they flatter proofstep.
 
-Wrong answers drop from 13 to 2, and no skipped step is ever passed. The price is "can't verify" on 9% of steps, each with the moment a person should look at.
+| | Spark alone, held-out | proofstep, held-out | Spark alone, dev | proofstep, dev |
+|---|---|---|---|---|
+| Skipped steps passed as done | 2 | 2 | 1 | 0 |
+| Done steps called missing | 6 | 3 | 12 | 2 |
+| Right when it answers | 93% | **95%** | 93% | 99% |
+| Can't verify | 0% | 10% | 1% | 9% |
+| Skipped steps flagged as missing | 5 of 7 | 2 of 7 | 16 of 17 | 13 of 17 |
+| Order mistakes caught | 1 of 3 | 1 of 3 | 2 of 5 | 4 of 5 |
 
-- **Substitutions are flagged, not called missing.** Five steps were done with something other than what was written (powdered sugar, a plate instead of a mug, cooking oil instead of olive oil), and proofstep reports them as done with a substitution.
-- **The two remaining errors:** in `8_50` both models miss chocolate going into the mug at 3:03, and in `12_41` the "olive oil" was apple cider vinegar that never went onto the dish, which the dataset counts as done.
-- **Caveat:** these rules were developed while looking at these 20 videos, so the numbers that count will come from a fresh held-out set.
+**On unseen videos the gain is real but smaller than on the development set:** wrong answers fall from 8 to 5, and 10% of steps go to a person with the moment to check. It does not yet reduce false passes there. What the held-out set shows:
+
+- **Tools used in many steps defeat the "check every moment" rule.** A knife or spoon can be in hand more often than the four moments proofstep checks, so those steps stay "can't verify" (5 of the 12).
+- **SAM never finds an English muffin**, so the three "replace the top of the muffin" steps can't be backed up.
+- **One of the two false passes was flagged as ambiguous before the run.** 1_28 has a single microwave run, which the labels assign to the second microwave step; proofstep assigns it to the first.
+- **Substitutions are flagged, not called missing.** On the development set, five steps done with something other than written (powdered sugar, a plate instead of a mug, cooking oil instead of olive oil) come out as done with a substitution noted.
 
 ## Run it
 
