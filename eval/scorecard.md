@@ -2,24 +2,26 @@
 
 20 CaptainCook4D recordings from the development set, which the rules were developed on (`eval/captaincook4d.json`), every label checked by eye: 178 steps, 17 of them skipped; 5 of the videos have steps out of order. Each system's answer for each step is compared with the human label.
 
-| | Spark alone | proofstep, first pass | proofstep with second look |
-|---|---|---|---|
-| Right | 163 of 178 | 122 of 178 | 160 of 178 |
-| **Wrong: skipped step passed as done** | **1** | **0** | **0** |
-| Wrong: done step called missing | 12 | 0 | 2 |
-| Can't verify | 2 | 56 | 16 |
-| Right when it answers | 93% | 100% | 99% |
-| Skipped steps caught | 16 of 17 | 6 of 17 | 13 of 17 |
-| Order mistakes caught | 2 of 5 | 2 of 5 | 4 of 5 |
-| Order flagged on a video without one | 0 | 0 | 0 |
+| | Spark alone | proofstep, first pass | proofstep, second look | proofstep, second look + search |
+|---|---|---|---|---|
+| Right | 163 of 178 | 122 of 178 | 160 of 178 | 160 of 178 |
+| **Wrong: skipped step passed as done** | **1** | **0** | **0** | **0** |
+| Wrong: done step called missing | 12 | 0 | 2 | 2 |
+| Can't verify | 2 | 56 | 16 | 16 |
+| Right when it answers | 93% | 100% | 99% | 99% |
+| Skipped steps caught | 16 of 17 | 6 of 17 | 13 of 17 | 13 of 17 |
+| Order mistakes caught | 2 of 5 | 2 of 5 | 4 of 5 | 4 of 5 |
+| Order flagged on a video without one | 0 | 0 | 0 | 0 |
 
 Spark alone means its first answer about the whole video, taken at face value: done = verified, skipped = missing, can't tell = can't verify.
 
+Can't verify, with the search: 16 steps. 7 come with a "likely at" moment, and for 6 of those the moment is inside the labelled step (5 s slack); 9 have no pointer.
+
 Verified with a substitution noted (done, but not as written): 8_50 S4: cane sugar instead of white sugar; 8_44 S1: whole milk; 8_40 S2: white plate with small brown piece instead of mug with milk; 12_38 S9: regular cooking oil in a large plastic bottle instead of extra-virgin olive oil; 7_35 S6: plate instead of cutting board
 
-Cost: about $2.21 per video on average (18 videos, 164 steps), almost all of it SAM.
+Cost: about $2.24 per video on average (18 videos, 164 steps), almost all of it SAM.
 
-## Per video (proofstep with second look)
+## Per video (proofstep, second look + search)
 
 | Video | Recipe | Steps | Skipped | Order mistake | Right | Wrong | Can't verify | Order flagged |
 |---|---|---|---|---|---|---|---|---|

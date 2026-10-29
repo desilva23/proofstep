@@ -5,7 +5,7 @@ import json
 import sys
 from pathlib import Path
 
-from . import api, config, decide, evidence, second_look, watch
+from . import api, config, decide, evidence, search, second_look, watch
 from .procedure import Procedure
 
 MARK = {decide.VERIFIED: "VERIFIED", decide.MISSING: "MISSING", decide.CANT_VERIFY: "CAN'T VERIFY"}
@@ -16,11 +16,16 @@ def run(procedure: Procedure, video_path: Path, *, max_sam_usd: float, effort: s
     concepts = [o for s in spark["steps"].values() for o in s["objects"]]
     sam = evidence.gather(video_path, concepts, max_usd=max_sam_usd)
     report = decide.decide(procedure, spark, sam)
+    config.RUNS.mkdir(exist_ok=True)
+    report["video"] = str(video_path)
     if look_again:
         report = second_look.resolve(procedure, video_path, spark, report, max_sam_usd=max_sam_usd, effort=effort)
-    report["video"] = str(video_path)
+        report["video"] = str(video_path)
+        # Kept for comparison: the result before the window search.
+        (config.RUNS / f"{video_path.stem}_no_search.json").write_text(json.dumps(report, indent=2))
+        report = search.search(procedure, video_path, spark, report, effort=effort)
+        report["video"] = str(video_path)
     report["second_look"] = look_again
-    config.RUNS.mkdir(exist_ok=True)
     out = config.RUNS / f"{video_path.stem}{'' if look_again else '_first_look'}.json"
     out.write_text(json.dumps(report, indent=2))
     print(f"Report saved to {out}")

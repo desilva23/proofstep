@@ -1,0 +1,72 @@
+{
+  "about": "Confirmation set for the window search: 5 CaptainCook4D recordings from three recipes no earlier set uses (pinwheels, zoodles, butter corn cup). Picked and label-checked after the search was frozen, committed with it, then run once. Labels checked by eye with proofstep.datasets.label_sheets.",
+  "totals": {
+    "recordings": 5,
+    "steps": 76,
+    "skipped_steps": 15,
+    "with_order_mistakes": 1,
+    "minutes": 31.6
+  },
+  "recordings": [
+    {
+      "id": "10_50",
+      "recipe": "pinwheels",
+      "minutes": 4.2,
+      "skipped": [
+        "S2",
+        "S3",
+        "S13",
+        "S14",
+        "S15",
+        "S18"
+      ],
+      "order_mistake": false,
+      "notes": "Jelly only, no nut butter; the roll is sliced with a knife, so the floss steps are skipped."
+    },
+    {
+      "id": "10_6",
+      "recipe": "pinwheels",
+      "minutes": 5.5,
+      "skipped": [],
+      "order_mistake": false,
+      "notes": ""
+    },
+    {
+      "id": "10_31",
+      "recipe": "pinwheels",
+      "minutes": 6.7,
+      "skipped": [
+        "S12",
+        "S13",
+        "S14"
+      ],
+      "order_mistake": false,
+      "notes": "Sliced with a knife at the end; the floss is barely used."
+    },
+    {
+      "id": "18_31",
+      "recipe": "zoodles",
+      "minutes": 7.4,
+      "skipped": [
+        "S2",
+        "S9",
+        "S10",
+        "S11"
+      ],
+      "order_mistake": true,
+      "notes": "No spiralizer; the zucchini noodles never go into the pan."
+    },
+    {
+      "id": "13_31",
+      "recipe": "buttercorncup",
+      "minutes": 7.8,
+      "skipped": [
+        "S7",
+        "S11"
+      ],
+      "order_mistake": false,
+      "notes": "No butter and no salt; ends with a squeeze of lemon."
+    }
+  ],
+  "excluded": []
+}

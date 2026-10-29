@@ -25,10 +25,13 @@ SETS = {
                 "the held-out set, chosen and label-checked after the rules were frozen"),
     "fresh": ("captaincook4d_fresh.json", "scorecard_fresh.md",
               "a second held-out set, chosen and label-checked after the rules were frozen"),
+    "confirm": ("captaincook4d_confirm.json", "scorecard_confirm.md",
+                "the confirmation set for the window search, chosen and label-checked after it was frozen"),
 }
 LOGS = config.RUNS / "logs"
 
-SYSTEMS = {"spark": "Spark alone", "first": "proofstep, first pass", "full": "proofstep with second look"}
+SYSTEMS = {"spark": "Spark alone", "first": "proofstep, first pass", "nosearch": "proofstep, second look",
+           "full": "proofstep, second look + search"}
 SPARK_TO_STATUS = {"done": VERIFIED, "not_done": MISSING, "cannot_tell": CANT_VERIFY}
 
 
@@ -67,16 +70,18 @@ def run(test_set: str, workers: int, max_sam_usd: float, max_total_usd: float) -
 
 
 def _statuses(rid: str) -> dict[str, dict] | None:
-    full, first = config.RUNS / f"{rid}_360p.json", config.RUNS / f"{rid}_360p_first_look.json"
-    if not (full.exists() and first.exists()):
+    paths = {k: config.RUNS / f"{rid}_360p{suffix}.json"
+             for k, suffix in (("full", ""), ("first", "_first_look"), ("nosearch", "_no_search"))}
+    if not all(p.exists() for p in paths.values()):
         return None
-    full, first = json.loads(full.read_text()), json.loads(first.read_text())
+    full, first, nosearch = (json.loads(paths[k].read_text()) for k in ("full", "first", "nosearch"))
     return {
         "spark": {s["id"]: SPARK_TO_STATUS[s["spark"]["status"]] for s in first["steps"]},
         "first": {s["id"]: s["status"] for s in first["steps"]},
+        "nosearch": {s["id"]: s["status"] for s in nosearch["steps"]},
         "full": {s["id"]: s["status"] for s in full["steps"]},
         "order": {"spark": _spark_order_flag(first), "first": bool(first["order_problems"]),
-                  "full": bool(full["order_problems"])},
+                  "nosearch": bool(nosearch["order_problems"]), "full": bool(full["order_problems"])},
     }
 
 
@@ -165,6 +170,25 @@ def report(test_set: str = "dev") -> str:
     row("Order flagged on a video without one", lambda k: str(t[k]["order_false"]))
     lines += ["", "Spark alone means its first answer about the whole video, taken at face value: done = verified, "
                   "skipped = missing, can't tell = can't verify.", ""]
+    # How useful the search's pointers are: is "likely at T" inside the labelled step (with 5 s of slack)?
+    pointed = right_moment = unpointed = 0
+    for rid, *_ in rows:
+        truth = cc4d.truth(rid)
+        for s in json.loads((config.RUNS / f"{rid}_360p.json").read_text())["steps"]:
+            if s["status"] != CANT_VERIFY:
+                continue
+            at = (s.get("search") or {}).get("pointer")
+            if at is None:
+                unpointed += 1
+                continue
+            pointed += 1
+            label = truth["steps"].get(s["id"])
+            right_moment += bool(label and label["happened"] and label["start"] - 5 <= at <= label["end"] + 5)
+    if pointed or unpointed:
+        lines += [f"Can't verify, with the search: {pointed + unpointed} steps. {pointed} come with a \"likely at\" "
+                  f"moment, and for {right_moment} of those the moment is inside the labelled step (5 s slack); "
+                  f"{unpointed} have no pointer.", ""]
+
     subs = [(rid, s["id"], s["substitution"]) for rid in ids if (config.RUNS / f"{rid}_360p.json").exists()
             for s in json.loads((config.RUNS / f"{rid}_360p.json").read_text())["steps"] if s.get("substitution")]
     if subs:
@@ -174,7 +198,7 @@ def report(test_set: str = "dev") -> str:
         lines += [f"Cost: about ${sum(fresh) / len(fresh):.2f} per video on average ({len(fresh)} videos, "
                   f"{sum(r[2] for r in rows if r[0] not in ('8_3', '8_50'))} steps), almost all of it SAM.", ""]
 
-    lines += ["## Per video (proofstep with second look)", "",
+    lines += ["## Per video (proofstep, second look + search)", "",
               "| Video | Recipe | Steps | Skipped | Order mistake | Right | Wrong | Can't verify | Order flagged |",
               "|---|---|---|---|---|---|---|---|---|"]
     for rid, recipe, steps, skipped, order, per in rows:

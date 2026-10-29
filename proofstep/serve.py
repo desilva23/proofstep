@@ -37,7 +37,7 @@ JOBS: dict[str, dict] = {}
 
 
 def _report_path(name: str) -> Path | None:
-    if not NAME.match(name) or name.endswith("_first_look"):
+    if not NAME.match(name) or name.endswith(("_first_look", "_no_search")):
         return None
     path = config.RUNS / f"{name}.json"
     return path if path.exists() else None
@@ -46,7 +46,7 @@ def _report_path(name: str) -> Path | None:
 def list_runs() -> list[dict]:
     runs = []
     for path in sorted(config.RUNS.glob("*.json")):
-        if path.stem.endswith("_first_look"):
+        if path.stem.endswith(("_first_look", "_no_search")):
             continue
         report = json.loads(path.read_text())
         runs.append({"name": path.stem, "procedure": report["procedure"], "counts": report["counts"],

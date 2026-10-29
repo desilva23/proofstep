@@ -156,7 +156,8 @@ function renderSteps(report, truth) {
     const lookAt = s.look_at ?? (s.status !== "missing" ? s.spark.start : null);
     const foot = el("div", { class: "step-foot" },
       lookAt != null ? el("button", { class: "look", type: "button", onclick: (e) => { e.stopPropagation(); select(s.id); seek(lookAt); } },
-        s.status === "cant_verify" ? `Look at ${clock(lookAt)}` : `Watch ${clock(lookAt)}`) : null,
+        s.status !== "cant_verify" ? `Watch ${clock(lookAt)}`
+          : s.search?.pointer != null ? `Likely at ${clock(lookAt)}` : `Look at ${clock(lookAt)}`) : null,
       s.substitution ? el("span", { class: "sub" }, `Done with a substitution: ${s.substitution}`) : null,
       v ? el("span", { class: `verdict ${v.cls}` }, v.text) : null,
     );
