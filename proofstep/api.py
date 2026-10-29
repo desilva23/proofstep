@@ -23,7 +23,7 @@ TOKEN_PRICES = {
 }
 SAM_USD_PER_FRAME = 0.20 / 1000
 
-UPLOADS = config.CACHE / "uploads.json"
+UPLOADS = config.CACHE / "uploads"  # one small file per upload, so parallel runs never overwrite each other
 RESPONSES = config.CACHE / "responses"
 COSTS = config.DATA / "costs.jsonl"
 
@@ -64,10 +64,11 @@ def upload(path: Path, content_type: str = "video/mp4", ttl_seconds: int = 7 * 8
     """Upload a file for use in requests; reuses the file id while it is still valid."""
     stat = path.stat()
     key = f"{config.API_BASE}|{path.resolve()}|{stat.st_size}|{int(stat.st_mtime)}"
-    cache = json.loads(UPLOADS.read_text()) if UPLOADS.exists() else {}
-    hit = cache.get(key)
-    if hit and hit["expires_at"] > time.time() + 3600:
-        return hit["id"]
+    record = UPLOADS / f"{hashlib.sha256(key.encode()).hexdigest()[:24]}.json"
+    if record.exists():
+        hit = json.loads(record.read_text())
+        if hit["expires_at"] > time.time() + 3600:
+            return hit["id"]
 
     boundary = uuid.uuid4().hex
     fields = {
@@ -84,12 +85,19 @@ def upload(path: Path, content_type: str = "video/mp4", ttl_seconds: int = 7 * 8
     body = head + path.read_bytes() + f"\r\n--{boundary}--\r\n".encode()
 
     print(f"  uploading {path.name} ({stat.st_size / 1e6:.1f} MB)")
-    with _request("POST", "/files", body=body, timeout=900,
-                  headers={"Content-Type": f"multipart/form-data; boundary={boundary}"}) as resp:
-        info = json.load(resp)
-    cache[key] = {"id": info["id"], "expires_at": time.time() + ttl_seconds}
-    UPLOADS.parent.mkdir(parents=True, exist_ok=True)
-    UPLOADS.write_text(json.dumps(cache, indent=2))
+    headers = {"Content-Type": f"multipart/form-data; boundary={boundary}"}
+    try:
+        with _request("POST", "/files", body=body, timeout=900, headers=headers) as resp:
+            info = json.load(resp)
+    except ApiError as e:
+        # One upload in the 20-video scorecard got "Invalid upload request" and went through on a plain retry.
+        if "HTTP 400" not in str(e):
+            raise
+        time.sleep(5)
+        with _request("POST", "/files", body=body, timeout=900, headers=headers) as resp:
+            info = json.load(resp)
+    UPLOADS.mkdir(parents=True, exist_ok=True)
+    record.write_text(json.dumps({"key": key, "id": info["id"], "expires_at": time.time() + ttl_seconds}))
     return info["id"]
 
 

@@ -32,6 +32,25 @@ So proofstep asks a second, different kind of witness. Spark claims what happene
 
    `--no-second-look` stops after stage 3, for comparison.
 
+## Results so far
+
+On 20 hand-checked CaptainCook4D videos (178 steps, 17 skipped), full table in [`eval/scorecard.md`](eval/scorecard.md):
+
+| | Spark alone | proofstep |
+|---|---|---|
+| Wrong answers | 13 | **4** |
+| Right when it answers | 93% | **97%** |
+| Can't verify | 2 | 20 |
+| Skipped steps flagged as missing | 16 of 17 | 8 of 17 |
+| Order mistakes caught | 2 of 5 | 3 of 5 |
+
+proofstep cuts wrong answers by about 70% by saying "can't verify" on 11% of steps. Known weaknesses, being worked on:
+
+- **It gives up half of Spark's correct "missing" calls.** In 8 skipped steps SAM saw a related object in hand (a spoon, a bottle), and the second look correctly explained each one, but a single "no" never marks a step missing. Checking every such moment would let it conclude "missing" honestly.
+- **The one false pass is shared with Spark.** Spark mistook a pepper grinder for salt, and SAM's fallback search for the generic word "box" matched it. Generic fallback names are too weak to count as evidence.
+
+These rules were tuned on the same videos, so the final numbers will come from a fresh held-out set.
+
 ## Run it
 
 Needs Python 3.11+ and ffmpeg. No packages to install.
@@ -57,6 +76,8 @@ A procedure is a JSON file with numbered steps and "this before that" rules. See
 [CaptainCook4D](https://github.com/CaptainCook4D) (Peddi et al., NeurIPS 2024): egocentric cooking videos with step timings and labelled mistakes, including skipped steps and wrong order. Videos are Apache 2.0, annotations MIT, and everyone filmed gave written consent.
 
 One label fix is applied: in recording `8_3` the cinnamon and chocolate step labels are swapped, which we confirmed frame by frame (`LABEL_SWAPS` in `proofstep/datasets/captaincook4d.py`). A step counts as skipped when it has no times or is tagged "Missing Step": four steps in the dataset keep their times despite the tag.
+
+**Scorecard.** `python -m proofstep.scorecard run` checks every test recording (5 at a time, with a spending cap), and `python -m proofstep.scorecard report` scores three systems against the labels: Spark alone, proofstep's first pass, and proofstep with the second look. The results are in `eval/scorecard.md`.
 
 **Test set.** `eval/captaincook4d.json` lists the 20 recordings used for the scorecard: three recipes, 178 steps, 17 of them genuinely skipped, and 5 videos with steps out of order. Every label was checked by eye with `python -m proofstep.datasets.label_sheets <id>`, which lays out four frames per labelled step and, for videos with skipped steps, one frame every 10 seconds. The file records what each check found and why two recordings were left out.
 
