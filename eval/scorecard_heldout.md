@@ -15,7 +15,7 @@
 
 Spark alone means its first answer about the whole video, taken at face value: done = verified, skipped = missing, can't tell = can't verify.
 
-Cost: about $2.69 per video on average (10 videos, 115 steps), almost all of it SAM.
+Cost: about $2.71 per video on average (10 videos, 115 steps), almost all of it SAM.
 
 ## Per video (proofstep with second look)
 

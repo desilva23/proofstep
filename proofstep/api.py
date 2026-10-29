@@ -168,9 +168,19 @@ def cached_stream(cache_key: dict, body_fn, label: str, cost_fn) -> tuple[str, d
     if path.exists():
         saved = json.loads(path.read_text())
         return saved["text"], saved["response"]
-    text, final = stream(body_fn())
+    for attempt in range(3):
+        try:
+            text, final = stream(body_fn())
+            break
+        except ApiError as e:
+            # The model sometimes fails mid-answer ("server_error"); in the held-out run a plain retry worked.
+            if "server_error" not in str(e) or attempt == 2:
+                raise
+            time.sleep(5 * (attempt + 1))
     log_cost(label, cost_fn(final), usage=final.get("usage"))
     final = {k: v for k, v in final.items() if k != "output"}  # the text is saved once, below
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps({"key": cache_key, "text": text, "response": final}))
+    part = path.with_name(f"{path.stem}.{uuid.uuid4().hex[:8]}.part")
+    part.write_text(json.dumps({"key": cache_key, "text": text, "response": final}))
+    part.replace(path)  # never leave a half-written answer in the cache
     return text, final

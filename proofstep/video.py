@@ -1,7 +1,9 @@
 """ffmpeg helpers: probing videos and making the copies each model needs."""
 
 import json
+import os
 import subprocess
+import threading
 from pathlib import Path
 
 from . import config
@@ -29,9 +31,10 @@ def probe(path: Path) -> dict:
 def _ffmpeg(src: Path, dest: Path, args: list[str]) -> Path:
     if not dest.exists():
         dest.parent.mkdir(parents=True, exist_ok=True)
-        part = dest.with_name(dest.stem + ".part" + dest.suffix)
+        # Unique per thread: the second look cuts clips in parallel.
+        part = dest.with_name(f"{dest.stem}.{os.getpid()}-{threading.get_ident()}.part{dest.suffix}")
         subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", str(src), *args, str(part)], check=True)
-        part.rename(dest)
+        os.replace(part, dest)
     return dest
 
 

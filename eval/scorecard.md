@@ -17,7 +17,7 @@ Spark alone means its first answer about the whole video, taken at face value: d
 
 Verified with a substitution noted (done, but not as written): 8_50 S4: cane sugar instead of white sugar; 8_44 S1: whole milk; 8_40 S2: white plate with small brown piece instead of mug with milk; 12_38 S9: regular cooking oil in a large plastic bottle instead of extra-virgin olive oil; 7_35 S6: plate instead of cutting board
 
-Cost: about $2.20 per video on average (18 videos, 164 steps), almost all of it SAM.
+Cost: about $2.21 per video on average (18 videos, 164 steps), almost all of it SAM.
 
 ## Per video (proofstep with second look)
 

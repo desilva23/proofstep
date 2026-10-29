@@ -1,0 +1,112 @@
+{
+  "about": "Second held-out set: 10 CaptainCook4D recordings from two recipes neither earlier set uses (cucumber raita, cheese pimiento). Chosen and label-checked after the rules were frozen at 9c1269e, and committed before being run. Labels were checked by eye the same way as the other sets (proofstep.datasets.label_sheets). Recordings were the shortest of each recipe, mixing ones with skipped steps, steps out of order, and none.",
+  "frozen_at": "9c1269e",
+  "totals": {
+    "recordings": 10,
+    "steps": 110,
+    "skipped_steps": 12,
+    "with_order_mistakes": 6,
+    "minutes": 91.8
+  },
+  "recordings": [
+    {
+      "id": "17_28",
+      "recipe": "cucumberraita",
+      "minutes": 6.8,
+      "skipped": [
+        "S1",
+        "S5",
+        "S7"
+      ],
+      "order_mistake": false,
+      "notes": "No curd whisking, peeling or cumin. Mostly spices into the bowl, then cucumber."
+    },
+    {
+      "id": "17_36",
+      "recipe": "cucumberraita",
+      "minutes": 7.1,
+      "skipped": [
+        "S3",
+        "S6",
+        "S9",
+        "S11"
+      ],
+      "order_mistake": true,
+      "notes": "The cucumber is chopped at the end but never goes into the bowl; nothing is combined."
+    },
+    {
+      "id": "17_43",
+      "recipe": "cucumberraita",
+      "minutes": 8.8,
+      "skipped": [
+        "S7"
+      ],
+      "order_mistake": true,
+      "notes": "The cucumber is chopped unpeeled."
+    },
+    {
+      "id": "17_40",
+      "recipe": "cucumberraita",
+      "minutes": 10.2,
+      "skipped": [
+        "S7"
+      ],
+      "order_mistake": true,
+      "notes": "The cucumber is chopped unpeeled."
+    },
+    {
+      "id": "17_14",
+      "recipe": "cucumberraita",
+      "minutes": 10.4,
+      "skipped": [],
+      "order_mistake": false,
+      "notes": ""
+    },
+    {
+      "id": "27_37",
+      "recipe": "cheesepimiento",
+      "minutes": 8.7,
+      "skipped": [],
+      "order_mistake": true,
+      "notes": ""
+    },
+    {
+      "id": "27_49",
+      "recipe": "cheesepimiento",
+      "minutes": 8.9,
+      "skipped": [],
+      "order_mistake": true,
+      "notes": ""
+    },
+    {
+      "id": "27_38",
+      "recipe": "cheesepimiento",
+      "minutes": 9.7,
+      "skipped": [
+        "S6",
+        "S9"
+      ],
+      "order_mistake": true,
+      "notes": "The cheese is never microwaved, and no salt is added."
+    },
+    {
+      "id": "27_34",
+      "recipe": "cheesepimiento",
+      "minutes": 10.5,
+      "skipped": [
+        "S9"
+      ],
+      "order_mistake": false,
+      "notes": "The camera mostly shows the person's chest; hands and the counter edge stay in view, so steps are visible but hard."
+    },
+    {
+      "id": "27_4",
+      "recipe": "cheesepimiento",
+      "minutes": 10.7,
+      "skipped": [],
+      "order_mistake": false,
+      "notes": ""
+    }
+  ],
+  "excluded": []
+}

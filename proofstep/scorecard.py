@@ -3,7 +3,7 @@
     python -m proofstep.scorecard run --workers 5     # every test recording; cached answers are reused
     python -m proofstep.scorecard report              # scores whatever has been run; writes eval/scorecard.md
 
---set heldout uses the held-out set instead, chosen and label-checked after the rules were frozen.
+--set heldout and --set fresh use the later test sets, each chosen and label-checked after the rules were frozen.
 """
 
 import argparse
@@ -23,6 +23,8 @@ SETS = {
     "dev": ("captaincook4d.json", "scorecard.md", "the development set, which the rules were developed on"),
     "heldout": ("captaincook4d_heldout.json", "scorecard_heldout.md",
                 "the held-out set, chosen and label-checked after the rules were frozen"),
+    "fresh": ("captaincook4d_fresh.json", "scorecard_fresh.md",
+              "a second held-out set, chosen and label-checked after the rules were frozen"),
 }
 LOGS = config.RUNS / "logs"
 

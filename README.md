@@ -58,6 +58,15 @@ Two test sets, every label checked by eye:
 - **One of the two false passes was flagged as ambiguous before the run.** 1_28 has a single microwave run, which the labels assign to the second microwave step; proofstep assigns it to the first.
 - **Substitutions are flagged, not called missing.** On the development set, five steps done with something other than written (powdered sugar, a plate instead of a mug, cooking oil instead of olive oil) come out as done with a substitution noted.
 
+### What didn't work
+
+After the held-out run we tried two fixes, scored them on both sets, and reverted both:
+
+- **"A tool used in several steps can't prove a step on its own."** It turned 27 correct answers into "can't verify" and fixed nothing. A microwave in hand at the right time really is good evidence, even though the recipe uses it twice.
+- **"Check up to 8 moments instead of 4."** It settled 2 abstentions but added 2 false "missing" calls. In both, the real knife moment had already been credited to another knife step, so every remaining moment was something else.
+
+The second failure shows the limit of the current approach: "every sighting is explained" only means "missing" if no sighting was set aside for another step first.
+
 ## Run it
 
 Needs Python 3.11+ and ffmpeg. No packages to install.
