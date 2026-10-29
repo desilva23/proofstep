@@ -37,26 +37,34 @@ So proofstep asks a second, different kind of witness. Spark claims what happene
 
 ## Results
 
-Two test sets, every label checked by eye:
+Three test sets, every label checked by eye:
 
-- **Held-out set** ([`eval/scorecard_heldout.md`](eval/scorecard_heldout.md)): 10 videos from two recipes the rules never saw (115 steps, 7 skipped). They were picked, label-checked and committed after the rules were frozen at `9c1269e`, then run once.
+- **Two held-out sets**: 20 videos from four recipes the rules never saw (225 steps, 19 skipped). Each set was picked, label-checked and committed after the rules were frozen at `9c1269e`, then run once.
+  - [`eval/scorecard_heldout.md`](eval/scorecard_heldout.md): microwave egg sandwich and French toast.
+  - [`eval/scorecard_fresh.md`](eval/scorecard_fresh.md): cucumber raita and cheese pimiento.
 - **Development set** ([`eval/scorecard.md`](eval/scorecard.md)): 20 videos from three recipes (178 steps, 17 skipped). The rules were developed while looking at these, so they flatter proofstep.
 
-| | Spark alone, held-out | proofstep, held-out | Spark alone, dev | proofstep, dev |
+| | Spark alone, 20 unseen videos | proofstep, 20 unseen videos | Spark alone, dev | proofstep, dev |
 |---|---|---|---|---|
-| Skipped steps passed as done | 2 | 2 | 1 | 0 |
-| Done steps called missing | 6 | 3 | 12 | 2 |
-| Right when it answers | 93% | **95%** | 93% | 99% |
-| Can't verify | 0% | 10% | 1% | 9% |
-| Skipped steps flagged as missing | 5 of 7 | 2 of 7 | 16 of 17 | 13 of 17 |
-| Order mistakes caught | 1 of 3 | 1 of 3 | 2 of 5 | 4 of 5 |
+| **Wrong answers** | 21 | **9** | 13 | 2 |
+| Done steps called missing | 16 | **4** | 12 | 2 |
+| Skipped steps passed as done | 5 | 5 | 1 | 0 |
+| Right when it answers | 91% | **95%** | 93% | 99% |
+| Can't verify | 0% | 12% | 1% | 9% |
+| Skipped steps flagged as missing | 14 of 19 | 5 of 19 | 16 of 17 | 13 of 17 |
+| Order mistakes caught | 6 of 9 | 6 of 9 | 2 of 5 | 4 of 5 |
 
-**On unseen videos the gain is real but smaller than on the development set:** wrong answers fall from 8 to 5, and 10% of steps go to a person with the moment to check. It does not yet reduce false passes there. What the held-out set shows:
+**On unseen videos, proofstep cuts wrong answers by more than half (21 to 9) by sending 12% of steps to a person, each with the moment to check.** Almost all of the gain is in false alarms: Spark alone calls 16 completed steps "missing", proofstep 4. It does not reduce false passes (5 each), and it flags far fewer skipped steps as missing, usually abstaining instead. So it is a check on Spark's "not done", not a substitute for a human on "done".
 
-- **Tools used in many steps defeat the "check every moment" rule.** A knife or spoon can be in hand more often than the four moments proofstep checks, so those steps stay "can't verify" (5 of the 12).
-- **SAM never finds an English muffin**, so the three "replace the top of the muffin" steps can't be backed up.
-- **One of the two false passes was flagged as ambiguous before the run.** 1_28 has a single microwave run, which the labels assign to the second microwave step; proofstep assigns it to the first.
-- **Substitutions are flagged, not called missing.** On the development set, five steps done with something other than written (powdered sugar, a plate instead of a mug, cooking oil instead of olive oil) come out as done with a substitution noted.
+What the unseen videos show:
+
+- **False passes come from errors both models share.** In 17_28 both took the brown chaat masala for cumin; when Spark and SAM agree on the wrong thing, there's nothing to disagree about.
+- **Tools used in many steps stay unresolved.** A knife or spoon can be in hand more often than the four moments proofstep checks, so those steps stay "can't verify".
+- **SAM never finds an English muffin**, so "replace the top of the muffin" can't be backed up in any egg-sandwich video.
+- **Some disagreements are about the labels.** 1_28 has a single microwave run, which the labels assign to the second microwave step (flagged before the run). In 17_28 the curd was stirred, not whisked; the dataset calls the step skipped, while proofstep reports it done with that substitution noted.
+- **Substitutions are flagged, not called missing**: powdered sugar, a plate instead of a mug, cooking oil instead of olive oil, cheese melted with the peppers instead of on its own.
+
+Cost: about $2.70 per video on the egg-sandwich and French-toast set and $3.80 on the longer raita and cheese videos, almost all of it SAM.
 
 ### What didn't work
 
