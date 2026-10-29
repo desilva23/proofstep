@@ -5,20 +5,23 @@ import json
 import sys
 from pathlib import Path
 
-from . import api, config, decide, evidence, watch
+from . import api, config, decide, evidence, second_look, watch
 from .procedure import Procedure
 
 MARK = {decide.VERIFIED: "VERIFIED", decide.MISSING: "MISSING", decide.CANT_VERIFY: "CAN'T VERIFY"}
 
 
-def run(procedure: Procedure, video_path: Path, *, max_sam_usd: float, effort: str) -> dict:
+def run(procedure: Procedure, video_path: Path, *, max_sam_usd: float, effort: str, look_again: bool = True) -> dict:
     spark = watch.watch(procedure, video_path, effort=effort)
     concepts = [o for s in spark["steps"].values() for o in s["objects"]]
     sam = evidence.gather(video_path, concepts, max_usd=max_sam_usd)
     report = decide.decide(procedure, spark, sam)
+    if look_again:
+        report = second_look.resolve(procedure, video_path, spark, report, max_sam_usd=max_sam_usd, effort=effort)
     report["video"] = str(video_path)
+    report["second_look"] = look_again
     config.RUNS.mkdir(exist_ok=True)
-    out = config.RUNS / f"{video_path.stem}.json"
+    out = config.RUNS / f"{video_path.stem}{'' if look_again else '_first_look'}.json"
     out.write_text(json.dumps(report, indent=2))
     print(f"Report saved to {out}")
     return report
@@ -60,6 +63,8 @@ def main() -> None:
     for p in (check, cc):
         p.add_argument("--max-sam-usd", type=float, default=3.0, help="stop if SAM would cost more per video")
         p.add_argument("--effort", default="medium", choices=["minimal", "low", "medium", "high", "xhigh"])
+        p.add_argument("--no-second-look", dest="look_again", action="store_false",
+                       help="stop after the first pass (to compare with the full pipeline)")
     args = ap.parse_args()
 
     try:
@@ -67,13 +72,15 @@ def main() -> None:
             for m in sorted(m["id"] for m in api.get_json("/models").get("data", [])):
                 print(m)
         elif args.cmd == "check":
-            show(run(Procedure.load(args.procedure), args.video, max_sam_usd=args.max_sam_usd, effort=args.effort))
+            show(run(Procedure.load(args.procedure), args.video, max_sam_usd=args.max_sam_usd, effort=args.effort,
+                     look_again=args.look_again))
         else:
             from .datasets import captaincook4d as cc4d
             for rid in args.recordings:
                 truth = cc4d.truth(rid)
                 procedure = Procedure.load(config.ROOT / "procedures" / f"{truth['recipe']}.json")
-                report = run(procedure, cc4d.fetch_video(rid), max_sam_usd=args.max_sam_usd, effort=args.effort)
+                report = run(procedure, cc4d.fetch_video(rid), max_sam_usd=args.max_sam_usd, effort=args.effort,
+                             look_again=args.look_again)
                 show(report, truth)
     except (api.ApiError, evidence.TooExpensive) as e:
         sys.exit(f"\n{e}")

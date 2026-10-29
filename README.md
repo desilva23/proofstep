@@ -25,6 +25,12 @@ So proofstep asks a second, different kind of witness. Spark claims what happene
    - The evidence shown is the in-hand stretch closest to Spark's time. Moments inside another step that uses the same object belong to that step.
    - An object named for three or more steps (the mug a drink is made in) is treated as background, not evidence.
    - Order rules are checked only between verified steps.
+4. **Second look** (`proofstep/second_look.py`). For each "can't verify", Spark gets a narrower question about a short clip, not the whole video again:
+   - *Spark placed the step, SAM never saw its object in hand.* Usually a naming miss. Spark names what's in the person's hands in plain words, SAM searches again, and the rules run again.
+   - *Spark said skipped, SAM saw the object in hand.* Spark looks closely at that moment. If it now sees the step performed, the step is verified: both witnesses agree on a specific moment. In `8_3` this finds two chocolate chips dropped into the mug at 2:42, which Spark missed watching the whole video.
+   - A "no" never marks a step missing. One clip can't show a step never happened: in `8_50` the chocolate went in at 3:03, a moment both models missed, while the clip SAM pointed to only showed the bag being put away. **proofstep changes its mind on evidence found, never on evidence not found.**
+
+   `--no-second-look` stops after stage 3, for comparison.
 
 ## Run it
 

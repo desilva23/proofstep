@@ -93,6 +93,7 @@ def decide(procedure: Procedure, spark: dict, sam: dict) -> dict:
         evidence = {o: sam["objects"].get(o, NOTHING) for o in objects}
         seen_anywhere = any(e["seen"] for e in evidence.values())
 
+        at = None  # when a verified step happened, for the order check
         if step.id in timed:
             start, end = timed[step.id]
             lo, hi = start - PAD, end + PAD
@@ -101,7 +102,7 @@ def decide(procedure: Procedure, spark: dict, sam: dict) -> dict:
             best = _best(near, fps, claimed=(start, end))
             if best:
                 obj, a, b = best
-                status, look_at = VERIFIED, a
+                status, look_at, at = VERIFIED, a, start
                 reason = f"Spark saw it at {clock(start)}-{clock(end)}; SAM saw the {label(obj)} in hand at {clock(a)}-{clock(b)}."
             elif seen_anywhere:
                 status, look_at = CANT_VERIFY, start
@@ -126,21 +127,28 @@ def decide(procedure: Procedure, spark: dict, sam: dict) -> dict:
                 reason = f"Spark says {said}, and SAM saw no handling of the {names} to settle it."
 
         steps.append({
-            "id": step.id, "text": step.text, "status": status, "look_at": look_at, "reason": reason,
+            "id": step.id, "text": step.text, "status": status, "look_at": look_at, "at": at, "reason": reason,
+            "evidence": {"object": best[0], "found_as": used_name(best[0]), "from": best[1], "to": best[2]}
+                        if best else None,
             "spark": claim,
             "sam": {"objects": objects, "seen_anywhere": seen_anywhere,
                     "handled_seconds": {o: round(len(e["handled"]) / fps, 1) for o, e in evidence.items()}},
         })
 
+    return summarize(procedure, steps, spark["other_mistakes"], duration)
+
+
+def summarize(procedure: Procedure, steps: list[dict], other_mistakes: list, duration: float) -> dict:
+    """Check order between verified steps and count the results."""
     by_id = {s["id"]: s for s in steps}
     order = []
     for a, b in procedure.rules:
         sa, sb = by_id[a], by_id[b]
-        if sa["status"] == sb["status"] == VERIFIED and sb["spark"]["start"] < sa["spark"]["start"]:
-            order.append({"before": a, "after": b, "at": sb["spark"]["start"],
-                          "reason": f"{b} was done at {clock(sb['spark']['start'])}, before {a} "
-                                    f"({clock(sa['spark']['start'])}); the procedure needs {a} first."})
+        if sa["status"] == sb["status"] == VERIFIED and sb["at"] < sa["at"]:
+            order.append({"before": a, "after": b, "at": sb["at"],
+                          "reason": f"{b} was done at {clock(sb['at'])}, before {a} ({clock(sa['at'])}); "
+                                    f"the procedure needs {a} first."})
 
     counts = {k: sum(s["status"] == k for s in steps) for k in (VERIFIED, MISSING, CANT_VERIFY)}
     return {"procedure": procedure.name, "duration": duration, "steps": steps, "order_problems": order,
-            "other_mistakes": spark["other_mistakes"], "counts": counts}
+            "other_mistakes": other_mistakes, "counts": counts}

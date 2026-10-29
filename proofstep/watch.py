@@ -72,15 +72,16 @@ def _clean_step(raw: dict | None, duration: float) -> dict:
             "evidence": raw.get("evidence", "")}
 
 
-def watch(procedure: Procedure, video_path: Path, *, model: str | None = None, effort: str = "medium") -> dict:
+def ask(video_file: Path, prompt: str, schema: dict, *, stage: str, name: str, label: str,
+        model: str | None = None, effort: str = "medium") -> tuple[dict, dict]:
+    """Ask Spark about one video file and get structured JSON back. Cached. Returns (answer, usage).
+
+    stage keys the cache; name is the response format's name.
+    """
     model = model or config.SPARK_MODEL
-    src = video.for_spark(video_path)
-    duration = video.probe(src)["duration"]
-    prompt = PROMPT.format(duration=duration, procedure=procedure.describe())
-    schema = _schema(procedure)
 
     def body() -> dict:
-        file_id = api.upload(src)
+        file_id = api.upload(video_file)
         return {
             "model": model,
             "input": [{"type": "message", "role": "user", "content": [
@@ -88,19 +89,27 @@ def watch(procedure: Procedure, video_path: Path, *, model: str | None = None, e
                 {"type": "input_file", "file_id": file_id},
             ]}],
             "reasoning": {"effort": effort},
-            "text": {"format": {"type": "json_schema", "name": "procedure_check", "schema": schema}},
+            "text": {"format": {"type": "json_schema", "name": name, "schema": schema}},
             "max_output_tokens": 20000,
         }
 
-    key = {"stage": "watch", "video": f"{src.name}:{src.stat().st_size}", "model": model, "effort": effort,
-           "prompt": prompt, "schema": schema}
-    print(f"Spark ({model}) watching {video_path.name}")
-    text, final = api.cached_stream(key, body, f"watch {video_path.stem}",
-                                    lambda f: api.token_cost(model, f.get("usage") or {}))
+    key = {"stage": stage, "video": f"{video_file.name}:{video_file.stat().st_size}", "model": model,
+           "effort": effort, "prompt": prompt, "schema": schema}
+    text, final = api.cached_stream(key, body, label, lambda f: api.token_cost(model, f.get("usage") or {}))
     try:
-        answer = json.loads(text)
+        return json.loads(text), final.get("usage") or {}
     except json.JSONDecodeError as e:
         raise api.ApiError(f"Spark's answer was not valid JSON ({e}); raw text starts: {text[:200]!r}") from None
+
+
+def watch(procedure: Procedure, video_path: Path, *, model: str | None = None, effort: str = "medium") -> dict:
+    model = model or config.SPARK_MODEL
+    src = video.for_spark(video_path)
+    duration = video.probe(src)["duration"]
+    prompt = PROMPT.format(duration=duration, procedure=procedure.describe())
+    print(f"Spark ({model}) watching {video_path.name}")
+    answer, usage = ask(src, prompt, _schema(procedure), stage="watch", name="procedure_check",
+                        label=f"watch {video_path.stem}", model=model, effort=effort)
 
     by_id = {s.get("step_id"): s for s in answer.get("steps", [])}
     return {
@@ -109,5 +118,5 @@ def watch(procedure: Procedure, video_path: Path, *, model: str | None = None, e
         "duration": duration,
         "steps": {s.id: _clean_step(by_id.get(s.id), duration) for s in procedure.steps},
         "other_mistakes": answer.get("other_mistakes", []),
-        "usage": final.get("usage"),
+        "usage": usage,
     }

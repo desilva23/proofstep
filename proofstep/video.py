@@ -40,6 +40,13 @@ def for_spark(src: Path) -> Path:
     return _ffmpeg(src, DERIVED / f"{src.stem}_noaudio.mp4", ["-an", "-c:v", "copy"])
 
 
+def clip(src: Path, start: float, end: float) -> Path:
+    """Cut [start, end] seconds out of src, re-encoded so the cut lands on the exact frame."""
+    return _ffmpeg(src, DERIVED / "clips" / f"{src.stem}_{start:.1f}-{end:.1f}.mp4",
+                   ["-ss", f"{start:.2f}", "-t", f"{end - start:.2f}", "-an", "-c:v", "libx264",
+                    "-preset", "veryfast", "-crf", "20", "-pix_fmt", "yuv420p"])
+
+
 def for_sam(src: Path, fps: int = 2) -> Path:
     """A low-frame-rate copy for SAM, which is billed per frame."""
     return _ffmpeg(src, DERIVED / f"{src.stem}_{fps}fps.mp4",
