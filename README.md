@@ -19,7 +19,7 @@ So proofstep asks a second, different kind of witness. Spark claims what happene
    | Spark says | SAM sees | Result |
    |---|---|---|
    | done at t | object in hand within 45 s of t | **Verified** |
-   | skipped | object never in hand, except during other steps that use it | **Missing** |
+   | skipped | object seen in the video, but never in hand except during other steps that use it | **Missing** |
    | anything else | | **Can't verify**, with the moment to look at |
 
    - The evidence shown is the in-hand stretch closest to Spark's time. Moments inside another step that uses the same object belong to that step.
@@ -27,8 +27,11 @@ So proofstep asks a second, different kind of witness. Spark claims what happene
    - Order rules are checked only between verified steps.
 4. **Second look** (`proofstep/second_look.py`). For each "can't verify", Spark gets a narrower question about a short clip, not the whole video again:
    - *Spark placed the step, SAM never saw its object in hand.* Usually a naming miss. Spark names what's in the person's hands in plain words, SAM searches again, and the rules run again.
-   - *Spark said skipped, SAM saw the object in hand.* Spark looks closely at that moment. If it now sees the step performed, the step is verified: both witnesses agree on a specific moment. In `8_3` this finds two chocolate chips dropped into the mug at 2:42, which Spark missed watching the whole video.
-   - A "no" never marks a step missing. One clip can't show a step never happened: in `8_50` the chocolate went in at 3:03, a moment both models missed, while the clip SAM pointed to only showed the bag being put away. **proofstep changes its mind on evidence found, never on evidence not found.**
+   - Every close look is asked twice, on a short clip and on a wide one, and only an answer both agree on counts. Short clips catch one-second actions; wide ones catch an action that happens well before the object is put away. Spark's answers depend on the clip, so a single look is not trusted.
+   - *Spark placed the step, but SAM only matched a generic stand-in name* (a "box" for "salt box"). Only an agreed "yes" at that moment verifies the step.
+   - *Spark said skipped, SAM saw the object in hand.* Spark looks closely at **every** such moment. An agreed "yes" at any of them verifies the step. If every moment is agreed to be something else (rinsing the spoon, moving the bottle aside), the step is missing. If the looks disagree, it stays "can't verify" with both accounts. In `8_3`, the short clip sees two chocolate chips dropped into the mug at 2:42, which Spark missed watching the whole video, while the wide clip doesn't, so proofstep points a person at 2:32 instead of guessing.
+   - A step done with a different item than written is reported as done with a substitution, not as missing.
+   - One "no" is never enough on its own. In `8_50` the chocolate went in at 3:03, while the moment SAM flagged only showed the bag being put away. **proofstep changes its mind on evidence found, never on evidence not found**, so every sighting needs a positive explanation before a step is called missing.
 
    `--no-second-look` stops after stage 3, for comparison.
 
@@ -38,18 +41,18 @@ On 20 hand-checked CaptainCook4D videos (178 steps, 17 skipped), full table in [
 
 | | Spark alone | proofstep |
 |---|---|---|
-| Wrong answers | 13 | **4** |
-| Right when it answers | 93% | **97%** |
-| Can't verify | 2 | 20 |
-| Skipped steps flagged as missing | 16 of 17 | 8 of 17 |
-| Order mistakes caught | 2 of 5 | 3 of 5 |
+| **Skipped steps passed as done** | 1 | **0** |
+| Done steps called missing | 12 | **2** |
+| Right when it answers | 93% | **99%** |
+| Can't verify | 2 | 16 (9%) |
+| Skipped steps flagged as missing | 16 of 17 | 13 of 17 (the other 4: can't verify) |
+| Order mistakes caught | 2 of 5 | **4 of 5** |
 
-proofstep cuts wrong answers by about 70% by saying "can't verify" on 11% of steps. Known weaknesses, being worked on:
+Wrong answers drop from 13 to 2, and no skipped step is ever passed. The price is "can't verify" on 9% of steps, each with the moment a person should look at.
 
-- **It gives up half of Spark's correct "missing" calls.** In 8 skipped steps SAM saw a related object in hand (a spoon, a bottle), and the second look correctly explained each one, but a single "no" never marks a step missing. Checking every such moment would let it conclude "missing" honestly.
-- **The one false pass is shared with Spark.** Spark mistook a pepper grinder for salt, and SAM's fallback search for the generic word "box" matched it. Generic fallback names are too weak to count as evidence.
-
-These rules were tuned on the same videos, so the final numbers will come from a fresh held-out set.
+- **Substitutions are flagged, not called missing.** Five steps were done with something other than what was written (powdered sugar, a plate instead of a mug, cooking oil instead of olive oil), and proofstep reports them as done with a substitution.
+- **The two remaining errors:** in `8_50` both models miss chocolate going into the mug at 3:03, and in `12_41` the "olive oil" was apple cider vinegar that never went onto the dish, which the dataset counts as done.
+- **Caveat:** these rules were developed while looking at these 20 videos, so the numbers that count will come from a fresh held-out set.
 
 ## Run it
 

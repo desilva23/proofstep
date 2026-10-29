@@ -1,6 +1,6 @@
 """Stage 3: plain rules combine Spark's claims with SAM's evidence. No model is involved here.
 
-  Spark: done,     SAM: object in hand near then       -> verified
+  Spark: done,     SAM: object (by its own name) in hand near then -> verified
   Spark: not done, SAM: never in hand (unexplained)    -> missing
   anything else, including the two disagreeing         -> can't verify, with the moment to look at
 
@@ -94,16 +94,26 @@ def decide(procedure: Procedure, spark: dict, sam: dict) -> dict:
         seen_anywhere = any(e["seen"] for e in evidence.values())
 
         at = None  # when a verified step happened, for the order check
+        sightings = []  # every unexplained in-hand stretch, for the second look to check one by one
         if step.id in timed:
             start, end = timed[step.id]
             lo, hi = start - PAD, end + PAD
             near = {o: outside([i for i in e["handled"] if lo <= i / fps <= hi], claimed_by_others(step.id, o, 0))
                     for o, e in evidence.items()}
-            best = _best(near, fps, claimed=(start, end))
+            # Only a match under the object's own name proves the step. A match found by retrying with the last
+            # word ("box" for "salt box") is too generic: in testing it "confirmed" salt when it was pepper.
+            best = _best({o: f for o, f in near.items() if used_name(o) == o}, fps, claimed=(start, end))
+            weak = None if best else _best(near, fps, claimed=(start, end))
             if best:
                 obj, a, b = best
                 status, look_at, at = VERIFIED, a, start
                 reason = f"Spark saw it at {clock(start)}-{clock(end)}; SAM saw the {label(obj)} in hand at {clock(a)}-{clock(b)}."
+            elif weak:
+                best = weak  # recorded as evidence for the second look to check
+                obj, a, b = weak
+                status, look_at = CANT_VERIFY, a
+                reason = (f"Spark says done at {clock(start)}. SAM couldn't find the {obj} by name; its closest match, "
+                          f"a '{used_name(obj)}' in hand at {clock(a)}-{clock(b)}, is too generic to count on its own.")
             elif seen_anywhere:
                 status, look_at = CANT_VERIFY, start
                 reason = f"Spark says done at {clock(start)}, but SAM never saw the {names} in hand near then."
@@ -119,9 +129,19 @@ def decide(procedure: Procedure, spark: dict, sam: dict) -> dict:
                 obj, a, b = best
                 status, look_at = CANT_VERIFY, a
                 reason = f"Spark says {said}, but SAM saw the {label(obj)} in hand at {clock(a)}-{clock(b)}."
-            elif claim["status"] == "not_done":
+                runs = [(o, ra, rb, n) for o, f in unexplained.items() for ra, rb, n in _runs(f, fps) if n > 1]
+                sightings = [{"object": o, "found_as": used_name(o), "from": ra, "to": rb}
+                             for o, ra, rb, _ in sorted(runs, key=lambda r: -r[3])] or \
+                            [{"object": obj, "found_as": used_name(obj), "from": a, "to": b}]
+            elif claim["status"] == "not_done" and seen_anywhere:
                 status, look_at = MISSING, None
                 reason = f"Spark saw it skipped, and SAM never saw the {names} in hand outside other steps."
+            elif claim["status"] == "not_done":
+                # SAM never finding the object at all can mean it wasn't there, or that SAM doesn't know the name
+                # ("pepper shaker" for a box of pepper). Missing on Spark's word alone would be one witness, not two.
+                status, look_at = CANT_VERIFY, None
+                reason = (f"Spark saw it skipped, but SAM couldn't find the {names} anywhere in the video, "
+                          f"so it can't back that up.")
             else:
                 status, look_at = CANT_VERIFY, None
                 reason = f"Spark says {said}, and SAM saw no handling of the {names} to settle it."
@@ -130,6 +150,7 @@ def decide(procedure: Procedure, spark: dict, sam: dict) -> dict:
             "id": step.id, "text": step.text, "status": status, "look_at": look_at, "at": at, "reason": reason,
             "evidence": {"object": best[0], "found_as": used_name(best[0]), "from": best[1], "to": best[2]}
                         if best else None,
+            "sightings": sightings,
             "spark": claim,
             "sam": {"objects": objects, "seen_anywhere": seen_anywhere,
                     "handled_seconds": {o: round(len(e["handled"]) / fps, 1) for o, e in evidence.items()}},

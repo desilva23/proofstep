@@ -155,6 +155,11 @@ def report() -> str:
     row("Order flagged on a video without one", lambda k: str(t[k]["order_false"]))
     lines += ["", "Spark alone means its first answer about the whole video, taken at face value: done = verified, "
                   "skipped = missing, can't tell = can't verify.", ""]
+    subs = [(rid, s["id"], s["substitution"]) for rid in ids if (config.RUNS / f"{rid}_360p.json").exists()
+            for s in json.loads((config.RUNS / f"{rid}_360p.json").read_text())["steps"] if s.get("substitution")]
+    if subs:
+        lines += [f"Verified with a substitution noted (done, but not as written): "
+                  + "; ".join(f"{rid} {sid}: {text}" for rid, sid, text in subs), ""]
     if fresh:
         lines += [f"Cost: about ${sum(fresh) / len(fresh):.2f} per video on average ({len(fresh)} videos, "
                   f"{sum(r[2] for r in rows if r[0] not in ('8_3', '8_50'))} steps), almost all of it SAM.", ""]
