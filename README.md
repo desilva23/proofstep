@@ -89,6 +89,38 @@ The second failure shows the limit of the current approach: "every sighting is e
 
 Later, the window search was first allowed to decide. On the 20 held-out videos that gave the most right answers of any version (208 against Spark's 203) and cut "can't verify" to 3%. But it passed two more skipped steps as done: Spark described peeling a cucumber that was only chopped, and took another seasoning for salt, and an open "which step is this?" question didn't catch either. A safety check shouldn't add those, so the search now only points.
 
+## What we learned about Meta's models
+
+Things we didn't find in the docs, each measured during the hackathon. Useful to anyone building on Muse Spark and SAM 3.1.
+
+**Muse Spark**
+- **There's no confidence signal, and asking again doesn't create one.** `logprobs` returns HTTP 400 on every Muse text model. Re-asking the same question about the whole video gave identical answers: 0 of 14 answers changed across 3 runs, and the wrong ones were wrong every time. That's why proofstep gets its confidence from a second model instead.
+- **Whole-video answers miss brief actions.** Watching all 7 minutes of 8_3, Spark said the chocolate was never added. Asked about the right 15-second clip, it sees two chips dropped into the mug at 2:42. Short clips find what a whole-video pass misses.
+- **Answers depend on clip length.** The same moment, asked the same question, can get "yes" on a 15-second clip and "no" on a 60-second one. proofstep only acts on an answer that both clip lengths agree on.
+- **Small wording changes flip answers; identical prompts don't.** Re-running a prompt gives the same answer. One reworded instruction turned "sugar added" into "sugar skipped" on the same video.
+- **Leading questions lean towards yes.** "Is step S5 performed here?" said yes to look-alike steps (pepper for salt). The open question "which step is the person doing?" is harder to fool, though not immune.
+- **Contributor models are cheap enough to ask many small questions.** Watching a whole video costs about one cent, and a short-clip question about a tenth of a cent. That's what makes searching a window in 20-second slices practical.
+
+**SAM 3.1**
+- **It finds plain nouns, not ingredients or compound names.** "cinnamon" and "chocolate" matched nothing in any frame, while "spice jar" found the jar. "milk bottle", "sugar bag" and "measuring spoon" found nothing, while "bottle", "bag" and "spoon" did. So proofstep has Spark name the container it sees, not what's inside.
+- **But a generic noun is weak evidence.** A fallback search for "box" "confirmed" salt when the box held pepper. A match under a generic name never verifies a step on its own.
+- **"In hand" is a usable signal.** Overlapping SAM's object box with its hand box separates "the jar was used" from "the jar sat on the counter". That distinction is the core of every verdict.
+- **It's the cost driver.** At $0.20 per 1,000 frames, SAM is almost all of the roughly $3 per video. Running it on a 2-frames-per-second copy keeps that down without losing the hand-object overlap.
+
+**Operations**
+- **Occasional transient failures recover on retry.** A response sometimes fails mid-answer with "The model failed to generate a response", and an upload once returned "Invalid upload request". Both succeeded when retried, so proofstep retries them automatically.
+
+## Built during the hackathon
+
+Everything in this repository was written during the building period. The repository was created on Oct 29, and the commit history shows each piece as it was built. That includes the pipeline (Spark, SAM, rules, second look, window search), the CaptainCook4D tooling and label checks, the four scored test sets, the viewer, typed procedures, and the static demo site.
+
+Before kickoff we read the API docs and wrote two throwaway feasibility tests (can Spark place recipe steps in time; can SAM find the objects). They were run on Oct 28, and their findings appear above. None of their code is in this repository.
+
+Not ours, and used under their licences:
+- the CaptainCook4D videos (Apache 2.0) and labels (MIT);
+- Meta's models, through the Meta Model API;
+- Python's standard library and ffmpeg.
+
 ## Run it
 
 Needs Python 3.11+ and ffmpeg. No packages to install.
@@ -96,6 +128,7 @@ Needs Python 3.11+ and ffmpeg. No packages to install.
 ```bash
 cp .env.example .env              # then put your Meta Model API key in it
 python -m proofstep models        # free: checks the key and lists your models
+python -m unittest discover -s tests   # offline tests of the decision rules, no API calls
 python -m proofstep.datasets.captaincook4d 8_50 8_3     # labels, recipe procedures, two videos
 python -m proofstep cc4d 8_50 8_3                       # check them and compare with the human labels
 python -m proofstep check procedures/spicedhotchocolate.json my_video.mp4
