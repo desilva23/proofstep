@@ -7,7 +7,7 @@ checked here: every rule must name real steps, and the rules must not loop.
 import json
 import re
 
-from . import api, config
+from . import api, config, open_weights
 from .procedure import Procedure, Step
 
 PROMPT = """Turn these instructions into a checklist that someone could verify by watching a video of the work.
@@ -78,8 +78,11 @@ def write(text: str, *, model: str | None = None) -> Procedure:
         "max_output_tokens": 8000,
     }
     key = {"stage": "author", "model": model, "prompt": prompt, "schema": SCHEMA}
-    raw, _ = api.cached_stream(key, body, "write procedure", lambda f: api.token_cost(model, f.get("usage") or {}))
-    answer = json.loads(raw)
+    if config.backend() == "open":
+        answer, _ = open_weights.ask_text(prompt, SCHEMA, stage="author", label="write procedure")
+    else:
+        raw, _ = api.cached_stream(key, body, "write procedure", lambda f: api.token_cost(model, f.get("usage") or {}))
+        answer = json.loads(raw)
 
     # Renumber in order so ids are always S1..Sn, whatever Spark called them.
     renumber, steps = {}, []

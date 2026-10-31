@@ -93,6 +93,11 @@ Later, the window search was first allowed to decide. On the 20 held-out videos 
 
 Things we didn't find in the docs, each measured during the hackathon. Useful to anyone building on Muse Spark and SAM 3.1.
 
+**Muse Spark Open**
+- **8 still frames tied Muse Spark on video.** On 60 labelled clips from 8 recipes, both scored 95.0%: yes on 93% of clips where the step happens, no on 97% of clips where it doesn't, with one false yes each ([`eval/frames_vs_video.json`](eval/frames_vs_video.json)). It's a small sample, and only 6 of the 30 negative clips were look-alike steps, so treat it as a promising result, not a proof.
+- **It can't break the tie between models that see the same thing.** Asked to confirm the window search's pointers, it accepted 20 of 24 right ones but also 4 of 5 wrong ones. Asked to re-check verified steps, it caught 1 of the 5 false passes and wrongly rejected 10% of good ones. On a lengthwise zucchini slice that looks like peeling, both models said peeling.
+- **Allow it room to think.** With a 4,000-token limit, about 1 reply in 25 came back empty because reasoning used up the limit. proofstep allows 16,000. Baseten also accepts at most 8 images per request.
+
 **Muse Spark**
 - **There's no confidence signal, and asking again doesn't create one.** `logprobs` returns HTTP 400 on every Muse text model. Re-asking the same question about the whole video gave identical answers: 0 of 14 answers changed across 3 runs, and the wrong ones were wrong every time. That's why proofstep gets its confidence from a second model instead.
 - **Whole-video answers miss brief actions.** Watching all 7 minutes of 8_3, Spark said the chocolate was never added. Asked about a 20-second clip around that moment, it sees two chips dropped into the mug at 2:42. Short clips find what a whole-video pass misses.
@@ -110,9 +115,22 @@ Things we didn't find in the docs, each measured during the hackathon. Useful to
 **Operations**
 - **Occasional transient failures recover on retry.** A response sometimes fails mid-answer with "The model failed to generate a response", and an upload once returned "Invalid upload request". Both succeeded when retried, so proofstep retries them automatically.
 
+## Open-weight option
+
+`--open-weights` runs the short-clip questions (second look and window search) and typed procedures on **Muse Spark Open**, which can be self-hosted. Any OpenAI-compatible server works: set `PROOFSTEP_OPEN_URL`. Muse Spark Open takes images, not video, so each clip becomes 8 evenly spaced frames ([`proofstep/open_weights.py`](proofstep/open_weights.py)). The whole-video pass and SAM 3.1 stay on the Meta Model API, so this isn't a fully offline mode: footage still reaches Meta's API for those two stages.
+
+Results on the 3 confirmation videos that finished before the Baseten credits ran out (51 steps, all pinwheels; [`eval/scorecard_open.md`](eval/scorecard_open.md)):
+
+| | Right | Wrong | Can't verify |
+|---|---|---|---|
+| Clip questions on Muse Spark, video | 31 | 0 | 20 |
+| Clip questions on Muse Spark Open, 8 frames | 34 | 1 | 16 |
+
+So far it holds up on real videos, but that's a small sample from one recipe. The published results above all use Muse Spark on video; this option doesn't change them. At about 1 cent a question it costs roughly 15 times a Contributor clip question, or $1 to $2 per video.
+
 ## Built during the hackathon
 
-Everything in this repository was written during the building period. The repository was created on Oct 29, and the commit history shows each piece as it was built. That includes the pipeline (Spark, SAM, rules, second look, window search), the CaptainCook4D tooling and label checks, the four scored test sets, the viewer, typed procedures, and the static demo site.
+Everything in this repository was written during the building period. The repository was created on Oct 29, and the commit history shows each piece as it was built. That includes the pipeline (Spark, SAM, rules, second look, window search), the CaptainCook4D tooling and label checks, the four scored test sets, the viewer, typed procedures, the open-weight option, and the static demo site.
 
 Before kickoff we read the API docs and wrote two throwaway feasibility tests (can Spark place recipe steps in time; can SAM find the objects). They were run on Oct 28, and their findings appear above. None of their code is in this repository.
 
@@ -132,6 +150,7 @@ python -m unittest discover -s tests   # offline tests of the decision rules, no
 python -m proofstep.datasets.captaincook4d 8_50 8_3     # labels, recipe procedures, two videos
 python -m proofstep cc4d 8_50 8_3                       # check them and compare with the human labels
 python -m proofstep check procedures/spicedhotchocolate.json my_video.mp4
+python -m proofstep cc4d 10_50 --open-weights           # clip questions on Muse Spark Open (needs BASETEN_API_KEY)
 ```
 
 To look through the results:

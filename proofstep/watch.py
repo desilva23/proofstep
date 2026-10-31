@@ -7,7 +7,7 @@ in testing "cinnamon" matched nothing in any frame, while "spice jar" found the 
 import json
 from pathlib import Path
 
-from . import api, config, video
+from . import api, config, open_weights, video
 from .procedure import Procedure
 
 STATUSES = ("done", "not_done", "cannot_tell")
@@ -100,6 +100,14 @@ def ask(video_file: Path, prompt: str, schema: dict, *, stage: str, name: str, l
         return json.loads(text), final.get("usage") or {}
     except json.JSONDecodeError as e:
         raise api.ApiError(f"Spark's answer was not valid JSON ({e}); raw text starts: {text[:200]!r}") from None
+
+
+def ask_clip(clip: Path, prompt: str, schema: dict, *, stage: str, name: str, label: str,
+             model: str | None = None, effort: str = "medium") -> tuple[dict, dict]:
+    """Ask about a short clip: Muse Spark on the video, or with --open-weights, Muse Spark Open on frames from it."""
+    if config.backend() == "open":
+        return open_weights.ask_clip(clip, prompt, schema, stage=stage, label=label)
+    return ask(clip, prompt, schema, stage=stage, name=name, label=label, model=model, effort=effort)
 
 
 def watch(procedure: Procedure, video_path: Path, *, model: str | None = None, effort: str = "medium") -> dict:

@@ -1,8 +1,10 @@
 """Offline tests for the decision rules and helpers. No API calls: python -m unittest discover tests"""
 
+import os
 import unittest
+from unittest import mock
 
-from proofstep import author, decide, evidence, search
+from proofstep import author, config, decide, evidence, open_weights, search
 from proofstep.decide import CANT_VERIFY, MISSING, VERIFIED
 from proofstep.procedure import Procedure, Step
 
@@ -109,6 +111,22 @@ class HelperTests(unittest.TestCase):
 
     def test_short_window_is_one_slice(self):
         self.assertEqual(search._slices(5.0, 12.0), [(5.0, 12.0)])
+
+
+class OpenWeightsTests(unittest.TestCase):
+    def test_clip_question_is_reworded_for_frames(self):
+        text = open_weights.frame_prompt("This is a 20-second clip from a first-person video of someone cooking.", 8)
+        self.assertTrue(text.startswith("These are 8 frames, in order and evenly spaced, from a 20-second clip"))
+
+    def test_reply_parsing(self):
+        self.assertEqual(open_weights.parse_json('Sure: {"answer": "yes"} done'), {"answer": "yes"})
+        self.assertEqual(open_weights.parse_json('{"answer":"yes","what'), {})  # cut off: counts as unsure
+        self.assertEqual(open_weights.parse_json(""), {})
+
+    def test_default_backend_is_meta(self):
+        with mock.patch.dict(os.environ):
+            os.environ.pop("PROOFSTEP_BACKEND", None)
+            self.assertEqual(config.backend(), "meta")
 
 
 if __name__ == "__main__":

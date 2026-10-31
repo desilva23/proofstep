@@ -2,16 +2,18 @@
 
 import argparse
 import json
+import os
 import sys
 from pathlib import Path
 
-from . import api, config, decide, evidence, search, second_look, watch
+from . import api, config, decide, evidence, open_weights, search, second_look, watch
 from .procedure import Procedure
 
 MARK = {decide.VERIFIED: "VERIFIED", decide.MISSING: "MISSING", decide.CANT_VERIFY: "CAN'T VERIFY"}
 
 
 def run(procedure: Procedure, video_path: Path, *, max_sam_usd: float, effort: str, look_again: bool = True) -> dict:
+    open_backend = look_again and config.backend() == "open"
     spark = watch.watch(procedure, video_path, effort=effort)
     concepts = [o for s in spark["steps"].values() for o in s["objects"]]
     sam = evidence.gather(video_path, concepts, max_usd=max_sam_usd)
@@ -21,12 +23,16 @@ def run(procedure: Procedure, video_path: Path, *, max_sam_usd: float, effort: s
     if look_again:
         report = second_look.resolve(procedure, video_path, spark, report, max_sam_usd=max_sam_usd, effort=effort)
         report["video"] = str(video_path)
-        # Kept for comparison: the result before the window search.
-        (config.RUNS / f"{video_path.stem}_no_search.json").write_text(json.dumps(report, indent=2))
+        if not open_backend:
+            # Kept for comparison: the result before the window search.
+            (config.RUNS / f"{video_path.stem}_no_search.json").write_text(json.dumps(report, indent=2))
         report = search.search(procedure, video_path, spark, report, effort=effort)
         report["video"] = str(video_path)
     report["second_look"] = look_again
-    out = config.RUNS / f"{video_path.stem}{'' if look_again else '_first_look'}.json"
+    if open_backend:
+        report["clip_model"] = open_weights.MODEL
+    suffix = "_open" if open_backend else "" if look_again else "_first_look"
+    out = config.RUNS / f"{video_path.stem}{suffix}.json"
     out.write_text(json.dumps(report, indent=2))
     print(f"Report saved to {out}")
     return report
@@ -70,7 +76,11 @@ def main() -> None:
         p.add_argument("--effort", default="medium", choices=["minimal", "low", "medium", "high", "xhigh"])
         p.add_argument("--no-second-look", dest="look_again", action="store_false",
                        help="stop after the first pass (to compare with the full pipeline)")
+    open_help = "answer short-clip questions and write procedures with Muse Spark Open"
+    for p in (check, cc):
+        p.add_argument("--open-weights", action="store_true", help=open_help)
     srv = sub.add_parser("serve", help="open the local web viewer")
+    srv.add_argument("--open-weights", action="store_true", help=open_help)
     srv.add_argument("--port", type=int, default=8765)
     ex = sub.add_parser("export", help="write chosen reports as a static site (no server needed)")
     ex.add_argument("runs", nargs="+", help="run names, optionally name=public:title")
@@ -78,7 +88,10 @@ def main() -> None:
     wr = sub.add_parser("write", help="turn plain-text instructions (a file, or stdin) into a procedure file")
     wr.add_argument("instructions", nargs="?", type=Path, help="text file; reads stdin if left out")
     wr.add_argument("-o", "--out", type=Path, help="where to save it (default procedures/<name>.json)")
+    wr.add_argument("--open-weights", action="store_true", help=open_help)
     args = ap.parse_args()
+    if getattr(args, "open_weights", False):
+        os.environ["PROOFSTEP_BACKEND"] = "open"
 
     try:
         if args.cmd == "export":

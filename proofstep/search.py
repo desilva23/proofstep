@@ -91,8 +91,8 @@ def search(procedure: Procedure, video_path: Path, spark: dict, report: dict, *,
         budget["looks"] += 1
         prompt = SEARCH_PROMPT.format(length=window[1] - window[0], procedure=procedure.describe(),
                                       sid=step["id"], text=step["text"])
-        answer, _ = watch.ask(video.clip(src, *window), prompt, LOOK_SCHEMA, stage="search", name="search",
-                              label=f"search {video_path.stem} {step['id']}", model=model, effort=effort)
+        answer, _ = watch.ask_clip(video.clip(src, *window), prompt, LOOK_SCHEMA, stage="search", name="search",
+                                   label=f"search {video_path.stem} {step['id']}", model=model, effort=effort)
         t = answer.get("time_sec")
         when = None if t is None else window[0] + min(max(float(t), 0.0), window[1] - window[0])
         return {"clip": window, "answer": answer.get("answer"), "time": when,
@@ -101,8 +101,8 @@ def search(procedure: Procedure, video_path: Path, spark: dict, report: dict, *,
     def which(step, window, at) -> dict:
         budget["looks"] += 1
         prompt = WHICH_PROMPT.format(length=window[1] - window[0], procedure=procedure.describe(), at=at - window[0])
-        answer, _ = watch.ask(video.clip(src, *window), prompt, _which_schema(procedure), stage="search_which",
-                              name="which_step", label=f"which {video_path.stem} {step['id']}", model=model, effort=effort)
+        answer, _ = watch.ask_clip(video.clip(src, *window), prompt, _which_schema(procedure), stage="search_which",
+                                   name="which_step", label=f"which {video_path.stem} {step['id']}", model=model, effort=effort)
         return answer
 
     def expected(sid: str) -> tuple[float, float]:

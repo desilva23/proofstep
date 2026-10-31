@@ -31,6 +31,11 @@ SPARK_MODEL = os.environ.get("PROOFSTEP_SPARK_MODEL", "muse-spark-1.3-contributo
 SAM_MODEL = "sam-3.1"
 
 
+def backend() -> str:
+    """Who answers the short-clip questions: "meta" (Muse Spark on video) or "open" (Muse Spark Open on frames)."""
+    return os.environ.get("PROOFSTEP_BACKEND", "meta")
+
+
 def api_key() -> str:
     key = os.environ.get("MODEL_API_KEY")
     if not key:

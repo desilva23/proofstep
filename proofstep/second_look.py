@@ -102,8 +102,8 @@ def resolve(procedure: Procedure, video_path: Path, spark: dict, report: dict, *
     def ask_clip(window, template, schema, stage, step, **fields) -> dict:
         prompt = template.format(length=window[1] - window[0], procedure=procedure.describe(),
                                  sid=step["id"], text=step["text"], **fields)
-        answer, _ = watch.ask(video.clip(src, *window), prompt, schema, stage=stage, name=stage,
-                              label=f"{stage} {video_path.stem} {step['id']}", model=model, effort=effort)
+        answer, _ = watch.ask_clip(video.clip(src, *window), prompt, schema, stage=stage, name=stage,
+                                   label=f"{stage} {video_path.stem} {step['id']}", model=model, effort=effort)
         return answer
 
     def look(step, sighting) -> dict:

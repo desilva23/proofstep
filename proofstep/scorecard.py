@@ -27,6 +27,8 @@ SETS = {
               "a second held-out set, chosen and label-checked after the rules were frozen"),
     "confirm": ("captaincook4d_confirm.json", "scorecard_confirm.md",
                 "the confirmation set for the window search, chosen and label-checked after it was frozen"),
+    "open": ("captaincook4d_open.json", "scorecard_open.md",
+             "the 3 confirmation videos that finished on Muse Spark Open before its credits ran out"),
 }
 LOGS = config.RUNS / "logs"
 
@@ -75,7 +77,7 @@ def _statuses(rid: str) -> dict[str, dict] | None:
     if not all(p.exists() for p in paths.values()):
         return None
     full, first, nosearch = (json.loads(paths[k].read_text()) for k in ("full", "first", "nosearch"))
-    return {
+    statuses = {
         "spark": {s["id"]: SPARK_TO_STATUS[s["spark"]["status"]] for s in first["steps"]},
         "first": {s["id"]: s["status"] for s in first["steps"]},
         "nosearch": {s["id"]: s["status"] for s in nosearch["steps"]},
@@ -83,6 +85,12 @@ def _statuses(rid: str) -> dict[str, dict] | None:
         "order": {"spark": _spark_order_flag(first), "first": bool(first["order_problems"]),
                   "nosearch": bool(nosearch["order_problems"]), "full": bool(full["order_problems"])},
     }
+    open_path = config.RUNS / f"{rid}_360p_open.json"
+    if open_path.exists():
+        report = json.loads(open_path.read_text())
+        statuses["open"] = {s["id"]: s["status"] for s in report["steps"]}
+        statuses["order"]["open"] = bool(report["order_problems"])
+    return statuses
 
 
 def _spark_order_flag(report: dict) -> bool:
@@ -97,12 +105,16 @@ def _spark_order_flag(report: dict) -> bool:
 def report(test_set: str = "dev") -> str:
     ids = _test_ids(test_set)
     set_file, out_file, described = SETS[test_set]
+    systems = dict(SYSTEMS)
+    all_got = {rid: _statuses(rid) for rid in ids}
+    if all(g and "open" in g for g in all_got.values()):
+        systems["open"] = "same, clip questions on Muse Spark Open"
     totals = {k: {"right": 0, "false_pass": 0, "false_alarm": 0, "abstain": 0, "skipped_caught": 0,
-                  "order_caught": 0, "order_false": 0} for k in SYSTEMS}
+                  "order_caught": 0, "order_false": 0} for k in systems}
     rows, missing_runs = [], []
     n_steps = n_skipped = n_order = 0
     for rid in ids:
-        got = _statuses(rid)
+        got = all_got[rid]
         if got is None:
             missing_runs.append(rid)
             continue
@@ -110,7 +122,7 @@ def report(test_set: str = "dev") -> str:
         has_order_mistake = any("Order Error" in s["errors"] for s in truth["steps"].values())
         n_order += has_order_mistake
         per = {}
-        for system in SYSTEMS:
+        for system in systems:
             t = totals[system]
             right = wrong = abstain = 0
             for sid, label in truth["steps"].items():
@@ -152,13 +164,13 @@ def report(test_set: str = "dev") -> str:
         f"{n_steps} steps, {n_skipped} of them skipped; {n_order} of the videos have steps out of order. "
         "Each system's answer for each step is compared with the human label.",
         "",
-        "| | " + " | ".join(SYSTEMS.values()) + " |",
-        "|---|" + "---|" * len(SYSTEMS),
+        "| | " + " | ".join(systems.values()) + " |",
+        "|---|" + "---|" * len(systems),
     ]
     t = totals
 
     def row(name: str, fn) -> None:
-        lines.append(f"| {name} | " + " | ".join(fn(k) for k in SYSTEMS) + " |")
+        lines.append(f"| {name} | " + " | ".join(fn(k) for k in systems) + " |")
 
     row("Right", lambda k: f"{t[k]['right']} of {n_steps}")
     row("**Wrong: skipped step passed as done**", lambda k: f"**{t[k]['false_pass']}**")

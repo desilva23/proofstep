@@ -1,0 +1,902 @@
+[
+ {
+  "rid": "9_47",
+  "sid": "S11",
+  "text": "cut the contents on plate, and serve",
+  "truth": "yes",
+  "clip": [
+   488.4,
+   500.4
+  ],
+  "shown": null,
+  "spark": "yes",
+  "open": "yes",
+  "spark_what": "The person unsheathes a purple knife and cuts the round cooked item on the gray plate into quarters then resheathes the knife.",
+  "open_what": "A person uses a large purple knife to cut the round cooked french toast on a black square plate into several smaller pieces."
+ },
+ {
+  "rid": "9_47",
+  "sid": "S11",
+  "text": "cut the contents on plate, and serve",
+  "truth": "no",
+  "clip": [
+   166.3,
+   182.3
+  ],
+  "shown": "S2",
+  "spark": "no",
+  "open": "no",
+  "spark_what": "The person carries a mug of melted butter to the sink, swirls it to coat the mug, returns it to the cutting board next to sliced bread, and scrolls on a tablet.",
+  "open_what": "The person holds a mug with yellow liquid over the sink, sets it down on a cutting board next to sliced bread and a purple knife, and then reaches to operate a tablet on the counter."
+ },
+ {
+  "rid": "7_26",
+  "sid": "S11",
+  "text": "Roll the tortilla from one end to another into a log shape, about 1.5 inches thick. Roll it tight enough to prevent gaps but not so tight that the filling leaks",
+  "truth": "yes",
+  "clip": [
+   357.3,
+   379.6
+  ],
+  "shown": null,
+  "spark": "yes",
+  "open": "yes",
+  "spark_what": "The person folds and rolls the filled tortilla from one end to the other into a tight log shape on the cutting board.",
+  "open_what": "The person folds and rolls the filled tortilla on the cutting board from one end into a tight log-shaped burrito."
+ },
+ {
+  "rid": "7_26",
+  "sid": "S11",
+  "text": "Roll the tortilla from one end to another into a log shape, about 1.5 inches thick. Roll it tight enough to prevent gaps but not so tight that the filling leaks",
+  "truth": "no",
+  "clip": [
+   299.9,
+   316.8
+  ],
+  "shown": "S9",
+  "spark": "no",
+  "open": "no",
+  "spark_what": "The person transfers the egg and salsa mixture from the bowl onto the tortilla on the cutting board using a spoon.",
+  "open_what": "The person pours the egg and salsa mixture from a white bowl onto a flat tortilla on the cutting board and sets the bowl aside, without rolling the tortilla."
+ },
+ {
+  "rid": "27_49",
+  "sid": "S9",
+  "text": "Add 1/4 teaspoon salt to the bowl",
+  "truth": "yes",
+  "clip": [
+   429.3,
+   442.0
+  ],
+  "shown": null,
+  "spark": "yes",
+  "open": "yes",
+  "spark_what": "The person scoops salt from a blue container with a red measuring spoon and adds it to the bowl with the cheese and pepper mixture.",
+  "open_what": "The person measures white salt from a blue container with a red 1/4 teaspoon and adds it to the bowl of cheese and pepper mixture."
+ },
+ {
+  "rid": "27_49",
+  "sid": "S9",
+  "text": "Add 1/4 teaspoon salt to the bowl",
+  "truth": "no",
+  "clip": [
+   446.3,
+   457.3
+  ],
+  "shown": "S8",
+  "spark": "no",
+  "open": "no",
+  "spark_what": "The person scoops softened butter from a plate and adds it to the bowl with the cheese-pepper mixture, then sets the spoon down.",
+  "open_what": "The person scoops yellow softened butter/margarine with a spoon from a plate and adds it to a bowl containing an orange-red mixture on the kitchen counter before setting the spoon down."
+ },
+ {
+  "rid": "12_17",
+  "sid": "S6",
+  "text": "Sprinkle mozzarella cheese on top of the tomato throughout the platter",
+  "truth": "yes",
+  "clip": [
+   197.1,
+   222.5
+  ],
+  "shown": null,
+  "spark": "yes",
+  "open": "yes",
+  "spark_what": "The person opens a bag of shredded mozzarella and sprinkles it over the sliced tomatoes arranged on the plate.",
+  "open_what": "The person reaches into a bag of shredded mozzarella and sprinkles it over the sliced tomatoes arranged on the floral platter."
+ },
+ {
+  "rid": "12_17",
+  "sid": "S6",
+  "text": "Sprinkle mozzarella cheese on top of the tomato throughout the platter",
+  "truth": "no",
+  "clip": [
+   77.1,
+   89.1
+  ],
+  "shown": "S4",
+  "spark": "no",
+  "open": "no",
+  "spark_what": "The person picks up sliced small tomatoes from a cutting board and arranges them on a floral plate.",
+  "open_what": "The person arranges thick tomato slices from a cutting board onto a floral platter in a single layer and does not sprinkle any cheese."
+ },
+ {
+  "rid": "12_17",
+  "sid": "S3",
+  "text": "Slice one tomato into about 1/2 inch thick slices",
+  "truth": "yes",
+  "clip": [
+   45.0,
+   62.1
+  ],
+  "shown": null,
+  "spark": "yes",
+  "open": "yes",
+  "spark_what": "The person slices a whole tomato into thick round slices on a wooden cutting board with a yellow knife.",
+  "open_what": "A person slices a whole tomato into about 1/2-inch thick rounds on a wooden cutting board using a yellow knife."
+ },
+ {
+  "rid": "12_17",
+  "sid": "S3",
+  "text": "Slice one tomato into about 1/2 inch thick slices",
+  "truth": "no",
+  "clip": [
+   197.1,
+   222.5
+  ],
+  "shown": "S6",
+  "spark": "no",
+  "open": "no",
+  "spark_what": "The person opens a bag of shredded mozzarella cheese and sprinkles it over sliced tomatoes arranged on a plate.",
+  "open_what": "The person sprinkles shredded mozzarella cheese from a purple bag onto sliced tomatoes already arranged on a floral platter."
+ },
+ {
+  "rid": "17_40",
+  "sid": "S9",
+  "text": "Add the chopped or grated cucumber to the whisked curd",
+  "truth": "yes",
+  "clip": [
+   548.3,
+   564.8
+  ],
+  "shown": null,
+  "spark": "yes",
+  "open": "yes",
+  "spark_what": "The person carries the green cutting board of chopped cucumber over to the counter and uses their hand to push the pieces into the bowl of whisked curd.",
+  "open_what": "The person carries the green cutting board with chopped cucumber to the bowl of whisked curd and transfers the cucumber pieces by hand into the bowl."
+ },
+ {
+  "rid": "17_40",
+  "sid": "S9",
+  "text": "Add the chopped or grated cucumber to the whisked curd",
+  "truth": "no",
+  "clip": [
+   251.1,
+   279.5
+  ],
+  "shown": "S2",
+  "spark": "no",
+  "open": "no",
+  "spark_what": "The person retrieves a chili powder jar from the cabinet, measures 1/4 teaspoon into a white bowl containing chopped ingredients, then closes the jar and returns it to the cabinet.",
+  "open_what": "The person retrieves a jar of chili powder from an overhead cabinet, measures 1/4 teaspoon, and sprinkles it into a bowl on the counter instead of adding cucumber."
+ },
+ {
+  "rid": "1_7",
+  "sid": "S4",
+  "text": "stir the ramekin cup",
+  "truth": "yes",
+  "clip": [
+   197.3,
+   224.7
+  ],
+  "shown": null,
+  "spark": "yes",
+  "open": "no",
+  "spark_what": "The person opens the microwave, removes a white cup with egg, and stirs it with a spoon.",
+  "open_what": "The person holds a ramekin cup with a raw whole egg and vigorously beats/stirs it with a spoon in front of the open microwave, which is a pre-cook stir not the post-30-second microwave stir required for S4."
+ },
+ {
+  "rid": "1_7",
+  "sid": "S4",
+  "text": "stir the ramekin cup",
+  "truth": "no",
+  "clip": [
+   568.4,
+   587.2
+  ],
+  "shown": "S11",
+  "spark": "no",
+  "open": "no",
+  "spark_what": "The person scoops the cooked egg with melted cheese out of the white ramekin cup onto the lettuce-lined English muffin half using a spoon.",
+  "open_what": "The person holds a ramekin with a fully cooked egg topped with melted cheese and uses a spoon to scoop and transfer the egg onto the lettuce-lined bottom half of an English muffin."
+ },
+ {
+  "rid": "9_108",
+  "sid": "S5",
+  "text": "Sprinkle 1/4 teaspoon cinnamon over the egg",
+  "truth": "yes",
+  "clip": [
+   238.4,
+   257.6
+  ],
+  "shown": null,
+  "spark": "yes",
+  "open": "yes",
+  "spark_what": "The person retrieves a jar of ground cinnamon from the cabinet and adds a measuring spoonful of it to the mug containing egg.",
+  "open_what": "The person takes a jar of cinnamon from the cabinet, measures a spoonful with a 1/4-teaspoon, and sprinkles it into the mug containing the whisked egg."
+ },
+ {
+  "rid": "9_108",
+  "sid": "S5",
+  "text": "Sprinkle 1/4 teaspoon cinnamon over the egg",
+  "truth": "no",
+  "clip": [
+   573.6,
+   583.2
+  ],
+  "shown": "S10",
+  "spark": "no",
+  "open": "no",
+  "spark_what": "The person tips the mug\u2019s contents out onto a plate and then reaches for a knife from the utensil holder.",
+  "open_what": "The person retrieves a plate from the dishwasher and inverts the mug to dump the cooked bread-egg mixture onto the plate before setting the empty mug down."
+ },
+ {
+  "rid": "7_5",
+  "sid": "S11",
+  "text": "Roll the tortilla from one end to another into a log shape, about 1.5 inches thick. Roll it tight enough to prevent gaps but not so tight that the filling leaks",
+  "truth": "yes",
+  "clip": [
+   562.1,
+   591.1
+  ],
+  "shown": null,
+  "spark": "yes",
+  "open": "yes",
+  "spark_what": "The person rolls the egg-filled tortilla on the cutting board from one end to the other into a tight log shape.",
+  "open_what": "The person uses both hands to fold and roll the egg-filled tortilla on the cutting board into a tight log-shaped burrito."
+ },
+ {
+  "rid": "7_5",
+  "sid": "S11",
+  "text": "Roll the tortilla from one end to another into a log shape, about 1.5 inches thick. Roll it tight enough to prevent gaps but not so tight that the filling leaks",
+  "truth": "no",
+  "clip": [
+   502.9,
+   530.4
+  ],
+  "shown": "S9",
+  "spark": "no",
+  "open": "no",
+  "spark_what": "The person stirs the egg mixture in a bowl and pours it onto a tortilla on a cutting board but does not roll the tortilla.",
+  "open_what": "The person pours the scrambled egg mixture from a white bowl onto the center of a tortilla on a cutting board next to the stove."
+ },
+ {
+  "rid": "1_43",
+  "sid": "S4",
+  "text": "stir the ramekin cup",
+  "truth": "yes",
+  "clip": [
+   119.7,
+   140.5
+  ],
+  "shown": null,
+  "spark": "no",
+  "open": "no",
+  "spark_what": "The person uses a fork to beat raw liquid egg in a small white ramekin on a cutting board, then sets the fork down and walks away.",
+  "open_what": "The person uses a fork to continuously whisk-stir a raw, liquid yellow egg in a small white ramekin on a cutting board, which is before any microwaving rather than the post-microwave stir of S4."
+ },
+ {
+  "rid": "1_43",
+  "sid": "S4",
+  "text": "stir the ramekin cup",
+  "truth": "no",
+  "clip": [
+   400.2,
+   428.1
+  ],
+  "shown": "S11",
+  "spark": "no",
+  "open": "no",
+  "spark_what": "The person inverts the ramekin containing cooked egg topped with salsa over the lettuce-lined muffin half and uses a fork to slide the egg out onto the muffin.",
+  "open_what": "The person picks up the ramekin with the cooked egg and salsa and uses a fork to transfer the egg onto the lettuce-covered bottom half of an English muffin."
+ },
+ {
+  "rid": "10_6",
+  "sid": "S5",
+  "text": "Use the knife to scoop jelly from the jar",
+  "truth": "yes",
+  "clip": [
+   85.5,
+   98.6
+  ],
+  "shown": null,
+  "spark": "yes",
+  "open": "yes",
+  "spark_what": "The person takes a jelly jar from the cabinet and uses the knife to scoop jelly from the jar onto the peanut-butter-covered tortilla.",
+  "open_what": "The person retrieves a jar of orange-colored jelly/preserve from the cabinet and uses the butter knife to scoop it from the jar and spread it over the peanut butter on the tortilla."
+ },
+ {
+  "rid": "10_6",
+  "sid": "S5",
+  "text": "Use the knife to scoop jelly from the jar",
+  "truth": "no",
+  "clip": [
+   12.0,
+   24.9
+  ],
+  "shown": "S2",
+  "spark": "no",
+  "open": "no",
+  "spark_what": "The person wipes the knife with a paper towel, retrieves a jar of peanut butter from the cabinet, scoops it with the knife and spreads it onto the tortilla.",
+  "open_what": "The person wipes the knife with a paper towel, retrieves a peanut butter jar from the cabinet, and scoops peanut butter from the jar with the knife."
+ },
+ {
+  "rid": "9_8",
+  "sid": "S10",
+  "text": "Put the mug's contents on a plate",
+  "truth": "yes",
+  "clip": [
+   519.8,
+   536.7
+  ],
+  "shown": null,
+  "spark": "yes",
+  "open": "yes",
+  "spark_what": "The person gets a black plate from the dishwasher and inverts the mug over it to dump the cooked contents onto the plate.",
+  "open_what": "The person retrieves a black plate from under the counter, carries it to the cutting board, and inverts the mug to deposit its cooked contents onto the plate."
+ },
+ {
+  "rid": "9_8",
+  "sid": "S10",
+  "text": "Put the mug's contents on a plate",
+  "truth": "no",
+  "clip": [
+   71.8,
+   95.8
+  ],
+  "shown": "S2",
+  "spark": "no",
+  "open": "no",
+  "spark_what": "The person swirls melted butter around inside the mug to coat it, sets the mug on the cutting board, then walks to and opens the refrigerator.",
+  "open_what": "The person holds and tilts/swirls a mug containing liquid on a wooden cutting board next to a bowl, then walks away carrying the mug, with no plate ever visible."
+ },
+ {
+  "rid": "27_34",
+  "sid": "S7",
+  "text": "Mix the cheese and red bell pepper in the bowl",
+  "truth": "yes",
+  "clip": [
+   346.0,
+   361.1
+  ],
+  "shown": null,
+  "spark": "yes",
+  "open": "yes",
+  "spark_what": "The person stirs melted yellow cheese with chopped green pepper in a small pink bowl on the stovetop using a spoon.",
+  "open_what": "The person in a blue shirt holds a small bowl on the stovetop and continuously stirs a yellow liquid with green broccoli florets using a utensil."
+ },
+ {
+  "rid": "27_34",
+  "sid": "S7",
+  "text": "Mix the cheese and red bell pepper in the bowl",
+  "truth": "no",
+  "clip": [
+   466.4,
+   491.5
+  ],
+  "shown": "S11",
+  "spark": "yes",
+  "open": "yes",
+  "spark_what": "The person holds the small pink bowl and stirs sliced green peppers together with the cheese mixture using a fork.",
+  "open_what": "A person in a blue shirt stands at a kitchen counter and vigorously stirs/whisks a pink bowl containing sliced green bell peppers and a yellow liquid with white dollops while a large glass bowl of pale mashed food sits nearby."
+ },
+ {
+  "rid": "12_10",
+  "sid": "S2",
+  "text": "gently dry it with a paper/tea towel",
+  "truth": "yes",
+  "clip": [
+   50.3,
+   59.7
+  ],
+  "shown": null,
+  "spark": "yes",
+  "open": "yes",
+  "spark_what": "The person rubs a whole tomato dry with a tan cloth towel hanging from the stove handle.",
+  "open_what": "The person holds a tomato and gently dries it by rubbing it with a tea towel hanging from the stove handle, assisted with a paper towel."
+ },
+ {
+  "rid": "12_10",
+  "sid": "S2",
+  "text": "gently dry it with a paper/tea towel",
+  "truth": "no",
+  "clip": [
+   164.6,
+   188.9
+  ],
+  "shown": "S5",
+  "spark": "no",
+  "open": "no",
+  "spark_what": "The person sprinkles salt over sliced tomatoes on a white plate and adjusts the slices with their fingers.",
+  "open_what": "The person sprinkles seasoning from a blue and white container onto sliced tomatoes arranged in a single layer on a white plate on the stovetop."
+ },
+ {
+  "rid": "8_40",
+  "sid": "S6",
+  "text": "Mix the contents of the mug",
+  "truth": "yes",
+  "clip": [
+   288.4,
+   309.8
+  ],
+  "shown": null,
+  "spark": "yes",
+  "open": "yes",
+  "spark_what": "The person stirs a brown liquid mixture in a square white dish with a spoon for most of the clip, then sets the spoon down and lifts the dish with both hands.",
+  "open_what": "The person continuously stirs a brown mixture in a white square plate on the counter beside the stove with a spoon."
+ },
+ {
+  "rid": "8_40",
+  "sid": "S6",
+  "text": "Mix the contents of the mug",
+  "truth": "no",
+  "clip": [
+   63.6,
+   90.2
+  ],
+  "shown": "S5",
+  "spark": "no",
+  "open": "no",
+  "spark_what": "The person retrieves a bag of chocolate chips from the cabinet, places a couple of pieces on a small plate, reseals the bag, and puts it back in the cabinet.",
+  "open_what": "The person retrieves a yellow bag from the kitchen cabinet, adds a few brown chunks to a small white plate beside the stove, then reseals the bag and returns it to the cabinet."
+ },
+ {
+  "rid": "7_1",
+  "sid": "S2",
+  "text": "Whisk the egg",
+  "truth": "yes",
+  "clip": [
+   43.0,
+   70.8
+  ],
+  "shown": null,
+  "spark": "yes",
+  "open": "yes",
+  "spark_what": "The person picks up a whisk and vigorously beats the raw egg in a dark bowl until it becomes a uniform yellow liquid.",
+  "open_what": "The person whisks a single raw egg in a dark bowl on a cutting board until it becomes a smooth, uniform pale yellow liquid."
+ },
+ {
+  "rid": "7_1",
+  "sid": "S2",
+  "text": "Whisk the egg",
+  "truth": "no",
+  "clip": [
+   470.4,
+   483.3
+  ],
+  "shown": "S9",
+  "spark": "no",
+  "open": "no",
+  "spark_what": "The person pours the cooked egg mixture with sauce from a bowl onto a tortilla using a whisk, then sets the bowl down and puts the whisk away.",
+  "open_what": "The person pours the cooked egg mixture with salsa/sauce from a dark bowl onto an 8-inch tortilla on a cutting board, using a whisk to scrape it out, then sets the bowl aside."
+ },
+ {
+  "rid": "7_32",
+  "sid": "S6",
+  "text": "Place 8 inch tortilla on a cutting board",
+  "truth": "yes",
+  "clip": [
+   187.4,
+   213.1
+  ],
+  "shown": null,
+  "spark": "yes",
+  "open": "yes",
+  "spark_what": "The person opens a package of tortillas, takes out one tortilla and lays it flat on the wooden cutting board.",
+  "open_what": "The person opens a plastic package of tortillas on the stovetop and then places a single tortilla flat onto the wooden cutting board next to the bowl of eggs."
+ },
+ {
+  "rid": "7_32",
+  "sid": "S6",
+  "text": "Place 8 inch tortilla on a cutting board",
+  "truth": "no",
+  "clip": [
+   4.0,
+   31.3
+  ],
+  "shown": "S1",
+  "spark": "no",
+  "open": "no",
+  "spark_what": "The person takes a pink bowl from the dishwasher, sets it on a wooden board, retrieves eggs from the fridge, and cracks an egg into the bowl.",
+  "open_what": "The person retrieves a pink bowl from the dishwasher and places it on a cutting board, then takes eggs and a package from the refrigerator and cracks an egg into the bowl."
+ },
+ {
+  "rid": "27_49",
+  "sid": "S8",
+  "text": "add 1/2 tbsp softened butter to the bowl",
+  "truth": "yes",
+  "clip": [
+   446.3,
+   457.3
+  ],
+  "shown": null,
+  "spark": "yes",
+  "open": "yes",
+  "spark_what": "The person scoops softened butter from a plate and adds it to the bowl of cheese and pepper mixture by the sink.",
+  "open_what": "The person scoops a pat of softened butter from a plate with a spoon and drops it into the bowl containing the melted cheese and pepper mixture by the sink."
+ },
+ {
+  "rid": "27_49",
+  "sid": "S8",
+  "text": "add 1/2 tbsp softened butter to the bowl",
+  "truth": "no",
+  "clip": [
+   44.1,
+   62.8
+  ],
+  "shown": "S1",
+  "spark": "no",
+  "open": "no",
+  "spark_what": "The person scoops shredded cheddar cheese into a red measuring cup and transfers it into a small white microwave-safe cup.",
+  "open_what": "The person portions shredded cheddar cheese from a bag into a red measuring cup and then into a small white bowl beside a bowl of water, handling dishes and moving between the counter and sink without adding butter."
+ },
+ {
+  "rid": "7_32",
+  "sid": "S9",
+  "text": "Pour egg mixture on top of the tortilla",
+  "truth": "yes",
+  "clip": [
+   319.4,
+   328.9
+  ],
+  "shown": null,
+  "spark": "yes",
+  "open": "yes",
+  "spark_what": "The person spoons the cooked egg mixture from a bowl onto the center of a tortilla on a cutting board.",
+  "open_what": "The person scoops the orange egg mixture from the pink bowl with a spoon and deposits it onto the center of the tortilla on the cutting board."
+ },
+ {
+  "rid": "7_32",
+  "sid": "S9",
+  "text": "Pour egg mixture on top of the tortilla",
+  "truth": "no",
+  "clip": [
+   301.3,
+   315.9
+  ],
+  "shown": "S8",
+  "spark": "no",
+  "open": "no",
+  "spark_what": "The person thoroughly mixes the egg and sauce in the bowl with a fork while the tortilla remains untouched on the cutting board.",
+  "open_what": "The person stirs and mixes the egg and salsa mixture inside the pink bowl with a fork, while the tortilla on the cutting board remains empty and untouched."
+ },
+ {
+  "rid": "10_6",
+  "sid": "S10",
+  "text": "Trim the ends of the tortilla roll with the butter knife, leaving 1/2 inch margin between the last toothpick and the end of the roll",
+  "truth": "yes",
+  "clip": [
+   182.5,
+   199.8
+  ],
+  "shown": null,
+  "spark": "yes",
+  "open": "yes",
+  "spark_what": "The person uses a knife to trim both ends off the rolled tortilla on the cutting board.",
+  "open_what": "The person uses a small knife to trim the small end pieces off the toothpick-secured tortilla roll on the cutting board."
+ },
+ {
+  "rid": "10_6",
+  "sid": "S10",
+  "text": "Trim the ends of the tortilla roll with the butter knife, leaving 1/2 inch margin between the last toothpick and the end of the roll",
+  "truth": "no",
+  "clip": [
+   85.5,
+   98.6
+  ],
+  "shown": "S5",
+  "spark": "no",
+  "open": "no",
+  "spark_what": "The person takes a jelly jar from the cabinet and uses a butter knife to scoop jelly and spread it over peanut butter on a flat tortilla.",
+  "open_what": "The person retrieves a jar of jelly from a cabinet and scoops and spreads the jelly onto a tortilla already covered with nut butter, with a pre-rolled tortilla log sitting untouched on the cutting board."
+ },
+ {
+  "rid": "17_28",
+  "sid": "S2",
+  "text": "1/4 teaspoon of red chilli powder to the bowl",
+  "truth": "yes",
+  "clip": [
+   266.3,
+   281.2
+  ],
+  "shown": null,
+  "spark": "yes",
+  "open": "yes",
+  "spark_what": "The person scoops red powder from a packet with a red measuring spoon and adds it to a small bowl on the stovetop.",
+  "open_what": "The person takes a packet of red chilli powder from the cabinet and sprinkles the red powder into the bowl of whisked curd on the stovetop."
+ },
+ {
+  "rid": "17_28",
+  "sid": "S2",
+  "text": "1/4 teaspoon of red chilli powder to the bowl",
+  "truth": "no",
+  "clip": [
+   287.2,
+   312.2
+  ],
+  "shown": "S3",
+  "spark": "no",
+  "open": "no",
+  "spark_what": "The person opens several upper cabinets, retrieves a container, scoops white powder with a small red spoon and adds it to a small bowl on the stovetop that already contains red powder.",
+  "open_what": "The person reaches for a container, scoops white salt with a small red spoon, and adds it to the bowl of curd on the stovetop that already contains red chilli powder while chopped cucumber rests on the cutting board nearby."
+ },
+ {
+  "rid": "1_43",
+  "sid": "S10",
+  "text": "Line the bottom piece of the English muffin with lettuce",
+  "truth": "yes",
+  "clip": [
+   211.7,
+   239.7
+  ],
+  "shown": null,
+  "spark": "yes",
+  "open": "yes",
+  "spark_what": "The person gets shredded lettuce from the fridge, lines one English muffin half with it, then returns the bag to the fridge.",
+  "open_what": "The person retrieves a bag of shredded lettuce from the refrigerator and sprinkles it onto one half of a split English muffin on a cutting board next to a ramekin of egg."
+ },
+ {
+  "rid": "1_43",
+  "sid": "S10",
+  "text": "Line the bottom piece of the English muffin with lettuce",
+  "truth": "no",
+  "clip": [
+   119.7,
+   140.5
+  ],
+  "shown": "S4",
+  "spark": "no",
+  "open": "no",
+  "spark_what": "The person stirs a beaten egg in a small white ramekin with a fork on a wooden cutting board.",
+  "open_what": "The person vigorously stirs a raw egg in a small white ramekin with a fork on a wooden cutting board beside a stovetop."
+ },
+ {
+  "rid": "9_108",
+  "sid": "S2",
+  "text": "Roll the butter around in the mug to coat it",
+  "truth": "yes",
+  "clip": [
+   119.7,
+   149.4
+  ],
+  "shown": null,
+  "spark": "yes",
+  "open": "yes",
+  "spark_what": "The person pours melted butter from a small bowl into a mug and then tilts and rotates the mug to coat its interior.",
+  "open_what": "The person pours yellow melted butter from a floral bowl into a white mug and then tilts and swirls the mug to coat its interior walls."
+ },
+ {
+  "rid": "9_108",
+  "sid": "S2",
+  "text": "Roll the butter around in the mug to coat it",
+  "truth": "no",
+  "clip": [
+   581.3,
+   599.5
+  ],
+  "shown": "S11",
+  "spark": "no",
+  "open": "no",
+  "spark_what": "The person cuts the cooked food into pieces on a plate using a knife.",
+  "open_what": "The person holds a plate steady and uses a knife to cut the cooked contents from the mug into several pieces."
+ },
+ {
+  "rid": "17_14",
+  "sid": "S10",
+  "text": "1/2 teaspoon of chaat masala powder to the bowl",
+  "truth": "yes",
+  "clip": [
+   516.4,
+   545.3
+  ],
+  "shown": null,
+  "spark": "cannot_tell",
+  "open": "yes",
+  "spark_what": "The person retrieves a spice packet and measuring spoon, scoops powder from the packet, and adds it to the metal mixing bowl containing the curd mixture.",
+  "open_what": "The person measures a 1/2 teaspoon of powder from a foil packet and adds it to the metal bowl containing whisked curd and chopped cucumber."
+ },
+ {
+  "rid": "17_14",
+  "sid": "S10",
+  "text": "1/2 teaspoon of chaat masala powder to the bowl",
+  "truth": "no",
+  "clip": [
+   328.6,
+   354.3
+  ],
+  "shown": "S6",
+  "spark": "no",
+  "open": "no",
+  "spark_what": "The person retrieves a packaged cucumber from the refrigerator, places one cucumber on the counter, returns the package, then rinses the cucumber under running water at the sink.",
+  "open_what": "The person opens the refrigerator, takes out a bag of cucumbers, places one cucumber on the counter, and then rinses it at the sink."
+ },
+ {
+  "rid": "12_10",
+  "sid": "S6",
+  "text": "Sprinkle mozzarella cheese on top of the tomato throughout the platter",
+  "truth": "yes",
+  "clip": [
+   289.9,
+   317.2
+  ],
+  "shown": null,
+  "spark": "yes",
+  "open": "yes",
+  "spark_what": "The person sprinkles shredded mozzarella cheese from a bag onto each tomato slice on a white plate.",
+  "open_what": "The person sprinkles shredded mozzarella cheese from a bag onto the tomato slices arranged on a white plate on the stovetop, covering each slice between frames."
+ },
+ {
+  "rid": "12_10",
+  "sid": "S6",
+  "text": "Sprinkle mozzarella cheese on top of the tomato throughout the platter",
+  "truth": "no",
+  "clip": [
+   164.6,
+   188.9
+  ],
+  "shown": "S5",
+  "spark": "no",
+  "open": "no",
+  "spark_what": "The person sprinkles salt from a blue canister onto sliced tomatoes on a white plate and repositions the slices by hand.",
+  "open_what": "The person sprinkles fine white powder, salt, from a blue-and-white shaker container by hand over sliced tomatoes arranged on a white plate on the stovetop."
+ },
+ {
+  "rid": "27_4",
+  "sid": "S11",
+  "text": "Mix all the ingredients of the bowl well",
+  "truth": "yes",
+  "clip": [
+   618.1,
+   643.7
+  ],
+  "shown": null,
+  "spark": "yes",
+  "open": "yes",
+  "spark_what": "The person picks up a spoon and thoroughly stirs and mixes the mixture in the gray bowl for most of the clip.",
+  "open_what": "The person stirs and mixes the contents of the gray bowl containing melted cheese and red bell pepper with a spoon on the stovetop for an extended period."
+ },
+ {
+  "rid": "27_4",
+  "sid": "S11",
+  "text": "Mix all the ingredients of the bowl well",
+  "truth": "no",
+  "clip": [
+   268.0,
+   278.2
+  ],
+  "shown": "S4",
+  "spark": "no",
+  "open": "no",
+  "spark_what": "The person carries a cutting board with chopped red pepper to the counter and scrapes the pieces into a bowl with a pink knife.",
+  "open_what": "The person finishes chopping red bell pepper into small pieces on a wooden cutting board and uses a pink knife to scrape the pieces into a bowl on the counter."
+ },
+ {
+  "rid": "12_38",
+  "sid": "S8",
+  "text": "Garnish platter with italian seasoning",
+  "truth": "yes",
+  "clip": [
+   263.3,
+   273.5
+  ],
+  "shown": null,
+  "spark": "yes",
+  "open": "yes",
+  "spark_what": "The person sprinkles seasoning from a small shaker over the three items on the white plate.",
+  "open_what": "The person shakes dried herb seasoning from a shaker bottle over three tomato slices on a white platter already covered with shredded cheese."
+ },
+ {
+  "rid": "12_38",
+  "sid": "S8",
+  "text": "Garnish platter with italian seasoning",
+  "truth": "no",
+  "clip": [
+   147.7,
+   162.2
+  ],
+  "shown": "S5",
+  "spark": "no",
+  "open": "no",
+  "spark_what": "The person scoops a white substance from a bag with a spoon and sprinkles it over the tomato slices on the white plate.",
+  "open_what": "The person scoops a white ingredient from a bag with a spoon and sprinkles it onto tomato slices arranged on a white platter, which corresponds to adding cheese/salt not italian seasoning."
+ },
+ {
+  "rid": "27_37",
+  "sid": "S8",
+  "text": "add 1/2 tbsp softened butter to the bowl",
+  "truth": "yes",
+  "clip": [
+   462.8,
+   479.4
+  ],
+  "shown": null,
+  "spark": "yes",
+  "open": "yes",
+  "spark_what": "The person scoops softened butter from a blue bowl with a spoon and adds it to the cheese and pepper mixture bowl.",
+  "open_what": "The person scoops softened butter from a light blue bowl with a spoon and drops it into the patterned bowl containing the cheese and chopped red pepper mixture."
+ },
+ {
+  "rid": "27_37",
+  "sid": "S8",
+  "text": "add 1/2 tbsp softened butter to the bowl",
+  "truth": "no",
+  "clip": [
+   67.2,
+   92.9
+  ],
+  "shown": "S10",
+  "spark": "no",
+  "open": "no",
+  "spark_what": "The person retrieves a measuring spoon from a drawer, scoops ground seasoning from a white container into a small bowl, and returns the container to an overhead cabinet.",
+  "open_what": "The person scoops ground black pepper from a white flip-top container with a small black spoon and adds it to a bowl containing a light-colored liquid on the counter."
+ },
+ {
+  "rid": "17_14",
+  "sid": "S6",
+  "text": "Rinse 1 medium sized cucumber",
+  "truth": "yes",
+  "clip": [
+   328.6,
+   354.3
+  ],
+  "shown": null,
+  "spark": "yes",
+  "open": "yes",
+  "spark_what": "The person takes a cucumber from the refrigerator and rinses it under running water in the sink.",
+  "open_what": "The person takes a bag of cucumbers from the refrigerator, removes one cucumber onto the counter, then brings it to the sink and rinses it under running water."
+ },
+ {
+  "rid": "17_14",
+  "sid": "S6",
+  "text": "Rinse 1 medium sized cucumber",
+  "truth": "no",
+  "clip": [
+   285.3,
+   309.8
+  ],
+  "shown": "S5",
+  "spark": "no",
+  "open": "no",
+  "spark_what": "The person takes a measuring spoon, retrieves a spice jar from the overhead cabinet, scoops powder and adds it to a bowl of curd mixture on the stove.",
+  "open_what": "The person retrieves a spice jar from a drawer and cabinet and adds the spice to a white mixture in a bowl on the stove while following a recipe on a tablet."
+ },
+ {
+  "rid": "9_47",
+  "sid": "S10",
+  "text": "Put the mug's contents on a plate",
+  "truth": "yes",
+  "clip": [
+   474.8,
+   490.0
+  ],
+  "shown": null,
+  "spark": "yes",
+  "open": "yes",
+  "spark_what": "The person takes a square plate from the dishwasher and inverts the mug to deposit its cooked contents onto the plate.",
+  "open_what": "The person takes a square black plate from the dishwasher, places it on the counter, and inverts the mug to deposit the cooked French toast onto the plate."
+ },
+ {
+  "rid": "9_47",
+  "sid": "S10",
+  "text": "Put the mug's contents on a plate",
+  "truth": "no",
+  "clip": [
+   166.3,
+   182.3
+  ],
+  "shown": "S2",
+  "spark": "no",
+  "open": "no",
+  "spark_what": "The person carries a mug with melted butter to the sink, swirls it, sets it down on a cutting board next to bread slices, and taps a tablet.",
+  "open_what": "The person carries a mug containing yellow liquid from the stove/sink area to the counter, sets it on a cutting board beside two slices of bread, and interacts with a tablet."
+ }
+]

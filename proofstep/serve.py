@@ -49,14 +49,16 @@ def list_runs() -> list[dict]:
         if path.stem.endswith(("_first_look", "_no_search")):
             continue
         report = json.loads(path.read_text())
+        recording = _recording_id(path.stem)
         runs.append({"name": path.stem, "procedure": report["procedure"], "counts": report["counts"],
-                     "recording": _recording_id(path.stem)})
+                     "recording": recording,
+                     "title": f"{recording} · open weights" if recording and path.stem.endswith("_open") else None})
     return runs
 
 
 def _recording_id(name: str) -> str | None:
     from .datasets import captaincook4d as cc4d
-    rid = name.removesuffix("_360p")
+    rid = name.removesuffix("_open").removesuffix("_360p")
     try:
         return rid if rid in cc4d.recordings() else None
     except FileNotFoundError:
