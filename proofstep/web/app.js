@@ -45,7 +45,8 @@ function verdict(step, truth) {
 }
 
 function seek(t, play = true) {
-  video.currentTime = Math.max(0, t - 1);
+  // Start a few seconds early: the moment itself can last only a second.
+  video.currentTime = Math.max(0, t - 3);
   if (play) video.play().catch(() => {});
 }
 
