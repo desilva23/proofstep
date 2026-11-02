@@ -28,7 +28,14 @@ _load_dotenv(ROOT / ".env")
 
 API_BASE = os.environ.get("MODEL_API_BASE", "https://api.meta.ai/v1")
 SPARK_MODEL = os.environ.get("PROOFSTEP_SPARK_MODEL", "muse-spark-1.3-contributor")
+PRIVATE_SPARK_MODEL = "muse-spark-1.3"
 SAM_MODEL = "sam-3.1"
+
+
+def use_private() -> None:
+    """Switch Muse Spark off the Contributor model, for this process and any check it starts."""
+    global SPARK_MODEL
+    SPARK_MODEL = os.environ["PROOFSTEP_SPARK_MODEL"] = PRIVATE_SPARK_MODEL
 
 
 def backend() -> str:

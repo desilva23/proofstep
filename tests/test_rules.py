@@ -129,5 +129,16 @@ class OpenWeightsTests(unittest.TestCase):
             self.assertEqual(config.backend(), "meta")
 
 
+class PrivateModeTests(unittest.TestCase):
+    def test_default_stays_contributor_until_asked(self):
+        self.assertEqual(config.SPARK_MODEL, "muse-spark-1.3-contributor")
+
+    def test_private_reaches_this_process_and_child_checks(self):
+        with mock.patch.dict(os.environ), mock.patch.object(config, "SPARK_MODEL", config.SPARK_MODEL):
+            config.use_private()
+            self.assertEqual(config.SPARK_MODEL, "muse-spark-1.3")
+            self.assertEqual(os.environ["PROOFSTEP_SPARK_MODEL"], "muse-spark-1.3")
+
+
 if __name__ == "__main__":
     unittest.main()

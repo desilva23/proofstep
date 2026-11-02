@@ -89,9 +89,16 @@ def main() -> None:
     wr.add_argument("instructions", nargs="?", type=Path, help="text file; reads stdin if left out")
     wr.add_argument("-o", "--out", type=Path, help="where to save it (default procedures/<name>.json)")
     wr.add_argument("--open-weights", action="store_true", help=open_help)
+    for p in (check, srv, wr):
+        p.add_argument("--private", action="store_true",
+                       help="use Muse Spark without Contributor terms, for footage Meta shouldn't train on (about 12x the price)")
     args = ap.parse_args()
     if getattr(args, "open_weights", False):
         os.environ["PROOFSTEP_BACKEND"] = "open"
+    if getattr(args, "private", False):
+        if config.backend() == "open":
+            ap.error("--private and --open-weights can't be combined: open weights send clips to another provider")
+        config.use_private()
 
     try:
         if args.cmd == "export":

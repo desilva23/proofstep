@@ -63,6 +63,10 @@ Every label in every test set was checked by eye. Each unseen set was picked, la
 
 **On unseen videos, proofstep makes about a quarter as many wrong calls as Spark alone (9 against 34). It gets there by sending 18% of steps to a person, often with the second to watch.** Almost all of the gain is in false accusations: Spark alone says a completed step was skipped 29 times, proofstep 4. It doesn't reduce false passes (5 each), and it usually abstains on skipped steps rather than calling them missing. So proofstep is a check on "not done", not a replacement for a person on "done".
 
+The first unseen set, `heldout`, was later used for the failed fixes described under "What didn't work". They were reverted, so its numbers didn't change, but it isn't untouched any more. On the other 15 videos, which were never used for any tuning (186 steps), proofstep made 4 wrong calls against 26 for Spark alone, and sent 23% of steps to a person.
+
+**Everything above is cooking.** One unscored trial outside it, a 92-second circuit build from [EgoOops](https://y-haneji.github.io/EgoOops-project-page/) (CC BY-SA 4.0) with the dataset's own instructions typed in, went poorly. 8 of 9 steps came back "can't verify", because SAM couldn't find several of the small parts, though 6 of those got a "likely at" moment on or right next to the step. The one verified step, putting in the batteries, is labelled as not done: they are already in the box in the first frame. Assembly work would need its own object names and its own test set.
+
 The window search is measured on the confirmation set, which was picked after the search was frozen:
 - It changed no answer into a wrong one.
 - It found two steps proofstep had wrongly called missing, and sent them back to a person.
@@ -165,7 +169,7 @@ The viewer shows the video with SAM's box around the evidence object, a timeline
 
 Every API answer is cached under `data/cache/`, so re-running costs nothing. Each paid call is logged to `data/costs.jsonl`. SAM is billed per frame ($0.20 per 1,000), which makes it the main cost: about $0.10 per object for a 4-minute video at 2 frames per second. `--max-sam-usd` (default $3) stops a run that would cost more per video.
 
-`muse-spark-1.3-contributor` is the default because it is about 12× cheaper, but Meta may train on what it receives. That is fine for the public dataset below and wrong for private footage: set `PROOFSTEP_SPARK_MODEL=muse-spark-1.3` for that.
+`muse-spark-1.3-contributor` is the default because it is about 12× cheaper, but Meta may train on what it receives. That is fine for the public dataset below and wrong for private footage: add `--private` to `check`, `write` or `serve` to use `muse-spark-1.3` instead. Spark calls then cost about 12× more, and the footage still goes to the Meta Model API. It can't be combined with `--open-weights`.
 
 ## Procedures
 
