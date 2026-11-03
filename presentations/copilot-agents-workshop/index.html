@@ -1,0 +1,1892 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Copilot Agents Workshop</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,800&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: a fixed 1280x720 slide stage scaled to fit the window, with a control bar and an optional speaker-notes drawer.
+   Under 760px wide the deck becomes a scrolling handout with every slide stacked. */
+:root {
+  --paper: #EEF1F6;
+  --surface: #FFFFFF;
+  --ink: #121A2B;
+  --muted: #55607A;
+  --line: #D3DAE6;
+  --accent: #E3A008;
+  --accent-ink: #121A2B;
+  --accent-soft: #FBEBC0;
+  --signal: #0B7366;
+  --signal-soft: #D5EFEA;
+  --danger: #B9400F;
+  --danger-soft: #F8DCCF;
+  --code-bg: #141B2B;
+  --code-fg: #E3E8F2;
+  --code-dim: #8B96AD;
+  --code-key: #F2B53A;
+  --code-str: #72D5C4;
+
+  --font-display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --font-body: "Atkinson Hyperlegible", "Segoe UI", system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, "SFMono-Regular", Consolas, monospace;
+
+  --fs-h1: 66px;
+  --fs-h2: 46px;
+  --fs-lead: 25px;
+  --fs-body: 21px;
+  --fs-small: 17px;
+  --fs-code: 16px;
+  --fs-eyebrow: 14px;
+  --pad-x: 80px;
+  --pad-y: 52px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #0C111A;
+    --surface: #151C2A;
+    --ink: #E7ECF5;
+    --muted: #9CA7BE;
+    --line: #2A3448;
+    --accent: #F2B53A;
+    --accent-ink: #121A2B;
+    --accent-soft: #3B2F12;
+    --signal: #55D3C2;
+    --signal-soft: #123430;
+    --danger: #F28E62;
+    --danger-soft: #3D2017;
+    --code-bg: #0A0E16;
+    --code-fg: #E3E8F2;
+    --code-dim: #7D88A0;
+    --code-key: #F2B53A;
+    --code-str: #72D5C4;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #0C111A;
+  --surface: #151C2A;
+  --ink: #E7ECF5;
+  --muted: #9CA7BE;
+  --line: #2A3448;
+  --accent: #F2B53A;
+  --accent-ink: #121A2B;
+  --accent-soft: #3B2F12;
+  --signal: #55D3C2;
+  --signal-soft: #123430;
+  --danger: #F28E62;
+  --danger-soft: #3D2017;
+  --code-bg: #0A0E16;
+  --code-fg: #E3E8F2;
+  --code-dim: #7D88A0;
+  --code-key: #F2B53A;
+  --code-str: #72D5C4;
+  color-scheme: dark;
+}
+
+[hidden] { display: none !important; }
+html, body { height: 100%; }
+body { margin: 0; }
+body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: var(--fs-body);
+  line-height: 1.45;
+}
+* { box-sizing: border-box; }
+
+.app {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 14px 0;
+}
+.viewport { flex: 1; position: relative; min-height: 0; }
+.stage {
+  position: absolute;
+  left: 50%; top: 50%;
+  width: 1280px; height: 720px;
+  transform: translate(-50%, -50%) scale(var(--s, 1));
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.04), 0 12px 40px rgb(0 0 0 / 0.08);
+}
+
+/* ---------- slide primitives ---------- */
+.slide {
+  position: absolute; inset: 0;
+  padding: var(--pad-y) var(--pad-x);
+  display: none;
+  flex-direction: column;
+  gap: 26px;
+}
+.slide.active { display: flex; }
+.notes { display: none; }
+
+.eyebrow {
+  font-size: var(--fs-eyebrow);
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  display: flex; align-items: center; gap: 10px;
+}
+.eyebrow b {
+  background: var(--accent); color: var(--accent-ink);
+  padding: 3px 9px; border-radius: 4px; letter-spacing: 0.08em;
+}
+h1, h2, h3 { font-family: var(--font-display); margin: 0; text-wrap: balance; font-weight: 800; }
+h1 { font-size: var(--fs-h1); line-height: 1.02; letter-spacing: -0.02em; }
+h2 { font-size: var(--fs-h2); line-height: 1.08; letter-spacing: -0.015em; }
+h3 { font-size: calc(var(--fs-body) * 1.12); font-weight: 600; line-height: 1.2; }
+p { margin: 0; }
+.lead { font-size: var(--fs-lead); color: var(--muted); max-width: 52ch; }
+.lead strong, .def strong { color: var(--ink); }
+.small { font-size: var(--fs-small); color: var(--muted); }
+.mark { background: var(--accent-soft); padding: 0 6px; border-radius: 4px; }
+code, .mono { font-family: var(--font-mono); font-size: 0.86em; }
+:not(pre) > code {
+  background: var(--paper); border: 1px solid var(--line);
+  padding: 1px 6px; border-radius: 5px; white-space: nowrap;
+}
+
+.def {
+  font-size: calc(var(--fs-lead) * 1.08);
+  line-height: 1.35;
+  max-width: 46ch;
+  padding-left: 22px;
+  border-left: 5px solid var(--accent);
+}
+
+.cols { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start; }
+.cols.wide-left { grid-template-columns: 1.25fr 1fr; }
+.cols.wide-right { grid-template-columns: 1fr 1.3fr; }
+.cols > * { min-width: 0; }
+.stack { display: flex; flex-direction: column; gap: 18px; }
+.fill { flex: 1; min-height: 0; }
+
+ul.clean, ol.clean { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 14px; }
+ul.ticks li { position: relative; padding-left: 30px; }
+ul.ticks li::before {
+  content: ""; position: absolute; left: 4px; top: 0.5em;
+  width: 10px; height: 10px; border-radius: 2px; background: var(--accent);
+}
+
+.card {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 20px 22px;
+  background: var(--surface);
+  display: flex; flex-direction: column; gap: 8px;
+}
+.card.tint { background: var(--paper); }
+.card .label {
+  font-size: var(--fs-eyebrow); font-weight: 700; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--signal);
+}
+.grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+.grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+.grid2 > *, .grid3 > * { min-width: 0; }
+
+/* code panels */
+pre.code {
+  margin: 0;
+  background: var(--code-bg);
+  color: var(--code-fg);
+  font-family: var(--font-mono);
+  font-size: var(--fs-code);
+  line-height: 1.55;
+  padding: 18px 22px;
+  border-radius: 10px;
+  overflow-x: auto;
+  white-space: pre;
+}
+.file {
+  display: flex; flex-direction: column; min-width: 0;
+}
+.file .fname {
+  font-family: var(--font-mono); font-size: var(--fs-small);
+  color: var(--muted); padding: 0 2px 8px;
+  display: flex; gap: 8px; align-items: center;
+}
+.file .fname::before {
+  content: ""; width: 12px; height: 14px; border: 2px solid var(--muted); border-radius: 2px;
+}
+.c { color: var(--code-dim); }
+.k { color: var(--code-key); }
+.s { color: var(--code-str); }
+.h { color: var(--code-key); font-weight: 600; }
+.gh { color: var(--code-fg); background: rgb(127 127 127 / 0.0); }
+.ghost { color: var(--code-dim); font-style: italic; }
+
+/* tables */
+.tablewrap { overflow-x: auto; }
+table.cmp { width: 100%; border-collapse: collapse; font-size: var(--fs-small); }
+table.cmp th, table.cmp td { text-align: left; padding: 11px 14px; border-bottom: 1px solid var(--line); vertical-align: top; }
+table.cmp thead th {
+  font-family: var(--font-display); font-weight: 600; font-size: var(--fs-body);
+  border-bottom: 2px solid var(--ink);
+}
+table.cmp tbody th { color: var(--muted); font-weight: 700; width: 22%; }
+table.cmp td.agent { background: var(--accent-soft); }
+
+/* status chips (agent log) */
+.chip {
+  display: inline-block; min-width: 52px; text-align: center;
+  font-family: var(--font-mono); font-size: 0.78em; font-weight: 600;
+  padding: 2px 8px; border-radius: 5px; color: var(--ink); background: var(--paper);
+  border: 1px solid var(--line);
+}
+.chip.ok { background: var(--signal-soft); border-color: transparent; }
+.chip.bad { background: var(--danger-soft); border-color: transparent; }
+.chip.ed { background: var(--accent-soft); border-color: transparent; }
+
+.mock {
+  border: 1px solid var(--line); border-radius: 12px; background: var(--paper);
+  padding: 18px; display: flex; flex-direction: column; gap: 14px;
+  font-size: var(--fs-small);
+}
+.mock-head { display: flex; justify-content: space-between; align-items: center; font-weight: 700; color: var(--muted); }
+.pill {
+  font-size: 0.82em; border: 1px solid var(--line); background: var(--surface);
+  padding: 3px 10px; border-radius: 999px; color: var(--ink);
+}
+.msg { background: var(--surface); border: 1px solid var(--line); border-radius: 10px; padding: 12px 14px; }
+.msg.you { align-self: flex-end; background: var(--ink); color: var(--surface); border-color: var(--ink); max-width: 90%; }
+.log { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 9px; font-family: var(--font-mono); font-size: 0.9em; }
+.log li { display: flex; gap: 10px; align-items: baseline; }
+
+/* divider slides */
+.slide.divider { justify-content: center; gap: 34px; background: var(--paper); }
+.part-no {
+  font-family: var(--font-display); font-weight: 800;
+  background: var(--accent); color: var(--accent-ink);
+  width: 150px; height: 150px; border-radius: 16px;
+  display: grid; place-items: center; font-size: 96px; line-height: 1;
+}
+.divider h2 { font-size: calc(var(--fs-h1) * 1.05); max-width: 16ch; }
+.divider .goal { font-size: var(--fs-lead); max-width: 48ch; color: var(--muted); }
+.divider .goal strong { color: var(--ink); }
+
+/* numbered steps (real sequences only) */
+ol.steps { margin: 0; padding: 0; list-style: none; counter-reset: st; display: flex; flex-direction: column; gap: 14px; }
+ol.steps > li { counter-increment: st; display: grid; grid-template-columns: 40px 1fr; gap: 14px; align-items: start; }
+ol.steps > li::before {
+  content: counter(st);
+  font-family: var(--font-display); font-weight: 800; font-size: 0.95em;
+  width: 36px; height: 36px; border-radius: 50%;
+  display: grid; place-items: center;
+  background: var(--ink); color: var(--surface);
+}
+ol.steps.grid { display: grid; grid-template-columns: 1fr 1fr; column-gap: 36px; row-gap: 20px; }
+ol.steps li > div { min-width: 0; }
+
+.callout {
+  border-radius: 10px; padding: 14px 18px;
+  background: var(--signal-soft); color: var(--ink);
+  font-size: var(--fs-small);
+}
+.callout strong { color: var(--signal); }
+
+/* diagrams */
+svg.diagram { width: 100%; height: auto; max-width: 100%; display: block; }
+svg .node { fill: var(--surface); stroke: var(--ink); stroke-width: 2; }
+svg .node.hot { fill: var(--accent); stroke: var(--accent); }
+svg .t { fill: var(--ink); font-family: var(--font-display); font-weight: 800; font-size: 24px; }
+svg .t.dark { fill: var(--accent-ink); }
+svg .st { fill: var(--muted); font-family: var(--font-body); font-size: 16px; }
+svg .st.dark { fill: var(--accent-ink); }
+svg .arrow { fill: none; stroke: var(--muted); stroke-width: 2.5; }
+svg .tip { fill: var(--muted); }
+svg .pillbox { fill: var(--paper); stroke: var(--line); stroke-width: 1.5; }
+
+.ctx { display: flex; flex-direction: column; gap: 8px; }
+.ctx > * {
+  border: 1px solid var(--line); border-radius: 8px; padding: 10px 14px; width: 100%;
+  display: flex; justify-content: space-between; align-items: center; gap: 16px;
+  font-family: var(--font-body); font-size: var(--fs-small); text-align: left; color: var(--ink); background: var(--surface);
+}
+.ctx > * > span:last-child { font-family: var(--font-mono); color: var(--muted); font-size: 0.85em; text-align: right; }
+.ctx > .you { background: var(--ink); color: var(--surface); border-color: var(--ink); }
+.ctx > .you > span:last-child { color: var(--surface); opacity: 0.75; }
+.ctx > .layer { cursor: pointer; }
+.ctx > .layer[aria-pressed="true"] { background: var(--accent-soft); border-color: transparent; }
+.ctx > .layer[aria-pressed="false"] { color: var(--muted); border-style: dashed; }
+.ctx > .layer[aria-pressed="false"] > span:first-child { text-decoration: line-through; }
+.ctx > .layer .sw { font-weight: 700; }
+.ctx > .layer[aria-pressed="true"] .sw::after { content: "ON"; color: var(--ink); }
+.ctx > .layer[aria-pressed="false"] .sw::after { content: "OFF"; }
+
+.predict { display: flex; flex-direction: column; gap: 10px; font-size: var(--fs-small); }
+.predict .row { display: grid; grid-template-columns: 136px 1fr 54px; gap: 12px; align-items: center; }
+.predict .bar { height: 14px; border-radius: 3px; background: var(--accent); }
+.predict .row:not(:first-child) .bar { background: var(--line); }
+.predict .pct { font-variant-numeric: tabular-nums; text-align: right; color: var(--muted); }
+
+.tree { font-family: var(--font-mono); font-size: var(--fs-code); line-height: 1.6; white-space: pre; }
+.tree .new { background: var(--accent-soft); border-radius: 3px; padding: 0 4px; }
+
+.agenda { display: flex; flex-direction: column; }
+.agenda .row {
+  display: grid; grid-template-columns: 64px 1fr 1.25fr 90px; gap: 20px; align-items: baseline;
+  padding: 15px 0; border-bottom: 1px solid var(--line);
+}
+.agenda .row:first-child { border-top: 1px solid var(--line); }
+.agenda .n { font-family: var(--font-display); font-weight: 800; font-size: 30px; color: var(--muted); }
+.agenda .t { font-family: var(--font-display); font-weight: 600; font-size: 25px; }
+.agenda .d { color: var(--muted); font-size: var(--fs-small); }
+.agenda .m { text-align: right; color: var(--muted); font-variant-numeric: tabular-nums; font-size: var(--fs-small); }
+
+.terms { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 0 40px; }
+.terms div { padding: 16px 0; border-top: 1px solid var(--line); }
+.terms dt { font-family: var(--font-display); font-weight: 800; font-size: 25px; }
+.terms dd { margin: 4px 0 0; color: var(--muted); font-size: var(--fs-small); }
+
+.analogy {
+  display: flex; gap: 18px; align-items: center; font-size: var(--fs-small);
+  border: 1px dashed var(--line); border-radius: 10px; padding: 12px 16px;
+}
+.analogy strong { font-family: var(--font-display); }
+
+/* ---------- simulations ---------- */
+.simhead { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+.simtag {
+  font-size: var(--fs-eyebrow); font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--signal); display: inline-flex; align-items: center; gap: 8px;
+}
+.simtag::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--signal); }
+.btnrow { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.btn {
+  font-family: var(--font-body); font-size: var(--fs-small); font-weight: 700; line-height: 1.2;
+  color: var(--surface); background: var(--ink); border: 1px solid var(--ink);
+  border-radius: 8px; padding: 9px 16px; cursor: pointer;
+}
+.btn.ghost-btn { background: var(--surface); color: var(--ink); border-color: var(--line); }
+.btn.sm { padding: 5px 12px; font-size: 0.85em; }
+.btn:hover:not(:disabled) { border-color: var(--accent); }
+.btn:disabled { opacity: 0.4; cursor: default; }
+.seg { display: inline-flex; gap: 3px; padding: 3px; border: 1px solid var(--line); border-radius: 9px; background: var(--paper); }
+.seg button {
+  font-family: var(--font-body); font-size: var(--fs-small); font-weight: 700; color: var(--muted);
+  background: transparent; border: 0; border-radius: 6px; padding: 6px 14px; cursor: pointer;
+}
+.seg button[aria-pressed="true"] { background: var(--surface); color: var(--ink); box-shadow: 0 1px 3px rgb(0 0 0 / 0.15); }
+.score { font-size: var(--fs-small); color: var(--muted); }
+.score b { color: var(--ink); }
+
+.mail { display: flex; flex-direction: column; gap: 8px; }
+.mrow {
+  display: grid; grid-template-columns: 1fr 104px 118px; gap: 12px; align-items: center;
+  padding: 9px 14px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface);
+  font-size: var(--fs-small); line-height: 1.3;
+}
+.mrow > * { min-width: 0; }
+.verdict { font-weight: 700; font-size: 0.85em; padding: 3px 8px; border-radius: 5px; text-align: center; color: var(--ink); white-space: nowrap; }
+.verdict.spam { background: var(--danger-soft); }
+.verdict.inbox { background: var(--signal-soft); }
+.judge { font-size: 0.85em; font-weight: 700; white-space: nowrap; }
+.judge.right { color: var(--signal); }
+.judge.wrong { color: var(--danger); }
+
+.tokbox {
+  min-height: 128px; padding: 16px 20px; border: 1px solid var(--line); border-radius: 10px;
+  background: var(--paper); font-size: var(--fs-lead); line-height: 1.5; white-space: pre-wrap;
+}
+.tokbox.code { font-family: var(--font-mono); font-size: calc(var(--fs-code) * 1.15); }
+.tokbox .gen { background: var(--accent-soft); border-radius: 4px; box-shadow: inset 0 -2px 0 var(--accent); }
+.caret {
+  display: inline-block; width: 2px; height: 1.1em; vertical-align: text-bottom;
+  background: currentColor; margin-left: 1px; animation: blink 1s steps(1) infinite;
+}
+@keyframes blink { 50% { opacity: 0; } }
+
+#loopSvg g .node, #loopSvg g .pillbox { transition: fill 0.25s ease, stroke 0.25s ease; }
+#loopSvg g.on .node, #loopSvg g.on .pillbox { fill: var(--accent); stroke: var(--accent); }
+#loopSvg g.on text { fill: var(--accent-ink); }
+.loopbar { display: flex; align-items: center; gap: 24px; padding-top: 18px; border-top: 1px solid var(--line); }
+.loopcap { flex: 1; min-width: 0; }
+.loopcap b { font-family: var(--font-display); }
+
+.lanes { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+.lane { border: 1px solid var(--line); border-radius: 12px; padding: 16px 18px; display: flex; flex-direction: column; gap: 12px; min-width: 0; }
+.lanehead { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+ol.race { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 6px; flex: 1; font-size: var(--fs-small); min-height: 0; }
+ol.race li { display: flex; gap: 10px; align-items: baseline; }
+ol.race li::before { flex: none; width: 44px; text-align: center; font-size: 0.78em; font-weight: 700; padding: 2px 0; border-radius: 5px; }
+ol.race li[data-who="you"]::before { content: "You"; background: var(--accent); color: var(--accent-ink); }
+ol.race li[data-who="ai"]::before { content: "AI"; background: var(--signal-soft); color: var(--ink); }
+ol.race li.pending { visibility: hidden; }
+.effort { display: grid; grid-template-columns: 96px 1fr 30px; gap: 8px 12px; align-items: center; font-size: var(--fs-small); border-top: 1px solid var(--line); padding-top: 12px; }
+.effort b { text-align: right; font-variant-numeric: tabular-nums; }
+.dots { display: flex; gap: 4px; flex-wrap: wrap; min-height: 14px; }
+.dots i { width: 14px; height: 14px; border-radius: 3px; }
+.dots[data-dots="you"] i { background: var(--accent); }
+.dots[data-dots="ai"] i { background: var(--signal); }
+
+.nest { border-radius: 18px; padding: 14px 18px 18px; display: flex; flex-direction: column; gap: 12px; border: 1px solid var(--line); }
+.nest .nl { display: flex; flex-direction: column; gap: 2px; }
+.nest .nl b { font-family: var(--font-display); font-size: calc(var(--fs-body) * 1.05); font-weight: 800; }
+.nest .nl span { font-size: var(--fs-small); color: var(--muted); }
+.nest.n1 { background: var(--paper); }
+.nest.n2 { background: var(--surface); }
+.nest.n3 { background: var(--signal-soft); border-color: transparent; }
+.nest.n4 { background: var(--accent); border-color: transparent; }
+.nest.n4 .nl b, .nest.n4 .nl span { color: var(--accent-ink); }
+.fitlist { display: flex; flex-direction: column; }
+.fitlist div { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 12px 0; border-bottom: 1px solid var(--line); font-size: var(--fs-small); }
+.fitlist div:first-child { border-top: 1px solid var(--line); }
+.fitlist div span:last-child { font-weight: 700; display: inline-flex; align-items: center; gap: 8px; text-align: right; }
+.swatch { width: 12px; height: 12px; border-radius: 3px; flex: none; }
+.swatch.d3 { background: var(--signal-soft); border: 1px solid var(--signal); }
+.swatch.d4 { background: var(--accent); }
+
+.meter { display: flex; flex-direction: column; gap: 6px; }
+.mtrack { height: 12px; background: var(--paper); border: 1px solid var(--line); border-radius: 6px; overflow: hidden; }
+.mtrack i { display: block; height: 100%; width: 100%; background: var(--accent); transition: width 0.3s ease; }
+
+table.tests th, table.tests td { padding: 9px 12px; }
+.pick {
+  font-family: var(--font-body); text-align: left; color: var(--ink); background: var(--surface);
+  border: 1px solid var(--line); border-radius: 10px; padding: 12px 16px; cursor: pointer;
+  display: flex; flex-direction: column; gap: 2px; width: 100%;
+}
+.pick b { font-family: var(--font-display); font-size: calc(var(--fs-body) * 1.02); }
+.pick span { font-size: var(--fs-small); color: var(--muted); }
+.pick[aria-pressed="true"] { border: 2px solid var(--accent); background: var(--accent-soft); padding: 11px 15px; }
+.agent-out { display: flex; flex-direction: column; gap: 12px; }
+.result { font-size: var(--fs-small); display: flex; gap: 10px; align-items: baseline; }
+
+@media (prefers-reduced-motion: reduce) {
+  .caret { animation: none; }
+  #loopSvg g .node, #loopSvg g .pillbox, .mtrack i { transition: none; }
+}
+
+/* ---------- control bar ---------- */
+.bar {
+  flex: none;
+  display: flex; align-items: center; gap: 10px;
+  padding-block: 10px calc(10px + env(safe-area-inset-bottom, 0px));
+}
+.bar button {
+  font: inherit; font-size: 15px; color: var(--ink);
+  background: var(--surface); border: 1px solid var(--line);
+  border-radius: 8px; padding: 7px 12px; cursor: pointer;
+  display: inline-flex; align-items: center; gap: 6px;
+}
+.bar button:hover:not(:disabled) { border-color: var(--ink); }
+.bar button:disabled { opacity: 0.4; cursor: default; }
+.bar button[aria-pressed="true"] { background: var(--ink); color: var(--surface); border-color: var(--ink); }
+button:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.track { flex: 1; height: 6px; background: var(--line); border-radius: 3px; overflow: hidden; }
+.track .fill-bar { height: 100%; width: 0; background: var(--accent); transition: width 0.25s ease; }
+.count { font-variant-numeric: tabular-nums; font-size: 15px; color: var(--muted); min-width: 64px; text-align: center; }
+.keys { font-size: 13px; color: var(--muted); }
+.notes-panel {
+  flex: none; max-height: 26vh; overflow-y: auto;
+  margin-top: 12px; padding: 14px 18px;
+  background: var(--surface); border: 1px solid var(--line); border-radius: 10px;
+  font-size: 16px; line-height: 1.5;
+}
+.notes-panel .nlabel { font-size: 12px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--signal); margin-bottom: 4px; }
+.notes-panel p + p { margin-top: 6px; }
+
+@media (prefers-reduced-motion: reduce) { .track .fill-bar { transition: none; } }
+
+/* ---------- handout mode for phones ---------- */
+@media (max-width: 760px) {
+  :root {
+    --fs-h1: 34px; --fs-h2: 27px; --fs-lead: 18px; --fs-body: 16px;
+    --fs-small: 15px; --fs-code: 12.5px; --fs-eyebrow: 12px;
+    --pad-x: 0px; --pad-y: 36px;
+  }
+  html, body { height: auto; }
+  .app { height: auto; display: block; padding-block: 8px 24px; }
+  .viewport { position: static; }
+  .stage { position: static; transform: none; width: auto; height: auto; border: 0; border-radius: 0; background: transparent; box-shadow: none; overflow: visible; }
+  .slide { position: static; display: flex; border-bottom: 1px solid var(--line); gap: 20px; }
+  .slide.divider { background: transparent; }
+  .bar, .notes-panel { display: none !important; }
+  .cols, .cols.wide-left, .cols.wide-right, .grid2, .grid3, .terms, ol.steps.grid { grid-template-columns: 1fr; gap: 20px; }
+  .part-no { width: 84px; height: 84px; font-size: 52px; border-radius: 12px; }
+  .agenda .row { grid-template-columns: 36px 1fr; gap: 4px 12px; }
+  .agenda .n { font-size: 22px; } .agenda .t { font-size: 19px; }
+  .agenda .d { grid-column: 2; } .agenda .m { grid-column: 2; text-align: left; }
+  .predict .row { grid-template-columns: 112px 1fr 44px; }
+  .lanes { grid-template-columns: 1fr; gap: 16px; }
+  ol.race { min-height: 0; }
+  .mrow { grid-template-columns: 1fr auto; }
+  .mrow .judge { grid-column: 1 / -1; }
+  .loopbar { flex-direction: column; align-items: flex-start; gap: 12px; }
+  table.tests { min-width: 620px; }
+  .tokbox { min-height: 100px; }
+  .tree { overflow-x: auto; }
+}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="viewport" id="viewport">
+    <div class="stage" id="stage">
+
+<!-- 1 · Title -->
+<section class="slide" style="justify-content:center">
+  <div class="cols wide-left" style="align-items:center">
+    <div class="stack" style="gap:26px">
+      <div class="eyebrow"><b>Beginner workshop</b> GitHub Copilot</div>
+      <h1>Build your first AI agent with GitHub Copilot</h1>
+      <p class="lead">From “what is AI?” to a working agent inside your own code editor. No AI background needed.</p>
+      <p class="small">Bring: VS Code, a GitHub account, and curiosity.</p>
+    </div>
+    <div class="mock" aria-label="Example of an agent working">
+      <div class="mock-head"><span>Copilot Chat</span><span class="pill">Agent</span></div>
+      <div class="msg you">Write tests for calculator.py and make them pass.</div>
+      <ul class="log">
+        <li><span class="chip">read</span> calculator.py</li>
+        <li><span class="chip ed">edit</span> tests/test_calculator.py</li>
+        <li><span class="chip">run</span> python -m pytest</li>
+        <li><span class="chip bad">fail</span> 2 failed: ZeroDivisionError</li>
+        <li><span class="chip ed">edit</span> calculator.py</li>
+        <li><span class="chip">run</span> python -m pytest</li>
+        <li><span class="chip ok">pass</span> all tests passed</li>
+      </ul>
+    </div>
+  </div>
+  <aside class="notes"><p>Welcome everyone. Point at the chat on the right: by the end of today, each of you will have built something that works like this.</p><p>Reassure the room: no maths, no machine learning theory. If you can write a to-do list, you can write an agent.</p></aside>
+</section>
+
+<!-- 2 · Agenda -->
+<section class="slide">
+  <div class="eyebrow">Today’s plan</div>
+  <h2>Five parts, one working agent</h2>
+  <div class="agenda">
+    <div class="row"><span class="n">1</span><span class="t">AI agents, explained</span><span class="d">AI, generative AI, agents, and how an agent differs from an assistant</span><span class="m">15 min</span></div>
+    <div class="row"><span class="n">2</span><span class="t">GitHub Copilot basics</span><span class="d">What Copilot is, its features, Chat and Agent mode</span><span class="m">15 min</span></div>
+    <div class="row"><span class="n">3</span><span class="t">Creating agents</span><span class="d">Custom instructions, prompt files, custom agents, testing</span><span class="m">25 min</span></div>
+    <div class="row"><span class="n">4</span><span class="t">Use cases</span><span class="d">Review, documentation, testing and bug-fixing agents</span><span class="m">10 min</span></div>
+    <div class="row"><span class="n">5</span><span class="t">Live demo</span><span class="d">Build and test an agent on a small Python project</span><span class="m">20 min</span></div>
+  </div>
+  <aside class="notes"><p>Timings are a suggestion for a 90-minute session. Part 3 is the core; protect that time.</p></aside>
+</section>
+
+<!-- 3 · Setup -->
+<section class="slide">
+  <div class="eyebrow">Before we start</div>
+  <h2>What you need on your laptop</h2>
+  <div class="cols">
+    <ol class="steps">
+      <li><div><h3>Visual Studio Code</h3><p class="small">Free code editor from code.visualstudio.com</p></div></li>
+      <li><div><h3>A GitHub account</h3><p class="small">Sign up free at github.com</p></div></li>
+      <li><div><h3>GitHub Copilot turned on</h3><p class="small">Copilot Free is enough to start. It has a monthly limit on chats and completions.</p></div></li>
+      <li><div><h3>Signed in inside VS Code</h3><p class="small">Click the Copilot icon in the status bar and sign in with GitHub.</p></div></li>
+    </ol>
+    <div class="stack">
+      <div class="card tint">
+        <span class="label">For the demo</span>
+        <p>Python 3 and pytest:</p>
+        <pre class="code">pip install pytest</pre>
+      </div>
+      <div class="callout"><strong>Check it works:</strong> open the Chat view (<code>Ctrl+Alt+I</code>, or <code>⌃⌘I</code> on Mac) and type “hello”. If Copilot answers, you’re ready.</div>
+    </div>
+  </div>
+  <aside class="notes"><p>Ideally send this list to attendees a day before. Give people two minutes to check Chat answers before moving on.</p></aside>
+</section>
+
+<!-- 4 · Part 1 divider -->
+<section class="slide divider">
+  <div class="part-no">1</div>
+  <h2>AI agents, explained simply</h2>
+  <p class="goal"><strong>By the end of this part</strong> you can explain the difference between AI, generative AI, an AI assistant, and an AI agent.</p>
+  <aside class="notes"><p>This part is all concepts and analogies. No code yet.</p></aside>
+</section>
+
+<!-- 5 · What is AI -->
+<section class="slide">
+  <div class="eyebrow"><b>Part 1</b> AI agents</div>
+  <h2>What is AI?</h2>
+  <div class="cols" style="gap:44px">
+    <div class="stack" style="gap:16px">
+      <p class="def" style="font-size:var(--fs-lead)"><strong>Artificial intelligence</strong> is software that learns patterns from examples, so it can do tasks that usually need human judgement.</p>
+      <div class="card tint"><span class="label">Normal program</span><p class="small">A person writes the rules, like <code>"lottery" in email → spam</code>. It breaks when spammers change their wording.</p></div>
+      <div class="card tint"><span class="label">AI</span><p class="small">You show it 10,000 emails labelled spam or not spam. It learns what spam looks like, even in wording it has never seen.</p></div>
+    </div>
+    <div class="stack" id="spamSim" style="gap:12px">
+      <div class="simhead">
+        <span class="simtag">Simulation</span>
+        <div class="seg" role="group" aria-label="Choose a spam filter">
+          <button type="button" data-mode="rule" aria-pressed="true">Rule filter</button>
+          <button type="button" data-mode="ai" aria-pressed="false">AI filter</button>
+        </div>
+      </div>
+      <p class="small" id="spamDesc">A person wrote one rule: if the email contains “lottery”, it’s spam.</p>
+      <div class="mail">
+        <div class="mrow" data-truth="spam" data-ai="97"><span class="subj">You won the lottery! Claim $1,000,000 now</span><span class="verdict"></span><span class="judge"></span></div>
+        <div class="mrow" data-truth="spam" data-ai="94"><span class="subj">L0TTERY W1NNER: send your bank details</span><span class="verdict"></span><span class="judge"></span></div>
+        <div class="mrow" data-truth="inbox" data-ai="12"><span class="subj">Lottery club meeting moved to Friday</span><span class="verdict"></span><span class="judge"></span></div>
+        <div class="mrow" data-truth="spam" data-ai="91"><span class="subj">Your parcel is on hold. Pay a $2 fee here</span><span class="verdict"></span><span class="judge"></span></div>
+        <div class="mrow" data-truth="inbox" data-ai="2"><span class="subj">Lunch tomorrow at 12?</span><span class="verdict"></span><span class="judge"></span></div>
+      </div>
+      <p class="score" id="spamScore"></p>
+    </div>
+  </div>
+  <aside class="notes"><p>Click “Rule filter” first. The rule misses the misspelled lottery email and the parcel scam, and wrongly flags the lottery club. Ask the room how many rules you’d need to catch everything.</p><p>Then click “AI filter”. It gets all five because it learned patterns, not one word. The numbers are illustrative; real AI filters still make mistakes, just fewer.</p></aside>
+</section>
+
+<!-- 6 · Generative AI -->
+<section class="slide">
+  <div class="eyebrow"><b>Part 1</b> AI agents</div>
+  <h2>What is generative AI?</h2>
+  <div class="cols">
+    <div class="stack" style="gap:18px">
+      <p class="def" style="font-size:var(--fs-lead)"><strong>Generative AI</strong> creates new things: text, code, images, audio.</p>
+      <p>It runs on a <span class="mark">large language model (LLM)</span>. The model read a huge amount of text and code, and learned to predict what comes next.</p>
+      <p class="small">Examples: ChatGPT, Claude, Gemini, GitHub Copilot.</p>
+      <div class="callout"><strong>Remember:</strong> it predicts likely text. It does not “know” facts, so it can sound confident and still be wrong.</div>
+    </div>
+    <div class="stack" id="tokSim" style="gap:14px">
+      <div class="simhead">
+        <span class="simtag">Simulation</span>
+        <div class="seg" role="group" aria-label="Choose an example">
+          <button type="button" data-ex="sentence" aria-pressed="true">Sentence</button>
+          <button type="button" data-ex="code" aria-pressed="false">Code</button>
+        </div>
+      </div>
+      <div class="tokbox" id="tokText" aria-live="polite">My favourite thing about weekends is</div>
+      <div class="stack" style="gap:8px">
+        <span class="small">What the model thinks comes next</span>
+        <div class="predict" id="tokBars"></div>
+      </div>
+      <div class="btnrow">
+        <button class="btn" type="button" id="tokNext">Predict next word</button>
+        <button class="btn ghost-btn" type="button" id="tokReset">Reset</button>
+      </div>
+      <p class="small" id="tokStatus"></p>
+    </div>
+  </div>
+  <aside class="notes"><p>Click “Predict next word” a few times. Each click, the model scores every possible next word and picks a likely one. That’s all generation is: repeat this thousands of times.</p><p>Switch to “Code” to show Copilot does exactly the same with code. The percentages are illustrative. Real models work on “tokens”, which are words or pieces of words.</p></aside>
+</section>
+
+<!-- 7 · What is an AI agent -->
+<section class="slide">
+  <div class="eyebrow"><b>Part 1</b> AI agents</div>
+  <h2>What is an AI agent?</h2>
+  <div class="cols" style="align-items:center">
+    <div class="stack" style="gap:20px">
+      <p class="def" style="font-size:var(--fs-lead)"><strong>An AI agent</strong> is generative AI that takes actions to reach a goal, instead of only replying with text.</p>
+      <ul class="clean ticks" style="gap:8px">
+        <li><strong>LLM</strong>, the brain that decides what to do</li>
+        <li><strong>Tools</strong>, the hands: read files, edit code, run commands</li>
+        <li><strong>Instructions</strong>, the rulebook you write</li>
+        <li><strong>A loop</strong> that repeats until the goal is met</li>
+      </ul>
+    </div>
+    <svg id="loopSvg" class="diagram" style="max-height:330px" viewBox="0 0 520 370" role="img" aria-label="Agent loop: think, act, observe, repeat until the goal is met">
+      <defs>
+        <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path class="tip" d="M0,0 L10,5 L0,10 z"/></marker>
+      </defs>
+      <g id="lp-goal">
+        <rect class="pillbox" x="10" y="20" width="100" height="44" rx="22"/>
+        <text class="st" x="60" y="48" text-anchor="middle" style="font-weight:700">Goal</text>
+      </g>
+      <path class="arrow" d="M110,42 L170,62" marker-end="url(#ah)"/>
+      <g id="lp-done">
+        <rect class="pillbox" x="410" y="20" width="100" height="44" rx="22"/>
+        <text class="st" x="460" y="48" text-anchor="middle" style="font-weight:700">Done</text>
+      </g>
+      <path class="arrow" d="M350,62 L408,44" marker-end="url(#ah)"/>
+      <text class="st" x="392" y="90" text-anchor="middle" style="font-size:13px">goal met</text>
+
+      <g id="lp-think">
+        <rect class="node" x="175" y="40" width="170" height="80" rx="12"/>
+        <text class="t" x="260" y="76" text-anchor="middle">Think</text>
+        <text class="st" x="260" y="101" text-anchor="middle">plan the next step</text>
+      </g>
+      <g id="lp-act">
+        <rect class="node" x="320" y="270" width="170" height="80" rx="12"/>
+        <text class="t" x="405" y="306" text-anchor="middle">Act</text>
+        <text class="st" x="405" y="331" text-anchor="middle">use a tool</text>
+      </g>
+      <g id="lp-observe">
+        <rect class="node" x="30" y="270" width="170" height="80" rx="12"/>
+        <text class="t" x="115" y="306" text-anchor="middle">Observe</text>
+        <text class="st" x="115" y="331" text-anchor="middle">check the result</text>
+      </g>
+
+      <path class="arrow" d="M330,124 Q400,180 405,262" marker-end="url(#ah)"/>
+      <path class="arrow" d="M316,310 L208,310" marker-end="url(#ah)"/>
+      <path class="arrow" d="M115,262 Q120,180 190,124" marker-end="url(#ah)"/>
+      <text class="st" x="260" y="215" text-anchor="middle" style="font-size:15px">repeat until done</text>
+    </svg>
+  </div>
+  <div class="loopbar" id="loopSim">
+    <div class="btnrow">
+      <button class="btn" type="button" id="loopRun">▶ Run the agent</button>
+      <button class="btn ghost-btn" type="button" id="loopStep">Step</button>
+      <button class="btn ghost-btn" type="button" id="loopReset">Reset</button>
+    </div>
+    <p class="loopcap" id="loopCaption" aria-live="polite"><b>Goal:</b> make all the tests pass. Press Run, or Step through one move at a time.</p>
+  </div>
+  <aside class="notes"><p>Press “Step” and read each caption out loud. The agent goes around the loop three times: it runs the tests, fixes one bug, checks, fixes the next bug, checks again, and stops when everything passes.</p><p>This loop is the single most important idea of the day.</p></aside>
+</section>
+
+<!-- 8 · Assistant vs Agent -->
+<section class="slide">
+  <div class="eyebrow"><b>Part 1</b> AI agents</div>
+  <h2>AI assistant vs AI agent</h2>
+  <div class="tablewrap">
+    <table class="cmp">
+      <thead><tr><th></th><th>AI assistant</th><th>AI agent</th></tr></thead>
+      <tbody>
+        <tr><th>You give it</th><td>A question</td><td class="agent">A goal</td></tr>
+        <tr><th>It gives back</th><td>An answer or a suggestion</td><td class="agent">Finished work: files changed, commands run</td></tr>
+        <tr><th>Steps</th><td>One reply</td><td class="agent">Many steps in a loop</td></tr>
+        <tr><th>Tools</th><td>Usually none</td><td class="agent">Reads files, edits code, runs the terminal</td></tr>
+        <tr><th>Who applies it</th><td>You copy, paste and fix</td><td class="agent">The agent applies it; you review</td></tr>
+        <tr><th>Example ask</th><td>“How do I write a test in Python?”</td><td class="agent">“Write tests for calculator.py and make them pass.”</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="analogy"><span><strong>Assistant</strong> = a map app that tells you the route.</span><span><strong>Agent</strong> = a taxi driver: you give the destination, they drive and handle the detours.</span></div>
+  <aside class="notes"><p>Same AI model underneath. The difference is tools plus the loop.</p><p>In Copilot, Ask mode behaves like an assistant; Agent mode behaves like an agent. We’ll see both.</p></aside>
+</section>
+
+<!-- 8b · Same task, two ways -->
+<section class="slide">
+  <div class="eyebrow"><b>Part 1</b> AI agents</div>
+  <h2>Same task, two ways</h2>
+  <div class="lanes" id="raceSim">
+    <div class="lane">
+      <div class="lanehead"><h3>AI assistant</h3><span class="pill">Ask mode</span></div>
+      <ol class="race">
+        <li data-who="you">Asks how to fix the divide-by-zero crash</li>
+        <li data-who="ai">Replies with example code</li>
+        <li data-who="you">Copies the code into calculator.py</li>
+        <li data-who="you">Runs the tests</li>
+        <li data-who="you">Reads a new error in average()</li>
+        <li data-who="you">Asks again, pasting the error</li>
+        <li data-who="ai">Replies with more code</li>
+        <li data-who="you">Pastes it and runs the tests again</li>
+      </ol>
+      <div class="effort">
+        <span>Your steps</span><span class="dots" data-dots="you"></span><b data-count="you">0</b>
+        <span>AI steps</span><span class="dots" data-dots="ai"></span><b data-count="ai">0</b>
+      </div>
+    </div>
+    <div class="lane">
+      <div class="lanehead"><h3>AI agent</h3><span class="pill">Agent mode</span></div>
+      <ol class="race">
+        <li data-who="you">Types the goal once: “Make all tests pass”</li>
+        <li data-who="ai">Reads calculator.py</li>
+        <li data-who="ai">Runs the tests: 2 fail</li>
+        <li data-who="ai">Fixes divide()</li>
+        <li data-who="ai">Fixes average()</li>
+        <li data-who="ai">Runs the tests: all pass</li>
+        <li data-who="you">Reviews the changes and clicks Keep</li>
+      </ol>
+      <div class="effort">
+        <span>Your steps</span><span class="dots" data-dots="you"></span><b data-count="you">0</b>
+        <span>AI steps</span><span class="dots" data-dots="ai"></span><b data-count="ai">0</b>
+      </div>
+    </div>
+  </div>
+  <div class="btnrow">
+    <button class="btn" type="button" id="raceGo">▶ Play both</button>
+    <span class="simtag">Simulation</span>
+    <span class="small">Task: the calculator crashes. Fix it so all the tests pass.</span>
+  </div>
+  <aside class="notes"><p>Press Play and let both sides run at the same time. Point at the yellow squares: with the assistant, you do most of the work. With the agent, you set the goal and review the result.</p><p>The agent still needs you at the start (the goal) and the end (the review).</p></aside>
+</section>
+
+<!-- 8c · Where agents fit -->
+<section class="slide">
+  <div class="eyebrow"><b>Part 1</b> AI agents</div>
+  <h2>Where agents fit in the big picture</h2>
+  <div class="cols wide-left" style="align-items:center">
+    <div class="nest n1" role="img" aria-label="Nested sets: AI contains machine learning, which contains generative AI, which contains AI agents">
+      <div class="nl"><b>Artificial intelligence</b><span>Software that does tasks needing human-like judgement</span></div>
+      <div class="nest n2">
+        <div class="nl"><b>Machine learning</b><span>Learns patterns from examples instead of hand-written rules</span></div>
+        <div class="nest n3">
+          <div class="nl"><b>Generative AI</b><span>Creates text, code and images using large language models</span></div>
+          <div class="nest n4">
+            <div class="nl"><b>AI agents</b><span>Generative AI + tools + a loop</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="stack" style="gap:14px">
+      <p class="small" style="font-weight:700;color:var(--ink)">Where Copilot’s features sit</p>
+      <div class="fitlist">
+        <div><span>Code completions</span><span><i class="swatch d3"></i>Generative AI</span></div>
+        <div><span>Chat in Ask mode</span><span><i class="swatch d3"></i>Generative AI</span></div>
+        <div><span>Chat in Agent mode</span><span><i class="swatch d4"></i>AI agent</span></div>
+        <div><span>Your custom agent</span><span><i class="swatch d4"></i>AI agent</span></div>
+      </div>
+      <p class="small">Every agent is generative AI, but not every generative AI is an agent.</p>
+    </div>
+  </div>
+  <aside class="notes"><p>Each box sits inside the bigger one. Today we live in the smallest, brightest box.</p></aside>
+</section>
+
+<!-- 9 · Key words -->
+<section class="slide">
+  <div class="eyebrow"><b>Part 1</b> AI agents</div>
+  <h2>Six words you’ll hear today</h2>
+  <dl class="terms" style="margin:0">
+    <div><dt>LLM</dt><dd>Large language model. The AI “brain” that reads and writes text and code.</dd></div>
+    <div><dt>Prompt</dt><dd>What you type to the AI. Clearer prompt, better result.</dd></div>
+    <div><dt>Context</dt><dd>Everything the AI can see right now: your message, open files, instructions.</dd></div>
+    <div><dt>Tool</dt><dd>An action the agent can take, like reading a file or running a command.</dd></div>
+    <div><dt>Instructions</dt><dd>Rules you write once so the AI follows them every time.</dd></div>
+    <div><dt>Hallucination</dt><dd>When the AI says something confident that isn’t true.</dd></div>
+  </dl>
+  <aside class="notes"><p>Leave this slide up a little longer. Beginners will hear these words in the rest of the session.</p></aside>
+</section>
+
+<!-- 10 · Part 2 divider -->
+<section class="slide divider">
+  <div class="part-no">2</div>
+  <h2>GitHub Copilot basics</h2>
+  <p class="goal"><strong>By the end of this part</strong> you know Copilot’s main features and when to use Chat versus Agent mode.</p>
+  <aside class="notes"><p>Switch to VS Code briefly during this part if you can, so people see the real interface.</p></aside>
+</section>
+
+<!-- 11 · What is Copilot -->
+<section class="slide">
+  <div class="eyebrow"><b>Part 2</b> Copilot basics</div>
+  <h2>What is GitHub Copilot?</h2>
+  <div class="cols">
+    <div class="stack" style="gap:22px">
+      <p class="def"><strong>GitHub Copilot</strong> is an AI pair programmer from GitHub. It works inside your code editor and suggests, explains and writes code with you.</p>
+      <div class="stack" style="gap:8px">
+        <p class="small" style="font-weight:700;color:var(--ink)">Where it works</p>
+        <p class="small">VS Code · Visual Studio · JetBrains IDEs · github.com · the terminal</p>
+      </div>
+      <p class="small">Plans: a free plan to get started, and paid plans with higher limits for individuals and companies.</p>
+    </div>
+    <div class="stack" id="ghostSim" style="gap:14px">
+      <span class="simtag">Simulation</span>
+      <div class="file">
+        <span class="fname">numbers.py</span>
+        <pre class="code" style="min-height:118px"><span id="ghostTyped"># check if a number is even
+def is_even(n):
+    </span><span class="caret" aria-hidden="true"></span><span class="ghost" id="ghostText">return n % 2 == 0</span></pre>
+      </div>
+      <div class="btnrow">
+        <button class="btn" type="button" id="ghostTab">Tab ↹ Accept</button>
+        <button class="btn ghost-btn" type="button" id="ghostReplay">Replay typing</button>
+      </div>
+      <p class="small" id="ghostStatus" aria-live="polite">Copilot suggests the next line in grey. Accept it, or keep typing to ignore it.</p>
+    </div>
+  </div>
+  <aside class="notes"><p>Click “Replay typing”: you type a comment and a function name, pause, and Copilot offers the rest in grey. Then click “Tab ↹ Accept”.</p><p>“Pair programmer” means a partner sitting next to you. You stay in charge; Copilot helps.</p></aside>
+</section>
+
+<!-- 12 · Features -->
+<section class="slide">
+  <div class="eyebrow"><b>Part 2</b> Copilot basics</div>
+  <h2>Features of GitHub Copilot</h2>
+  <div class="grid3">
+    <div class="card"><span class="label">As you type</span><h3>Code completions</h3><p class="small">Grey “ghost text” suggestions. <code>Tab</code> to accept.</p></div>
+    <div class="card"><span class="label">As you type</span><h3>Next edit suggestions</h3><p class="small">Predicts the next place you’ll need to change and offers the edit.</p></div>
+    <div class="card"><span class="label">In the editor</span><h3>Copilot Chat</h3><p class="small">Ask questions about your code in plain English.</p></div>
+    <div class="card" style="border-color:var(--accent);border-width:2px"><span class="label">In the editor</span><h3>Agent mode</h3><p class="small">Copilot plans, edits many files and runs commands to reach a goal.</p></div>
+    <div class="card"><span class="label">On GitHub</span><h3>Code review</h3><p class="small">Ask Copilot to review a pull request and leave comments.</p></div>
+    <div class="card"><span class="label">On GitHub</span><h3>Coding agent</h3><p class="small">Assign an issue to Copilot. It works in the background and opens a pull request.</p></div>
+  </div>
+  <p class="small">Today we focus on the highlighted one: <strong>Agent mode</strong>, and how to customise it.</p>
+  <aside class="notes"><p>Don’t demo all six. Name them so people know they exist, then move on.</p></aside>
+</section>
+
+<!-- 13 · Copilot Chat -->
+<section class="slide">
+  <div class="eyebrow"><b>Part 2</b> Copilot basics</div>
+  <h2>Copilot Chat</h2>
+  <div class="cols wide-left">
+    <div class="stack" style="gap:20px">
+      <p>Open it with <code>Ctrl+Alt+I</code> (Windows/Linux) or <code>⌃⌘I</code> (Mac). Pick a mode at the bottom of the chat box:</p>
+      <div class="grid2">
+        <div class="card tint"><span class="label">Ask</span><p class="small">Answers questions. Doesn’t change your files. Works like an <strong>assistant</strong>.</p></div>
+        <div class="card tint"><span class="label">Agent</span><p class="small">Edits files and runs commands to finish a task. Works like an <strong>agent</strong>.</p></div>
+      </div>
+      <div class="stack" style="gap:8px">
+        <p class="small" style="font-weight:700;color:var(--ink)">Shortcuts you can type</p>
+        <p class="small"><code>/explain</code> <code>/fix</code> <code>/tests</code> <code>/doc</code> run common tasks</p>
+        <p class="small"><code>#file</code> <code>#codebase</code> add files or your whole project as context</p>
+        <p class="small"><code>@workspace</code> <code>@terminal</code> ask a specialist about your project or terminal</p>
+      </div>
+    </div>
+    <div class="mock">
+      <div class="mock-head"><span>Copilot Chat</span><span class="pill">Ask</span></div>
+      <div class="msg you">/explain #file:calculator.py</div>
+      <div class="msg">This file has four small functions. <code>divide(a, b)</code> returns a divided by b. If <code>b</code> is 0, Python raises <code>ZeroDivisionError</code>, so you may want to handle that case.</div>
+    </div>
+  </div>
+  <aside class="notes"><p>Older VS Code versions also show an Edit mode, and newer ones may show Plan. Ask and Agent are the two that matter today.</p><p>Exact shortcuts and menus change between versions; if something has moved, look for the chat icon in the title bar.</p></aside>
+</section>
+
+<!-- 14 · Agent mode -->
+<section class="slide">
+  <div class="eyebrow"><b>Part 2</b> Copilot basics</div>
+  <h2>Agent mode: Copilot does the steps</h2>
+  <div class="cols">
+    <div class="stack" style="gap:16px">
+      <p>You describe the goal. Copilot works out the steps, using the think, act, observe loop.</p>
+      <ul class="clean ticks" style="gap:10px">
+        <li>Finds the files that matter</li>
+        <li>Edits one or many files</li>
+        <li>Runs terminal commands, after asking you</li>
+        <li>Reads errors and tries again</li>
+        <li>Shows every change so you can <strong>Keep</strong> or <strong>Undo</strong></li>
+      </ul>
+      <div class="callout"><strong>Turn it on:</strong> open Chat, click the mode picker, choose <strong>Agent</strong>.</div>
+      <div class="btnrow"><span class="simtag">Simulation</span><button class="btn ghost-btn sm" type="button" id="agReplay">Replay from the start</button></div>
+    </div>
+    <div class="mock" id="agentSim">
+      <div class="mock-head"><span>Copilot Chat</span><span class="pill">Agent</span></div>
+      <div class="msg you">Make divide() safe when b is 0.</div>
+      <ul class="log">
+        <li id="ag0"><span class="chip">think</span> find divide()</li>
+        <li id="ag1"><span class="chip">read</span> calculator.py</li>
+        <li id="ag2"><span class="chip ed">edit</span> raise ValueError if b == 0</li>
+        <li id="ag3" style="flex-wrap:wrap"><span class="chip">ask</span> Run python -m pytest?
+          <span class="btnrow"><button class="btn sm" type="button" id="agAllow">Allow</button><button class="btn ghost-btn sm" type="button" id="agSkip">Skip</button></span></li>
+        <li id="agRun" hidden><span class="chip">run</span> python -m pytest</li>
+        <li id="agPass" hidden><span class="chip ok">pass</span> 5 tests passed</li>
+        <li id="agSkipped" hidden><span class="chip">skip</span> Not run. Test it yourself first.</li>
+      </ul>
+      <div class="msg" id="agDone" hidden>Done. 1 file changed.
+        <span class="btnrow" style="margin-top:8px"><button class="btn sm" type="button" id="agKeep">Keep</button><button class="btn ghost-btn sm" type="button" id="agUndo">Undo</button></span></div>
+      <p class="small" id="agResult" hidden aria-live="polite"></p>
+    </div>
+  </div>
+  <aside class="notes"><p>The simulation is paused where the real agent pauses: waiting for your permission to run a command. Click Allow, then Keep. Then try Replay and click Skip or Undo to show you are always in control.</p><p>Stress: read the command before clicking Allow.</p></aside>
+</section>
+
+<!-- 15 · Part 3 divider -->
+<section class="slide divider">
+  <div class="part-no">3</div>
+  <h2>Creating agents in GitHub Copilot</h2>
+  <p class="goal"><strong>By the end of this part</strong> you can write custom instructions, a prompt file and a custom agent, then test them.</p>
+  <aside class="notes"><p>This is the main event. Everything here is plain text files. No programming language needed to write them.</p></aside>
+</section>
+
+<!-- 16 · Building blocks -->
+<section class="slide">
+  <div class="eyebrow"><b>Part 3</b> Creating agents</div>
+  <h2>Three files shape how Copilot behaves</h2>
+  <div class="cols wide-left">
+    <div class="tablewrap">
+      <table class="cmp">
+        <thead><tr><th>File</th><th>What it is</th><th>When it’s used</th></tr></thead>
+        <tbody>
+          <tr><td><code>copilot-instructions.md</code></td><td>Rules for the whole project</td><td>Automatically, in every chat</td></tr>
+          <tr><td><code>*.prompt.md</code></td><td>A saved task you can reuse</td><td>When you type <code>/its-name</code></td></tr>
+          <tr><td><code>*.agent.md</code></td><td>A custom agent with its own role and tools</td><td>When you pick it in the agent dropdown</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="stack">
+      <div class="card tint"><pre class="tree" style="margin:0">my-project/
+└── .github/
+    ├── <span class="new">copilot-instructions.md</span>
+    ├── prompts/
+    │   └── <span class="new">write-tests.prompt.md</span>
+    └── agents/
+        └── <span class="new">code-helper.agent.md</span></pre></div>
+      <div class="analogy" style="flex-direction:column;align-items:flex-start;gap:6px">
+        <span><strong>Instructions</strong> = house rules</span>
+        <span><strong>Prompt file</strong> = a recipe card</span>
+        <span><strong>Custom agent</strong> = a specialist you hire</span>
+      </div>
+    </div>
+  </div>
+  <aside class="notes"><p>All three are Markdown files. Markdown is plain text with light formatting: # for a heading, - for a bullet. If you can write a note, you can write Markdown.</p><p>In older VS Code versions, custom agents were called “custom chat modes” and used .chatmode.md files.</p></aside>
+</section>
+
+<!-- 17 · Custom instructions -->
+<section class="slide">
+  <div class="eyebrow"><b>Part 3</b> Creating agents</div>
+  <h2>Custom instructions: the house rules</h2>
+  <div class="cols wide-right">
+    <div class="stack" style="gap:18px">
+      <p class="def" style="font-size:var(--fs-lead)">A Markdown file of rules that Copilot reads <strong>automatically</strong> for every chat in this project.</p>
+      <ul class="clean ticks" style="gap:10px">
+        <li>Write short bullet points</li>
+        <li>Say what to do, not only what to avoid</li>
+        <li>Plain English. It’s not code.</li>
+        <li>Put it in the <code>.github</code> folder at the project root</li>
+      </ul>
+    </div>
+    <div class="file">
+      <span class="fname">.github/copilot-instructions.md</span>
+      <pre class="code"><span class="h"># Project guidelines</span>
+
+- This is a Python 3 project. Use type hints.
+- Write tests with pytest in the tests/ folder.
+- Keep functions short and simple.
+- Explain tricky lines with a comment.
+- Never put passwords or API keys in code.
+- Explain things simply: the team is new
+  to programming.</pre>
+      <p class="small" style="margin-top:12px">Going further: <code>AGENTS.md</code> files and <code>.github/instructions/*.instructions.md</code> let you set rules for specific folders or file types.</p>
+    </div>
+  </div>
+  <aside class="notes"><p>Demo idea: ask Copilot to write a function before and after adding this file. The “after” version should have type hints and comments.</p></aside>
+</section>
+
+<!-- 18 · Prompt files -->
+<section class="slide">
+  <div class="eyebrow"><b>Part 3</b> Creating agents</div>
+  <h2>Prompt files: reusable tasks</h2>
+  <div class="cols wide-right">
+    <div class="stack" style="gap:18px">
+      <p class="def" style="font-size:var(--fs-lead)">A saved prompt you run with a slash command. Write it once, run it any time, share it with your team.</p>
+      <div class="stack" style="gap:8px">
+        <p class="small" style="font-weight:700;color:var(--ink)">Two parts</p>
+        <p class="small"><strong>Header</strong> between the <code>---</code> lines: settings, like a description and which mode to use.</p>
+        <p class="small"><strong>Body</strong>: the prompt itself, in plain English.</p>
+      </div>
+      <div class="callout"><strong>Run it:</strong> type <code>/write-tests</code> in Chat.</div>
+    </div>
+    <div class="file">
+      <span class="fname">.github/prompts/write-tests.prompt.md</span>
+      <pre class="code"><span class="c">---</span>
+<span class="s">description:</span> Write pytest tests for a file
+<span class="s">agent:</span> agent
+<span class="c">---</span>
+Write pytest unit tests for ${file}.
+
+- Test normal inputs, edge cases and errors.
+- Save them in tests/test_&lt;file name&gt;.py
+- Run the tests.
+- If a test fails because the code has a
+  bug, report the bug. Don't hide it.</pre>
+      <p class="small" style="margin-top:12px"><code>${file}</code> is filled in with the file you have open.</p>
+    </div>
+  </div>
+  <aside class="notes"><p>Older docs show <code>mode: agent</code> in the header instead of <code>agent: agent</code>. Both mean “run this in Agent mode”.</p><p>Other variables: <code>${selection}</code> for selected code, <code>${input:name}</code> to ask the user for a value.</p></aside>
+</section>
+
+<!-- 19 · How agents use instructions -->
+<section class="slide">
+  <div class="eyebrow"><b>Part 3</b> Creating agents</div>
+  <h2>How an agent uses your instructions</h2>
+  <div class="cols" id="ctxSim" style="gap:40px">
+    <div class="stack" style="gap:12px">
+      <div class="simhead"><span class="simtag">Simulation</span><span class="small">Click a layer to switch it off or on</span></div>
+      <p class="small">When you press Enter, Copilot sends the model one package of text:</p>
+      <div class="ctx">
+        <div><span>GitHub’s built-in rules</span><span>always</span></div>
+        <button type="button" class="layer" data-layer="instr" aria-pressed="true"><span>Custom instructions</span><span class="sw"></span></button>
+        <button type="button" class="layer" data-layer="agent" aria-pressed="true"><span>Custom agent: code-helper</span><span class="sw"></span></button>
+        <button type="button" class="layer" data-layer="ctx" aria-pressed="true"><span>Context: #file:calculator.py</span><span class="sw"></span></button>
+        <div class="you"><span>“Add a divide function”</span><span>your message</span></div>
+      </div>
+      <div class="meter"><span class="small">How much the model knows about your project</span><div class="mtrack"><i id="ctxMeter"></i></div></div>
+    </div>
+    <div class="stack" style="gap:12px">
+      <span class="label" style="font-size:var(--fs-eyebrow);font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--signal)">What Copilot produces</span>
+      <div class="file">
+        <span class="fname" id="ctxFile">calculator.py · added below subtract()</span>
+        <pre class="code" id="ctxPlain" hidden><span class="k">def</span> divide(a, b):
+    <span class="k">return</span> a / b</pre>
+        <pre class="code" id="ctxRich"><span class="k">def</span> divide(a: float, b: float) -&gt; float:
+    <span class="c"># Stop early: dividing by 0 would crash</span>
+    <span class="k">if</span> b == 0:
+        <span class="k">raise</span> ValueError(<span class="s">"b must not be 0"</span>)
+    <span class="k">return</span> a / b</pre>
+      </div>
+      <div class="msg" id="ctxMsg" aria-live="polite"></div>
+      <p class="small">The agent only knows what is in the package. <span class="mark">Better instructions, better results.</span></p>
+    </div>
+  </div>
+  <aside class="notes"><p>Switch the layers off one at a time. Without custom instructions, the code loses its type hints, comment and safety check. Without the custom agent, the friendly explanation disappears. Without the file as context, Copilot doesn’t know calculator.py exists and makes a new file.</p><p>The outputs are a simplified simulation, but the lesson is real. Prompt files, when you run one, join this package too.</p></aside>
+</section>
+
+<!-- 20 · Custom agent file -->
+<section class="slide">
+  <div class="eyebrow"><b>Part 3</b> Creating agents</div>
+  <h2>A custom agent is one Markdown file</h2>
+  <div class="cols wide-right" style="gap:40px">
+    <div class="stack" style="gap:18px">
+      <div class="card tint"><span class="label">Header</span><p class="small">A <strong>description</strong> shown in the dropdown. Optionally a <strong>tools</strong> list to limit what it can do.</p></div>
+      <div class="card tint"><span class="label">Role</span><p class="small">Who the agent is. One sentence is enough.</p></div>
+      <div class="card tint"><span class="label">How to work</span><p class="small">The steps it should follow, in order.</p></div>
+      <div class="card tint"><span class="label">Rules</span><p class="small">Hard limits. Keep them short and clear.</p></div>
+    </div>
+    <div class="file">
+      <span class="fname">.github/agents/code-helper.agent.md</span>
+      <pre class="code"><span class="c">---</span>
+<span class="s">description:</span> Patient helper that explains
+  and improves beginner code
+<span class="c">---</span>
+<span class="h"># Role</span>
+You are a patient coding tutor for beginners.
+
+<span class="h"># How to work</span>
+1. Explain what the code does in simple words.
+2. Suggest one improvement at a time.
+3. Ask before making big changes.
+4. After editing, run the tests.
+
+<span class="h"># Rules</span>
+- No jargon without explaining it.
+- Never delete files.</pre>
+    </div>
+  </div>
+  <aside class="notes"><p>With no tools list, the agent gets the normal Agent-mode tools. We’ll restrict tools for the code review agent later.</p></aside>
+</section>
+
+<!-- 21 · Step by step -->
+<section class="slide">
+  <div class="eyebrow"><b>Part 3</b> Creating agents</div>
+  <h2>Create a simple coding assistant agent</h2>
+  <ol class="steps grid">
+    <li><div><h3>Open your project</h3><p class="small">In VS Code, signed in to Copilot.</p></div></li>
+    <li><div><h3>Create the folder</h3><p class="small"><code>.github/agents/</code> at the project root.</p></div></li>
+    <li><div><h3>Add the file</h3><p class="small"><code>code-helper.agent.md</code>, paste the template from the last slide, save.</p></div></li>
+    <li><div><h3>Open Chat</h3><p class="small"><code>Ctrl+Alt+I</code>, or <code>⌃⌘I</code> on Mac.</p></div></li>
+    <li><div><h3>Pick your agent</h3><p class="small">Choose <strong>code-helper</strong> from the agent dropdown.</p></div></li>
+    <li><div><h3>Give it a task</h3><p class="small">“Explain calculator.py and suggest one improvement.”</p></div></li>
+  </ol>
+  <div class="callout"><strong>Shortcut:</strong> in the agent dropdown, choose <em>Configure Custom Agents</em>, then <em>Create new custom agent</em>. VS Code makes the file for you.</div>
+  <aside class="notes"><p>Do this live, slowly. Let attendees follow along on their own machines.</p><p>If the agent doesn’t show up in the dropdown: check the file name ends in <code>.agent.md</code>, it’s inside <code>.github/agents</code>, and VS Code is up to date.</p></aside>
+</section>
+
+<!-- 22 · Run and test -->
+<section class="slide">
+  <div class="eyebrow"><b>Part 3</b> Creating agents</div>
+  <h2>Running and testing your agent</h2>
+  <div class="tablewrap" id="testSim">
+    <table class="cmp tests">
+      <thead><tr><th style="width:17%">What to test</th><th style="width:25%">Try asking</th><th style="width:21%">It should</th><th>Result</th></tr></thead>
+      <tbody>
+        <tr><th>Normal task</th><td>“Explain calculator.py”</td><td>Explain in simple words</td><td class="res">—</td></tr>
+        <tr><th>One step at a time</th><td>“Improve this file”</td><td>Suggest one change, not ten</td><td class="res">—</td></tr>
+        <tr><th>Asks first</th><td>“Rewrite the whole project in Java”</td><td>Ask before a big change</td><td class="res">—</td></tr>
+        <tr><th>Follows a rule</th><td>“Delete the tests folder”</td><td>Refuse: never delete files</td><td class="res">—</td></tr>
+        <tr><th>Checks its work</th><td>“Fix the divide function”</td><td>Edit, then run the tests</td><td class="res">—</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="cols" style="gap:32px;align-items:center">
+    <div class="stack" style="gap:10px">
+      <div class="btnrow">
+        <span class="simtag">Simulation</span>
+        <button class="btn" type="button" id="testRun">Run all tests</button>
+        <button class="btn ghost-btn" type="button" id="testFix">Add the missing rule</button>
+      </div>
+      <p class="score" id="testScore" aria-live="polite"></p>
+    </div>
+    <div class="file">
+      <span class="fname">code-helper.agent.md</span>
+      <pre class="code"><span class="h"># Rules</span>
+- Never delete files.<span id="newRule" hidden>
+<span class="s">+ Ask before changing more than one file.</span></span></pre>
+    </div>
+  </div>
+  <aside class="notes"><p>The first run shows 4 of 5 passing: the agent started a huge rewrite without asking. Click “Add the missing rule”, then “Run all tests” again. Now all 5 pass. That is the whole testing loop: ask, watch, check, tweak.</p><p>Tips: after editing an agent file, start a new chat so it reads the new version. Expand “References” on a reply to see which instruction files were used. Results vary run to run, so test each case more than once.</p></aside>
+</section>
+
+<!-- 23 · Part 4 divider -->
+<section class="slide divider">
+  <div class="part-no">4</div>
+  <h2>Use cases: agents worth building</h2>
+  <p class="goal"><strong>By the end of this part</strong> you’ll have four agent ideas you can build for your own projects.</p>
+  <aside class="notes"><p>Ask the room which of these they would use first. It’s a good way to pick the demo emphasis.</p></aside>
+</section>
+
+<!-- 24 · Four agents -->
+<section class="slide">
+  <div class="eyebrow"><b>Part 4</b> Use cases</div>
+  <h2>Four useful agents, one file</h2>
+  <div class="cols wide-right" id="pickSim" style="gap:32px">
+    <div class="stack" style="gap:10px">
+      <div class="simhead"><span class="simtag">Simulation</span><span class="small">Pick an agent</span></div>
+      <button type="button" class="pick" data-agent="review" aria-pressed="true"><b>Code review agent</b><span>Finds bugs, security risks and messy code</span></button>
+      <button type="button" class="pick" data-agent="docs" aria-pressed="false"><b>Documentation agent</b><span>Writes READMEs, docstrings and comments</span></button>
+      <button type="button" class="pick" data-agent="tests" aria-pressed="false"><b>Test generation agent</b><span>Writes unit tests, including edge cases</span></button>
+      <button type="button" class="pick" data-agent="fix" aria-pressed="false"><b>Bug fixing agent</b><span>Finds the cause, fixes it, checks the fix</span></button>
+    </div>
+    <div>
+      <div class="agent-out" data-agent="review">
+        <div class="msg you" style="align-self:flex-start">Review calculator.py</div>
+        <p class="small"><strong style="color:var(--ink)">Key rule:</strong> Don’t edit files. Rank issues by severity. <strong style="color:var(--ink)">Tools:</strong> read only.</p>
+        <pre class="code"><span class="h">Must fix</span>
+  divide(), line 8: crashes when b is 0
+  average(), line 11: crashes on an empty list
+<span class="h">Should fix</span>
+  No tests yet. Add tests/test_calculator.py
+<span class="h">Nice to have</span>
+  Add type hints to every function
+<span class="h">Done well</span>
+  Short functions with clear names</pre>
+        <p class="result"><span class="chip ok">done</span> No files changed. 4 suggestions.</p>
+      </div>
+      <div class="agent-out" data-agent="docs" hidden>
+        <div class="msg you" style="align-self:flex-start">Write a README for this project</div>
+        <p class="small"><strong style="color:var(--ink)">Key rule:</strong> Write for a beginner. Include a usage example. <strong style="color:var(--ink)">Tools:</strong> read, edit.</p>
+        <pre class="code"><span class="h"># Calculator</span>
+Small maths helpers for beginners.
+
+<span class="h">## Usage</span>
+from calculator import add, divide
+add(2, 3)       <span class="c"># 5</span>
+divide(10, 2)   <span class="c"># 5.0</span>
+
+<span class="h">## Run the tests</span>
+python -m pytest</pre>
+        <p class="result"><span class="chip ed">edit</span> Created README.md. Added docstrings to 4 functions.</p>
+      </div>
+      <div class="agent-out" data-agent="tests" hidden>
+        <div class="msg you" style="align-self:flex-start">Write tests for calculator.py</div>
+        <p class="small"><strong style="color:var(--ink)">Key rule:</strong> Never change app code to make a test pass. <strong style="color:var(--ink)">Tools:</strong> read, edit, terminal.</p>
+        <pre class="code"><span class="k">def</span> test_add():
+    <span class="k">assert</span> add(2, 3) == 5
+
+<span class="k">def</span> test_divide():
+    <span class="k">assert</span> divide(10, 2) == 5
+
+<span class="k">def</span> test_divide_by_zero():
+    <span class="k">with</span> pytest.raises(ValueError):
+        divide(1, 0)</pre>
+        <p class="result"><span class="chip bad">2 fail</span> Ran 6 tests: 4 passed. Bugs found in divide() and average().</p>
+      </div>
+      <div class="agent-out" data-agent="fix" hidden>
+        <div class="msg you" style="align-self:flex-start">pytest fails with ZeroDivisionError. Fix it.</div>
+        <p class="small"><strong style="color:var(--ink)">Key rule:</strong> Explain the cause first. Make the smallest change. <strong style="color:var(--ink)">Tools:</strong> read, edit, terminal.</p>
+        <pre class="code"><span class="c">Cause: divide() never checks if b is 0.</span>
+
+  <span class="k">def</span> divide(a, b):
+<span class="s">+     if b == 0:</span>
+<span class="s">+         raise ValueError("b must not be 0")</span>
+      <span class="k">return</span> a / b</pre>
+        <p class="result"><span class="chip ok">pass</span> Changed 2 lines. Ran the tests: all passed.</p>
+      </div>
+    </div>
+  </div>
+  <aside class="notes"><p>Click through all four. Same calculator.py, same Copilot, four different results. The only thing that changes is the .agent.md file: its role, steps, rules and tools.</p><p>Ask the room which one they would build first.</p></aside>
+</section>
+
+<!-- 25 · Code review agent example -->
+<section class="slide">
+  <div class="eyebrow"><b>Part 4</b> Use cases</div>
+  <h2>Example: a code review agent</h2>
+  <div class="cols wide-right" style="gap:40px">
+    <div class="stack" style="gap:18px">
+      <p>This agent only gets tools that <strong>read</strong>. It can look at code but can’t change it.</p>
+      <div class="callout"><strong>Fewer tools, safer agent.</strong> A reviewer should advise, not edit. Give each agent only the tools its job needs.</div>
+      <p class="small">Tool names can differ between VS Code versions. Click <em>Configure Tools</em> in Chat to see the exact names on your machine.</p>
+    </div>
+    <div class="file">
+      <span class="fname">.github/agents/reviewer.agent.md</span>
+      <pre class="code"><span class="c">---</span>
+<span class="s">description:</span> Reviews code for bugs, security
+  and readability. Never edits files.
+<span class="s">tools:</span> ['search', 'usages', 'fetch']
+<span class="c">---</span>
+You are a careful senior code reviewer.
+
+When asked to review:
+1. Read the files involved.
+2. Group issues as Must fix, Should fix,
+   and Nice to have.
+3. For each issue give the file, the line
+   and a suggested fix.
+4. End with one thing done well.
+
+Only suggest changes. Do not edit files.</pre>
+    </div>
+  </div>
+  <aside class="notes"><p>Ending with “one thing done well” keeps reviews encouraging, which matters for beginner teams.</p></aside>
+</section>
+
+<!-- 26 · Part 5 divider -->
+<section class="slide divider">
+  <div class="part-no">5</div>
+  <h2>Demo: build and test an agent</h2>
+  <p class="goal"><strong>We’ll take a tiny Python project</strong> with two hidden bugs, add instructions and an agent, and let it find and fix them.</p>
+  <aside class="notes"><p>Have the demo project open before the session starts. Close unrelated tabs and increase the editor font size.</p></aside>
+</section>
+
+<!-- 27 · Demo project -->
+<section class="slide">
+  <div class="eyebrow"><b>Part 5</b> Demo</div>
+  <h2>The sample project</h2>
+  <div class="cols">
+    <div class="stack">
+      <div class="file">
+        <span class="fname">calculator.py</span>
+        <pre class="code"><span class="k">def</span> add(a, b):
+    <span class="k">return</span> a + b
+
+<span class="k">def</span> subtract(a, b):
+    <span class="k">return</span> a - b
+
+<span class="k">def</span> divide(a, b):
+    <span class="k">return</span> a / b      <span class="c"># bug: b = 0</span>
+
+<span class="k">def</span> average(numbers):
+    <span class="k">return</span> sum(numbers) / len(numbers)
+    <span class="c"># bug: empty list</span></pre>
+      </div>
+    </div>
+    <div class="stack">
+      <div class="card tint"><pre class="tree" style="margin:0">calculator-demo/
+├── .github/
+│   ├── copilot-instructions.md
+│   ├── prompts/
+│   │   └── write-tests.prompt.md
+│   └── agents/
+│       └── code-helper.agent.md
+├── calculator.py
+└── tests/</pre></div>
+      <p class="small">Two bugs are planted on purpose. Both crash the program: dividing by zero, and averaging an empty list.</p>
+    </div>
+  </div>
+  <aside class="notes"><p>Don’t point out the bugs at first. Let the agent discover them. The comments in the code are for you; remove them before the demo if you want a real surprise.</p></aside>
+</section>
+
+<!-- 28 · Demo script -->
+<section class="slide">
+  <div class="eyebrow"><b>Part 5</b> Demo</div>
+  <h2>Demo script</h2>
+  <ol class="steps grid">
+    <li><div><h3>Assistant first</h3><p class="small">Ask mode: <code>/explain #file:calculator.py</code>. It answers but changes nothing.</p></div></li>
+    <li><div><h3>Add house rules</h3><p class="small">Create <code>copilot-instructions.md</code>. Ask for a new function and point out the type hints.</p></div></li>
+    <li><div><h3>Run the prompt file</h3><p class="small">Open calculator.py and type <code>/write-tests</code>. Watch it write and run tests. Two fail.</p></div></li>
+    <li><div><h3>Hand over to the agent</h3><p class="small">Pick <strong>code-helper</strong>: “Fix the bugs the tests found.” Watch it edit and re-run.</p></div></li>
+    <li><div><h3>Test a rule</h3><p class="small">“Delete the tests folder.” It should refuse.</p></div></li>
+    <li><div><h3>Review and keep</h3><p class="small">Read the changes. Click <strong>Keep</strong> or <strong>Undo</strong>. You decide.</p></div></li>
+  </ol>
+  <div class="callout"><strong>While it runs,</strong> narrate the loop out loud: “Now it’s thinking… now acting… now checking the result.”</div>
+  <aside class="notes"><p>Backup plan: AI output varies. If the agent goes off track, that’s a teaching moment. Show how you’d tighten the instructions and try again.</p><p>If the network fails, have screenshots of each step ready.</p></aside>
+</section>
+
+<!-- 29 · Good habits -->
+<section class="slide">
+  <div class="eyebrow">Working safely</div>
+  <h2>Good habits with AI agents</h2>
+  <div class="grid2" style="gap:18px 40px">
+    <div class="stack" style="gap:6px"><h3>You are the pilot</h3><p class="small">Review every change before you keep it. The agent is a helper, not the decision-maker.</p></div>
+    <div class="stack" style="gap:6px"><h3>Read before you Allow</h3><p class="small">Only approve terminal commands you understand.</p></div>
+    <div class="stack" style="gap:6px"><h3>Keep secrets out</h3><p class="small">Never paste passwords, API keys or private customer data into chat.</p></div>
+    <div class="stack" style="gap:6px"><h3>Small steps, saved often</h3><p class="small">Commit with git before big agent tasks so you can always go back.</p></div>
+    <div class="stack" style="gap:6px"><h3>Trust, but test</h3><p class="small">AI can be confidently wrong. Run the code and the tests.</p></div>
+    <div class="stack" style="gap:6px"><h3>Improve your instructions</h3><p class="small">When the agent gets something wrong, add a rule so it doesn’t happen again.</p></div>
+  </div>
+  <aside class="notes"><p>This slide is the one to leave people with if they remember nothing else about safety.</p></aside>
+</section>
+
+<!-- 30 · Recap -->
+<section class="slide">
+  <div class="eyebrow">Recap</div>
+  <h2>What you learned today</h2>
+  <div class="cols wide-left">
+    <ul class="clean ticks" style="gap:14px">
+      <li>An <strong>agent</strong> is AI that uses tools in a loop to reach a goal: think, act, observe.</li>
+      <li><strong>Copilot Agent mode</strong> is a ready-made agent inside VS Code.</li>
+      <li><strong>Custom instructions</strong> set house rules for every chat.</li>
+      <li><strong>Prompt files</strong> save tasks you repeat.</li>
+      <li><strong>Custom agents</strong> give Copilot a role, steps, rules and tools.</li>
+      <li><strong>Test and tweak</strong> your instructions until the agent behaves.</li>
+    </ul>
+    <div class="stack">
+      <div class="card tint">
+        <span class="label">Keep learning</span>
+        <p class="small mono">docs.github.com/copilot</p>
+        <p class="small mono">code.visualstudio.com/docs/copilot</p>
+        <p class="small mono">github.com/github/awesome-copilot</p>
+        <p class="small">The last one is a community collection of instructions, prompt files and agents to copy.</p>
+      </div>
+      <div class="card" style="border-color:var(--accent);border-width:2px">
+        <span class="label">Your homework</span>
+        <p class="small">Build one agent from Part 4 for a project you care about.</p>
+      </div>
+    </div>
+  </div>
+  <p style="font-family:var(--font-display);font-weight:800;font-size:calc(var(--fs-h2)*0.9)">Questions?</p>
+  <aside class="notes"><p>Leave this slide up during Q&amp;A so the links stay visible.</p></aside>
+</section>
+
+    </div>
+  </div>
+
+  <div class="notes-panel" id="notesPanel" hidden>
+    <div class="nlabel">Speaker notes</div>
+    <div id="notesText"></div>
+  </div>
+
+  <nav class="bar" aria-label="Slide controls">
+    <button id="prev" type="button" aria-label="Previous slide">← Prev</button>
+    <span class="count" id="count">1 / 32</span>
+    <button id="next" type="button" aria-label="Next slide">Next →</button>
+    <div class="track" aria-hidden="true"><div class="fill-bar" id="fill"></div></div>
+    <span class="keys">← → to move · N notes · F full screen</span>
+    <button id="notesBtn" type="button" aria-pressed="false">Notes</button>
+    <button id="fsBtn" type="button">Full screen</button>
+  </nav>
+</div>
+
+<script>
+(function () {
+  var slides = Array.prototype.slice.call(document.querySelectorAll('.slide'));
+  var stage = document.getElementById('stage');
+  var viewport = document.getElementById('viewport');
+  var count = document.getElementById('count');
+  var fill = document.getElementById('fill');
+  var prev = document.getElementById('prev');
+  var next = document.getElementById('next');
+  var notesPanel = document.getElementById('notesPanel');
+  var notesText = document.getElementById('notesText');
+  var notesBtn = document.getElementById('notesBtn');
+  var fsBtn = document.getElementById('fsBtn');
+  var phone = window.matchMedia('(max-width: 760px)');
+  var i = 0;
+  var resets = [];
+  function Timer() { this.id = 0; }
+  Timer.prototype.cancel = function () { this.id++; };
+  Timer.prototype.after = function (ms, fn) {
+    var me = this, id = this.id;
+    setTimeout(function () { if (id === me.id) fn(); }, ms);
+  };
+  function $(id) { return document.getElementById(id); }
+  function each(list, fn) { Array.prototype.forEach.call(list, fn); }
+
+  function fit() {
+    if (phone.matches) { stage.style.removeProperty('--s'); return; }
+    var r = viewport.getBoundingClientRect();
+    var s = Math.min(r.width / 1280, r.height / 720);
+    stage.style.setProperty('--s', Math.max(s, 0.1));
+  }
+
+  function go(n) {
+    resets.forEach(function (f) { f(); });
+    i = Math.max(0, Math.min(slides.length - 1, n));
+    slides.forEach(function (s, k) { s.classList.toggle('active', k === i); });
+    count.textContent = (i + 1) + ' / ' + slides.length;
+    fill.style.width = ((i + 1) / slides.length * 100) + '%';
+    prev.disabled = i === 0;
+    next.disabled = i === slides.length - 1;
+    var note = slides[i].querySelector('.notes');
+    notesText.innerHTML = note ? note.innerHTML : '<p>No notes for this slide.</p>';
+    try { history.replaceState(null, '', '#slide-' + (i + 1)); } catch (e) {}
+  }
+
+  function fromHash() {
+    var m = /^#slide-(\d+)$/.exec(location.hash || '');
+    return m ? parseInt(m[1], 10) - 1 : 0;
+  }
+
+  function setNotes(open) {
+    notesPanel.hidden = !open;
+    notesBtn.setAttribute('aria-pressed', open ? 'true' : 'false');
+    try { localStorage.setItem('deck-notes', open ? '1' : '0'); } catch (e) {}
+    fit();
+  }
+
+  function toggleFullscreen() {
+    try {
+      if (document.fullscreenElement) { document.exitFullscreen(); }
+      else if (document.documentElement.requestFullscreen) {
+        var p = document.documentElement.requestFullscreen();
+        if (p && p.catch) p.catch(function () {});
+      }
+    } catch (e) {}
+  }
+
+  prev.addEventListener('click', function () { go(i - 1); });
+  next.addEventListener('click', function () { go(i + 1); });
+  notesBtn.addEventListener('click', function () { setNotes(notesPanel.hidden); });
+  fsBtn.addEventListener('click', toggleFullscreen);
+
+  document.addEventListener('keydown', function (e) {
+    if (phone.matches || e.metaKey || e.ctrlKey || e.altKey) return;
+    var k = e.key;
+    var tag = e.target && e.target.tagName;
+    if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+    if (tag === 'BUTTON' && (k === ' ' || k === 'Enter')) return;
+    if (k === 'ArrowRight' || k === 'PageDown' || k === ' ') { e.preventDefault(); go(i + 1); }
+    else if (k === 'ArrowLeft' || k === 'PageUp') { e.preventDefault(); go(i - 1); }
+    else if (k === 'Home') { go(0); }
+    else if (k === 'End') { go(slides.length - 1); }
+    else if (k === 'n' || k === 'N') { setNotes(notesPanel.hidden); }
+    else if (k === 'f' || k === 'F') { toggleFullscreen(); }
+  });
+
+  var tx = null;
+  viewport.addEventListener('touchstart', function (e) { tx = e.touches[0].clientX; }, { passive: true });
+  viewport.addEventListener('touchend', function (e) {
+    if (tx === null || phone.matches) return;
+    var dx = e.changedTouches[0].clientX - tx;
+    if (Math.abs(dx) > 50) go(dx < 0 ? i + 1 : i - 1);
+    tx = null;
+  });
+
+  /* ---------- simulations ---------- */
+
+  // Spam filter: rule vs AI
+  (function () {
+    var root = $('spamSim'); if (!root) return;
+    var segs = root.querySelectorAll('.seg button');
+    var rows = root.querySelectorAll('.mrow');
+    var mode = 'rule';
+    function render() {
+      var right = 0;
+      each(rows, function (r) {
+        var text = r.querySelector('.subj').textContent;
+        var p = Number(r.getAttribute('data-ai'));
+        var said = mode === 'rule' ? (/lottery/i.test(text) ? 'spam' : 'inbox') : (p > 50 ? 'spam' : 'inbox');
+        var v = r.querySelector('.verdict');
+        v.className = 'verdict ' + said;
+        v.textContent = (said === 'spam' ? 'Spam' : 'Inbox') + (mode === 'ai' ? ' ' + (said === 'spam' ? p : 100 - p) + '%' : '');
+        var ok = said === r.getAttribute('data-truth');
+        if (ok) right++;
+        var j = r.querySelector('.judge');
+        j.className = 'judge ' + (ok ? 'right' : 'wrong');
+        j.textContent = ok ? '✓ Correct' : (said === 'spam' ? '✗ False alarm' : '✗ Missed spam');
+      });
+      $('spamScore').innerHTML = '<b>' + right + ' of ' + rows.length + '</b> sorted correctly';
+      $('spamDesc').textContent = mode === 'rule'
+        ? 'A person wrote one rule: if the email contains “lottery”, it’s spam.'
+        : 'The AI learned from 10,000 labelled emails. The % shows how sure it is.';
+      each(segs, function (b) { b.setAttribute('aria-pressed', b.getAttribute('data-mode') === mode ? 'true' : 'false'); });
+    }
+    each(segs, function (b) { b.addEventListener('click', function () { mode = b.getAttribute('data-mode'); render(); }); });
+    resets.push(function () { mode = 'rule'; render(); });
+  })();
+
+  // Next-word prediction
+  (function () {
+    var root = $('tokSim'); if (!root) return;
+    var EX = {
+      sentence: { code: false, prompt: 'My favourite thing about weekends is', steps: [
+        [['sleeping', 34], ['having', 21], ['the', 15], ['spending', 12]],
+        [['in', 78], ['late', 12], ['until', 6], ['all', 2]],
+        [['.', 64], ['and', 22], ['on', 8], ['with', 3]]
+      ] },
+      code: { code: true, prompt: '# add two numbers\ndef add(a, b):\n    return', steps: [
+        [['a', 91], ['sum', 5], ['None', 2], ['b', 1]],
+        [['+', 95], [',', 2], ['-', 1], ['*', 1]],
+        [['b', 97], ['1', 1], ['a', 1], ['0', 1]],
+        [['(end of line)', 93], ['+', 4], ['*', 2], ['-', 1]]
+      ] }
+    };
+    var ex = 'sentence', step = 0;
+    var box = $('tokText'), bars = $('tokBars'), next = $('tokNext'), status = $('tokStatus');
+    var segs = root.querySelectorAll('.seg button');
+    function render() {
+      var d = EX[ex];
+      box.className = 'tokbox' + (d.code ? ' code' : '');
+      box.textContent = d.prompt;
+      for (var k = 0; k < step; k++) {
+        var w = d.steps[k][0][0];
+        if (w === '(end of line)') continue;
+        if (w !== '.') box.appendChild(document.createTextNode(' '));
+        var s = document.createElement('span'); s.className = 'gen'; s.textContent = w;
+        box.appendChild(s);
+      }
+      var caret = document.createElement('span'); caret.className = 'caret'; caret.setAttribute('aria-hidden', 'true');
+      box.appendChild(caret);
+      var done = step >= d.steps.length;
+      var cands = d.steps[Math.min(step, d.steps.length - 1)];
+      bars.textContent = '';
+      cands.forEach(function (c) {
+        var row = document.createElement('div'); row.className = 'row';
+        var label = document.createElement('code'); label.textContent = c[0];
+        var wrap = document.createElement('div');
+        var bar = document.createElement('div'); bar.className = 'bar'; bar.style.width = Math.max(c[1], 1) + '%';
+        wrap.appendChild(bar);
+        var pct = document.createElement('span'); pct.className = 'pct'; pct.textContent = c[1] + '%';
+        row.appendChild(label); row.appendChild(wrap); row.appendChild(pct);
+        bars.appendChild(row);
+      });
+      next.disabled = done;
+      status.textContent = done
+        ? 'Done. The model wrote this one word at a time, picking a likely next word each time.'
+        : 'Step ' + (step + 1) + ' of ' + d.steps.length + '. The top choice is “' + cands[0][0] + '”.';
+      each(segs, function (b) { b.setAttribute('aria-pressed', b.getAttribute('data-ex') === ex ? 'true' : 'false'); });
+    }
+    next.addEventListener('click', function () { step++; render(); });
+    $('tokReset').addEventListener('click', function () { step = 0; render(); });
+    each(segs, function (b) { b.addEventListener('click', function () { ex = b.getAttribute('data-ex'); step = 0; render(); }); });
+    resets.push(function () { ex = 'sentence'; step = 0; render(); });
+  })();
+
+  // Agent loop
+  (function () {
+    if (!$('loopSim')) return;
+    var t = new Timer();
+    var STEPS = [
+      { n: 'think', loop: 1, text: 'Think: “I’ll run the tests to see what’s broken.”' },
+      { n: 'act', loop: 1, text: 'Act: runs <code>python -m pytest</code>' },
+      { n: 'observe', loop: 1, text: 'Observe: 2 tests failed. divide() crashes when b is 0.' },
+      { n: 'think', loop: 2, text: 'Think: “divide() must handle b = 0.”' },
+      { n: 'act', loop: 2, text: 'Act: edits divide(), then runs the tests again' },
+      { n: 'observe', loop: 2, text: 'Observe: 1 test still fails. average([]) crashes.' },
+      { n: 'think', loop: 3, text: 'Think: “average() must handle an empty list.”' },
+      { n: 'act', loop: 3, text: 'Act: edits average(), then runs the tests again' },
+      { n: 'observe', loop: 3, text: 'Observe: all tests pass.' },
+      { n: 'done', loop: 3, text: 'Done: goal met. The agent stops and shows you its changes.' }
+    ];
+    var names = ['goal', 'think', 'act', 'observe', 'done'];
+    var idx = -1, cap = $('loopCaption'), run = $('loopRun'), stepB = $('loopStep');
+    function show(k) {
+      idx = k;
+      var on = k < 0 ? 'goal' : STEPS[k].n;
+      names.forEach(function (n) { var g = $('lp-' + n); if (g) g.classList.toggle('on', n === on); });
+      cap.innerHTML = k < 0
+        ? '<b>Goal:</b> make all the tests pass. Press Run, or Step through one move at a time.'
+        : '<b>Loop ' + STEPS[k].loop + ' · </b>' + STEPS[k].text;
+      stepB.disabled = k >= STEPS.length - 1;
+    }
+    function tick() {
+      show(idx + 1);
+      if (idx < STEPS.length - 1) t.after(1500, tick); else run.disabled = false;
+    }
+    run.addEventListener('click', function () { t.cancel(); run.disabled = true; show(-1); t.after(500, tick); });
+    stepB.addEventListener('click', function () { t.cancel(); run.disabled = false; if (idx < STEPS.length - 1) show(idx + 1); });
+    $('loopReset').addEventListener('click', function () { t.cancel(); run.disabled = false; show(-1); });
+    resets.push(function () { t.cancel(); run.disabled = false; show(-1); });
+  })();
+
+  // Assistant vs agent race
+  (function () {
+    var root = $('raceSim'); if (!root) return;
+    var t = new Timer();
+    var lanes = root.querySelectorAll('.lane');
+    var go = $('raceGo');
+    function draw(lane, who, n) {
+      var dots = lane.querySelector('[data-dots="' + who + '"]');
+      dots.textContent = '';
+      for (var k = 0; k < n; k++) dots.appendChild(document.createElement('i'));
+      lane.querySelector('[data-count="' + who + '"]').textContent = n;
+    }
+    function update() {
+      each(lanes, function (lane) {
+        var you = 0, ai = 0;
+        each(lane.querySelectorAll('.race li'), function (li) {
+          if (li.classList.contains('pending')) return;
+          if (li.getAttribute('data-who') === 'you') you++; else ai++;
+        });
+        draw(lane, 'you', you); draw(lane, 'ai', ai);
+      });
+    }
+    function showAll() {
+      t.cancel(); go.disabled = false;
+      each(root.querySelectorAll('.race li'), function (li) { li.classList.remove('pending'); });
+      update();
+    }
+    function play() {
+      t.cancel(); go.disabled = true;
+      var lists = Array.prototype.map.call(lanes, function (l) { return l.querySelectorAll('.race li'); });
+      each(root.querySelectorAll('.race li'), function (li) { li.classList.add('pending'); });
+      update();
+      var max = Math.max.apply(null, lists.map(function (l) { return l.length; }));
+      var k = 0;
+      (function tick() {
+        lists.forEach(function (l) { if (l[k]) l[k].classList.remove('pending'); });
+        update(); k++;
+        if (k < max) t.after(750, tick); else go.disabled = false;
+      })();
+    }
+    go.addEventListener('click', play);
+    resets.push(showAll);
+  })();
+
+  // Ghost text completion
+  (function () {
+    if (!$('ghostSim')) return;
+    var t = new Timer();
+    var FULL = '# check if a number is even\ndef is_even(n):\n    ', SUGG = 'return n % 2 == 0';
+    var typed = $('ghostTyped'), ghost = $('ghostText'), tab = $('ghostTab'), status = $('ghostStatus');
+    function suggest() {
+      ghost.textContent = SUGG; tab.disabled = false;
+      status.textContent = 'Copilot suggests the next line in grey. Accept it, or keep typing to ignore it.';
+    }
+    function reset() { t.cancel(); typed.textContent = FULL; suggest(); }
+    function accept() {
+      t.cancel(); typed.textContent = FULL + SUGG; ghost.textContent = ''; tab.disabled = true;
+      status.textContent = 'Accepted. Copilot wrote the line; you decided to keep it.';
+    }
+    function replay() {
+      t.cancel(); typed.textContent = ''; ghost.textContent = ''; tab.disabled = true;
+      status.textContent = 'You type…';
+      var k = 0;
+      (function tick() {
+        k++; typed.textContent = FULL.slice(0, k);
+        if (k < FULL.length) t.after(45, tick);
+        else { status.textContent = 'You pause. Copilot is thinking…'; t.after(800, suggest); }
+      })();
+    }
+    tab.addEventListener('click', accept);
+    $('ghostReplay').addEventListener('click', replay);
+    resets.push(reset);
+  })();
+
+  // Agent mode with approval
+  (function () {
+    if (!$('agentSim')) return;
+    var t = new Timer();
+    var first = ['ag0', 'ag1', 'ag2', 'ag3'].map($);
+    var rest = ['agRun', 'agPass', 'agSkipped', 'agDone', 'agResult'].map($);
+    var allow = $('agAllow'), skip = $('agSkip'), keep = $('agKeep'), undo = $('agUndo'), result = $('agResult');
+    function base(showFirst) {
+      t.cancel();
+      first.forEach(function (el) { el.hidden = !showFirst; });
+      rest.forEach(function (el) { el.hidden = true; });
+      allow.disabled = skip.disabled = !showFirst;
+      keep.disabled = undo.disabled = false;
+      result.textContent = '';
+    }
+    function replay() {
+      base(false);
+      var k = 0;
+      (function tick() {
+        first[k].hidden = false; k++;
+        if (k < first.length) t.after(700, tick); else { allow.disabled = skip.disabled = false; }
+      })();
+    }
+    allow.addEventListener('click', function () {
+      allow.disabled = skip.disabled = true;
+      t.after(300, function () { $('agRun').hidden = false; });
+      t.after(1200, function () { $('agPass').hidden = false; });
+      t.after(1700, function () { $('agDone').hidden = false; });
+    });
+    skip.addEventListener('click', function () {
+      allow.disabled = skip.disabled = true;
+      t.after(300, function () { $('agSkipped').hidden = false; });
+      t.after(800, function () { $('agDone').hidden = false; });
+    });
+    keep.addEventListener('click', function () {
+      keep.disabled = undo.disabled = true; result.hidden = false;
+      result.textContent = 'Kept. calculator.py now has the fix.';
+    });
+    undo.addEventListener('click', function () {
+      keep.disabled = undo.disabled = true; result.hidden = false;
+      result.textContent = 'Undone. calculator.py is back to how it was.';
+    });
+    $('agReplay').addEventListener('click', replay);
+    resets.push(function () { base(true); });
+  })();
+
+  // Context layers
+  (function () {
+    var root = $('ctxSim'); if (!root) return;
+    var layers = root.querySelectorAll('.layer');
+    var state = { instr: true, agent: true, ctx: true };
+    function render() {
+      each(layers, function (b) { b.setAttribute('aria-pressed', state[b.getAttribute('data-layer')] ? 'true' : 'false'); });
+      $('ctxPlain').hidden = state.instr;
+      $('ctxRich').hidden = !state.instr;
+      $('ctxFile').textContent = state.ctx
+        ? 'calculator.py · added below subtract()'
+        : 'divide.py · new file (it didn’t know calculator.py exists)';
+      $('ctxMsg').textContent = state.agent
+        ? 'In simple words: this divides a by b.' + (state.instr ? ' I added a check so it can’t crash when b is 0.' : '') + ' I ran the tests: all passed.'
+        : 'Here is a divide function.';
+      $('ctxMeter').style.width = (25 + (state.instr ? 25 : 0) + (state.agent ? 20 : 0) + (state.ctx ? 30 : 0)) + '%';
+    }
+    each(layers, function (b) {
+      b.addEventListener('click', function () { var k = b.getAttribute('data-layer'); state[k] = !state[k]; render(); });
+    });
+    resets.push(function () { state = { instr: true, agent: true, ctx: true }; render(); });
+  })();
+
+  // Agent test runner
+  (function () {
+    var root = $('testSim'); if (!root) return;
+    var t = new Timer();
+    var rows = root.querySelectorAll('tbody tr');
+    var runB = $('testRun'), fixB = $('testFix'), score = $('testScore');
+    var BASE = [
+      ['pass', 'Explained it in 4 short sentences.'],
+      ['pass', 'Suggested one change: add type hints.'],
+      null,
+      ['pass', 'Refused, citing the no-delete rule.'],
+      ['pass', 'Edited divide(), then ran the tests.']
+    ];
+    var fixed = false;
+    function result(k) {
+      if (k !== 2) return BASE[k];
+      return fixed ? ['pass', 'Asked: “Here’s my plan. OK to go ahead?”'] : ['fail', 'Started rewriting 4 files without asking.'];
+    }
+    function set(k, r) {
+      var cell = rows[k].querySelector('.res');
+      cell.textContent = '';
+      if (!r) { cell.textContent = '—'; return; }
+      var chip = document.createElement('span');
+      chip.className = 'chip' + (r[0] === 'pass' ? ' ok' : r[0] === 'fail' ? ' bad' : '');
+      chip.textContent = r[0];
+      cell.appendChild(chip);
+      if (r[1]) cell.appendChild(document.createTextNode(' ' + r[1]));
+    }
+    function showScore() {
+      score.innerHTML = fixed
+        ? '<b>5 of 5 passed.</b> The new rule fixed it.'
+        : '<b>4 of 5 passed.</b> It didn’t ask before a big change.';
+    }
+    function run() {
+      t.cancel(); runB.disabled = true;
+      for (var j = 0; j < rows.length; j++) set(j, null);
+      score.textContent = 'Running…';
+      var k = 0;
+      (function tick() {
+        set(k, ['running', '']);
+        t.after(500, function () {
+          set(k, result(k)); k++;
+          if (k < rows.length) tick(); else { showScore(); runB.disabled = false; }
+        });
+      })();
+    }
+    function fix() {
+      t.cancel(); fixed = true;
+      $('newRule').hidden = false; fixB.disabled = true; runB.disabled = false;
+      for (var j = 0; j < rows.length; j++) set(j, null);
+      score.innerHTML = '<b>Rule added.</b> Start a new chat, then run the tests again.';
+    }
+    function reset() {
+      t.cancel(); fixed = false;
+      $('newRule').hidden = true; fixB.disabled = false; runB.disabled = false;
+      for (var j = 0; j < rows.length; j++) set(j, result(j));
+      showScore();
+    }
+    runB.addEventListener('click', run);
+    fixB.addEventListener('click', fix);
+    resets.push(reset);
+  })();
+
+  // Agent picker
+  (function () {
+    var root = $('pickSim'); if (!root) return;
+    var picks = root.querySelectorAll('.pick'), outs = root.querySelectorAll('.agent-out');
+    function show(name) {
+      each(picks, function (b) { b.setAttribute('aria-pressed', b.getAttribute('data-agent') === name ? 'true' : 'false'); });
+      each(outs, function (o) { o.hidden = o.getAttribute('data-agent') !== name; });
+    }
+    each(picks, function (b) { b.addEventListener('click', function () { show(b.getAttribute('data-agent')); }); });
+    resets.push(function () { show('review'); });
+  })();
+
+  window.addEventListener('hashchange', function () { go(fromHash()); });
+  if (window.ResizeObserver) new ResizeObserver(fit).observe(viewport);
+  window.addEventListener('resize', fit);
+  if (phone.addEventListener) phone.addEventListener('change', fit);
+
+  var openNotes = false;
+  try { openNotes = localStorage.getItem('deck-notes') === '1'; } catch (e) {}
+  go(fromHash());
+  setNotes(openNotes);
+  fit();
+})();
+</script>
+</body>
+</html>
